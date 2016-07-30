@@ -30,7 +30,7 @@ refunds on Instamojo.
 ## Requirements
 Java Version : 1.7+
    
-## Installation
+## Installation [ ![Download](https://api.bintray.com/packages/dev-accounts/maven/wrappers/images/download.svg) ](https://bintray.com/dev-accounts/maven/wrappers/_latestVersion)
 ### Gradle
 All the dependencies will be downloded automatically.
 
@@ -38,6 +38,7 @@ All the dependencies will be downloded automatically.
 
 ### JAR
 Download `instamojo-java-<version>.jar` from the latest release and the following dependencies to the classpath of the Application. 
+
 1. [Apache HttpClient v4.5.2](http://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient/4.5.2)
 2. [Apache HttpCore v4.4.4](http://mvnrepository.com/artifact/org.apache.httpcomponents/httpcore/4.4.4)
 3. [Apache Commons Codec v1.9](http://mvnrepository.com/artifact/commons-codec/commons-codec/1.9)
