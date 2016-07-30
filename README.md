@@ -1,5 +1,28 @@
 # Java wrapper for Instamojo API
 
+Table of Contents
+=================
+* [Preface](#preface)
+    * [Requirements](#requirements)
+    * [Installation](#installation)
+      * [Gradle](#gradle)
+      * [JAR](#jar)
+    * [Authentication Keys](#authentication-keys)
+    * [Payment Order API](#payment-order-api)
+      * [Create new Payment Order](#create-new-payment-order)
+        * [Payment Order Creation Parameters](#payment-order-creation-parameters)
+          * [Required](#required)
+          * [Optional](#optional)
+      * [Get details of a Payment order by order id](#get-details-of-a-payment-order-by-order-id)
+      * [Get details of a Payment order by transaction id](#get-details-of-a-payment-order-by-transaction-id)
+      * [Get list of all Payment Orders](#get-list-of-all-payment-orders)
+        * [Payment Order List Parameters](#payment-order-list-parameters)
+          * [Optional](#optional-1)
+    * [Refund API](#refund-api)
+      * [Create a refund](#create-a-refund)
+        * [Refund Creation Parameters](#refund-creation-parameters)
+          * [Required](#required-1)
+
 ## Preface
 Instamojo java wrapper for the Instamojo API assists you to programmatically create, list, filter payment orders and 
 refunds on Instamojo.
