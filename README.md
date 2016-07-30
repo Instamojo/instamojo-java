@@ -5,11 +5,16 @@ Instamojo java wrapper for the Instamojo API assists you to programmatically cre
 refunds on Instamojo.
 
 ## Requirements
-
 Java Version : 1.7+
    
-## Dependencies
-   
+## Installation
+### Gradle
+All the dependencies will be downloded automatically.
+
+`compile group: 'com.instamojo', name: 'instamojo-java', version: '1.0.0'`
+
+### JAR
+Download `instamojo-java-<version>.jar` from the latest release and the following dependencies to the classpath of the Application. 
 1. [Apache HttpClient v4.5.2](http://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient/4.5.2)
 2. [Apache HttpCore v4.4.4](http://mvnrepository.com/artifact/org.apache.httpcomponents/httpcore/4.4.4)
 3. [Apache Commons Codec v1.9](http://mvnrepository.com/artifact/commons-codec/commons-codec/1.9)
@@ -17,11 +22,9 @@ Java Version : 1.7+
 5. [Gson v2.6.2](http://mvnrepository.com/artifact/com.google.code.gson/gson/2.6.2)
 
 ## Authentication Keys
-You can find your CLIENT_ID and CLIENT_SECRET at the API Documentation Page. 
-Create an account on Instamojo, log in and visit this link: https://www.instamojo.com/api/1.1/docs/
+Please raise support ticket to receive CLIENT_ID and CLIENT_SECRET for Test and Production Environments
 
 ## Payment Order API
-
 ### Create new Payment Order
 ```Java
 /***** Create a new payment order *******/
