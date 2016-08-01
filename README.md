@@ -30,7 +30,7 @@ refunds on Instamojo.
 ## Requirements
 Java Version : 1.7+
    
-## Installation [ ![Download](https://api.bintray.com/packages/dev-accounts/maven/wrappers/images/download.svg) ](https://bintray.com/dev-accounts/maven/wrappers/_latestVersion)
+## Installation [ ![Download](https://api.bintray.com/packages/dev-accounts/maven/wrappers/images/download.svg) ](https://bintray.com/dev-accounts/maven/wrappers/_latestVersion) [![Build Status](https://travis-ci.org/Instamojo/instamojo-java.svg?branch=master)](https://travis-ci.org/Instamojo/instamojo-java)
 ### Gradle
 All the dependencies will be downloded automatically.
 
@@ -76,7 +76,7 @@ boolean isOrderValid = order.validate();
 
 if (isOrderValid) {
 	try {
-		CreatePaymentOrderResponse createPaymentOrderResponse =         api.createNewPaymentOrder(order);
+		CreatePaymentOrderResponse createPaymentOrderResponse = api.createNewPaymentOrder(order);
 	    // print the status of the payment order.
 		System.out.println(createPaymentOrderResponse.getPaymentOrder().getStatus());
 	} catch (InvalidPaymentOrderException e) {
