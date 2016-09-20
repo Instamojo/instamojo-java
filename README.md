@@ -188,7 +188,7 @@ Instamojo api = InstamojoImpl.getApi("[CLIENT_ID]", "[CLIENT_SECRET]",
 "[API_ENDPOINT]", "[AUTH_ENDPOINT]");
 
 PaymentOrderFilter paymentOrderFilter = new PaymentOrderFilter();
-PaymentOrderListResponse paymentOrderListResponse = api.(paymentOrderFilter);
+PaymentOrderListResponse paymentOrderListResponse =  api.getPaymentOrderList(paymentOrderFilter);
 
 // print the list of all payment orders.
 for (PaymentOrder paymentOrder : paymentOrderListResponse.getPaymentOrders()) {
