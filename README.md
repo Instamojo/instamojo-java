@@ -8,6 +8,9 @@ Table of Contents
     * [Gradle](#gradle)
     * [JAR](#jar)
 * [Authentication Keys](#authentication-keys)
+* [End Points](#end-points)
+    * [Test URLs](#test-urls)
+    * [Production URLs](#production-urls)
 * [Payment Order API](#payment-order-api)
     * [Create new Payment Order](#create-new-payment-order)
       * [Payment Order Creation Parameters](#payment-order-creation-parameters)
@@ -47,6 +50,17 @@ Download `instamojo-java-<version>.jar` from the latest release and the followin
 
 ## Authentication Keys
 Please raise support ticket to receive CLIENT_ID and CLIENT_SECRET for Test and Production Environments
+
+## End Points
+### Test URLs
+auth_endpoint : https://test.instamojo.com/oauth2/token/
+
+endpoint: https://test.instamojo.com/v2/
+
+### Production URLs
+auth endpoint : https://www.instamojo.com/oauth2/token/
+
+endpoint: https://api.instamojo.com/v2/
 
 ## Payment Order API
 ### Create new Payment Order
