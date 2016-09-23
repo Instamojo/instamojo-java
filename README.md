@@ -37,7 +37,7 @@ Java Version : 1.7+
 ### Gradle
 All the dependencies will be downloded automatically.
 
-`compile group: 'com.instamojo', name: 'instamojo-java', version: '1.0.0'`
+`compile group: 'com.instamojo', name: 'instamojo-java', version: '1.0.1'`
 
 ### JAR
 Download `instamojo-java-<version>.jar` from the latest release and the following dependencies to the classpath of the Application. 
@@ -49,7 +49,11 @@ Download `instamojo-java-<version>.jar` from the latest release and the followin
 5. [Gson v2.6.2](http://mvnrepository.com/artifact/com.google.code.gson/gson/2.6.2)
 
 ## Authentication Keys
-Please raise support ticket to receive CLIENT_ID and CLIENT_SECRET for Test and Production Environments
+Generate CLIENT_ID and CLIENT_SECRET for specific environments from the following links.
+
+[Test Environment](https://test.instamojo.com/integrations)
+
+[Production Environment](https://www.instamojo.com/integrations)
 
 ## End Points
 ### Test URLs
@@ -134,8 +138,8 @@ if (isOrderValid) {
 	}
 	
 	if (order.isWebhookInvalid()) {
-          System.out.println("Provide a valid webhook url");
-        }
+      System.out.println("Provide a valid webhook url");
+    }
 }
 ```
 
@@ -151,7 +155,7 @@ if (isOrderValid) {
 
 ##### Optional
 1.  Description:  Short description of the order (max 255 characters). If provided, this information is sent to backend gateways, wherever possible.
-2.  Webhook URL: Full URL to which webhook is made post transaction.
+2.  Webhook URL: Full URL to which webhook call to be made post transaction.
 
 ### Get details of a Payment order by order id
 ```Java
