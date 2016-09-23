@@ -48,6 +48,10 @@ public class PaymentOrder implements Serializable {
 	/** The description. */
 	private String description;
 
+	/** Webhook URL */
+	@SerializedName("webhook_url")
+	private String webhookUrl;
+
 	/** The redirect url. */
 	@SerializedName("redirect_url")
 	private String redirectUrl;
@@ -71,6 +75,7 @@ public class PaymentOrder implements Serializable {
     private boolean currencyInvalid;
     private boolean amountInvalid;
     private boolean redirectUrlInvalid;
+    private boolean webhookInvalid;
 
     /**
      * Gets the id.
@@ -235,6 +240,22 @@ public class PaymentOrder implements Serializable {
     public void setDescription(String description) {
 		this.description = description;
 	}
+
+    /**
+     * Gets Webhook URL for this order
+     * @return webhook url
+     */
+    public String getWebhookUrl() {
+        return webhookUrl;
+    }
+
+    /**
+     * Sets webhookurl
+     * @param webhookUrl webhook url for this order
+     */
+    public void setWebhookUrl(String webhookUrl) {
+        this.webhookUrl = webhookUrl;
+    }
 
     /**
      * Gets the redirect url.
@@ -437,6 +458,22 @@ public class PaymentOrder implements Serializable {
 	}
 
     /**
+     * Check if the given webhook is invalid
+     * @return webhookInvalid
+     */
+	public boolean isWebhookInvalid(){
+        return this.webhookInvalid;
+    }
+
+    /**
+     * Sets webhookInvalid
+     * @param webhookInvalid webhookInvalid
+     */
+    public void setWebhookInvalid(boolean webhookInvalid){
+        this.webhookInvalid = webhookInvalid;
+    }
+
+    /**
      * Is redirect url invalid boolean.
      *
      * @return the boolean
@@ -461,22 +498,21 @@ public class PaymentOrder implements Serializable {
      */
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("PaymentOrder{");
-        sb.append("id='").append(id).append('\'');
-        sb.append(", name='").append(name).append('\'');
-        sb.append(", email='").append(email).append('\'');
-        sb.append(", phone='").append(phone).append('\'');
-        sb.append(", currency='").append(currency).append('\'');
-        sb.append(", amount=").append(amount);
-        sb.append(", description='").append(description).append('\'');
-        sb.append(", transactionId='").append(transactionId).append('\'');
-        sb.append(", redirectUrl='").append(redirectUrl).append('\'');
-        sb.append(", status='").append(status).append('\'');
-        sb.append(", createdAt='").append(createdAt).append('\'');
-        sb.append(", resourceUri='").append(resourceUri).append('\'');
-        sb.append(", payments='").append(payments).append('\'');
-        sb.append('}');
-        return sb.toString();
+        return "PaymentOrder{" + "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", currency='" + currency + '\'' +
+                ", amount=" + amount +
+                ", description='" + description + '\'' +
+                ", transactionId='" + transactionId + '\'' +
+                ", webhook_url='" + webhookUrl +'\'' +
+                ", redirectUrl='" + redirectUrl + '\'' +
+                ", status='" + status + '\'' +
+                ", createdAt='" + createdAt + '\'' +
+                ", resourceUri='" + resourceUri + '\'' +
+                ", payments='" + payments + '\'' +
+                '}';
     }
 
     /**
@@ -527,6 +563,11 @@ public class PaymentOrder implements Serializable {
             valid = false;
             this.setRedirectUrlInvalid(true);
 		}
+
+		if (!TextUtils.isEmpty(webhookUrl) && !webhookUrl.matches(URL_MATCHER)){
+            valid = false;
+            this.setWebhookInvalid(true);
+        }
 
 	    return valid;
     }

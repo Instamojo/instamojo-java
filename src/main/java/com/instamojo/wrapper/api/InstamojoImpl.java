@@ -206,6 +206,7 @@ public class InstamojoImpl implements Instamojo {
         params.put("description", paymentOrder.getDescription());
         params.put("transaction_id", paymentOrder.getTransactionId());
         params.put("redirect_url", paymentOrder.getRedirectUrl());
+        params.put("webhook_url", paymentOrder.getWebhookUrl());
 
         try {
             String response = HttpUtils.sendPostRequest(this.getApiPath(Constants.PAYMENT_ORDER_API_PATH), headers,
@@ -217,6 +218,11 @@ public class InstamojoImpl implements Instamojo {
                 if (map != null && map.get(Constants.TRANSACTION_ID) != null) {
                     paymentOrder.setTransactionIdInvalid(true);
                 }
+
+                if (map != null && map.get(Constants.WEBHOOK_URL) != null){
+                    paymentOrder.setWebhookInvalid(true);
+                }
+
                 if (map != null && map.get(Constants.CURRENCY) != null) {
                     paymentOrder.setCurrencyInvalid(true);
                 }

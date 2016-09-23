@@ -42,6 +42,24 @@ public class InstamojoIntegrationTest {
     }
 
     @Test(expected = InvalidPaymentOrderException.class)
+    public void createOrder_whenWebhookIsInvalid_shouldThrowException() throws Exception{
+        PaymentOrder order = new PaymentOrderBuilder()
+                .withWebhookUrl("invalid_url")
+                .build();
+        api.createNewPaymentOrder(order);
+    }
+
+    @Test
+    public void createOrder_whenWebhookIsNull_shouldCreateNewOrder() throws Exception {
+        PaymentOrder order = new PaymentOrderBuilder()
+                .withWebhookUrl(null)
+                .build();
+
+        api.createNewPaymentOrder(order);
+        assertThat(order.getWebhookUrl()).isNull();
+    }
+
+    @Test(expected = InvalidPaymentOrderException.class)
     public void createPaymentOrder_whenInvalidPaymentOrderIsMade_shouldThrowException() throws Exception {
         PaymentOrder order = new PaymentOrderBuilder()
                 .withEmail(null)

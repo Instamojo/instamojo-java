@@ -33,6 +33,7 @@ public class InstamojoExample {
 		order.setAmount(9D);
 		order.setDescription("This is a test transaction.");
 		order.setRedirectUrl("http://www.someexample.com");
+		order.setWebhookUrl("http://www.someurl.com/");
 		order.setTransactionId("dxg234");
 
 		Instamojo api = null;
@@ -89,6 +90,10 @@ public class InstamojoExample {
 			if (order.isRedirectUrlInvalid()) {
 				System.out.println("Please provide valid Redirect url.");
 			}
+
+			if (order.isWebhookInvalid()) {
+                System.out.println("Provide a valid webhook url");
+            }
 		}
 
 		/*

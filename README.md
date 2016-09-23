@@ -75,6 +75,7 @@ order.setCurrency("INR");
 order.setAmount(9D);
 order.setDescription("This is a test transaction.");
 order.setRedirectUrl("http://www.someexample.com");
+order.setWebhookUrl("http://www.someurl.com/");
 order.setTransactionId("dxg234");
 
 Instamojo api = null;
@@ -131,6 +132,10 @@ if (isOrderValid) {
 	if (order.isRedirectUrlInvalid()) {
 	  System.out.println("Please provide valid Redirect url.");
 	}
+	
+	if (order.isWebhookInvalid()) {
+          System.out.println("Provide a valid webhook url");
+        }
 }
 ```
 
@@ -141,11 +146,12 @@ if (isOrderValid) {
 3.	Phone:  Phone number of the customer. It is recommended to use 	E.164 	number formatting for all phone numbers.
 4.	Currency:  String identifier for the currency. Currently, only INR (for Indian 	Rupee) is supported.
 5.	Amount:  Amount the customer has to pay. Numbers upto 2 decimal places are supported.
-6.	Transaction_id:  Unique identifier for the order (max 64 characters). Identifier can 	contain alphanumeric characters, hyphens and underscores only. This is generally the unique order id (or primary key) in your system.
-7.	Redirect_url:  Full URL to which the customer is redirected after payment. 	Redirection happens even if payment wasn't successful. This URL shouldn't contain any query parameters.
+6.	Transaction ID:  Unique identifier for the order (max 64 characters). Identifier can 	contain alphanumeric characters, hyphens and underscores only. This is generally the unique order id (or primary key) in your system.
+7.	Redirect URL:  Full URL to which the customer is redirected after payment. 	Redirection happens even if payment wasn't successful. This URL shouldn't contain any query parameters.
 
 ##### Optional
-1. Description:  Short description of the order (max 255 characters). If provided, this information is sent to backend gateways, wherever possible.
+1.  Description:  Short description of the order (max 255 characters). If provided, this information is sent to backend gateways, wherever possible.
+2.  Webhook URL: Full URL to which webhook is made post transaction.
 
 ### Get details of a Payment order by order id
 ```Java
