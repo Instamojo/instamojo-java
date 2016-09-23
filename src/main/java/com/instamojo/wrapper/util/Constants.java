@@ -53,6 +53,11 @@ public class Constants {
 	public static final String TRANSACTION_ID = "transaction_id";
 
 	/**
+	 * The constant WEBHOOK_URL
+	 */
+	public static final String WEBHOOK_URL = "webhook_url";
+
+	/**
 	 * The constant TRANSACTION_ID.
 	 */
 	public static final String CURRENCY = "currency";

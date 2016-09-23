@@ -41,7 +41,11 @@ public class PaymentOrderDetailsResponse extends Response {
     /** The redirect url. */
     @SerializedName("redirect_url")
     private String redirectUrl;
-    
+
+    /** Webhook URL */
+    @SerializedName("webhook_url")
+    private String webhookUrl;
+
     /** The created at. */
     @SerializedName("created_at")
     private String createdAt;
@@ -236,7 +240,23 @@ public class PaymentOrderDetailsResponse extends Response {
     public void setRedirectUrl(String redirectUrl) {
         this.redirectUrl = redirectUrl;
     }
-    
+
+    /**
+     * Gets Webhook url for this order
+     * @return webhook url
+     */
+    public String getWebhookUrl() {
+        return webhookUrl;
+    }
+
+    /**
+     * Sets webhook url for this order
+     * @param webhookUrl webhookurl for this order
+     */
+    public void setWebhookUrl(String webhookUrl) {
+        this.webhookUrl = webhookUrl;
+    }
+
     /**
      * Gets the created at.
      *
@@ -314,6 +334,7 @@ public class PaymentOrderDetailsResponse extends Response {
                 ", amount=" + amount +
                 ", description='" + description + '\'' +
                 ", transactionId='" + transactionId + '\'' +
+                ", webhookUrl='" + webhookUrl + '\'' +
                 ", redirectUrl='" + redirectUrl + '\'' +
                 ", status='" + status + '\'' +
                 ", createdAt='" + createdAt + '\'' +

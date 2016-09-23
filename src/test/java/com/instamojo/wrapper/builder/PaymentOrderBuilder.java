@@ -16,6 +16,7 @@ public class PaymentOrderBuilder {
     private static final Double PAYMENT_ORDER_AMOUNT = 9D;
     private static final String PAYMENT_ORDER_DESCRIPTION = "This is a test payment order.";
     private static final String PAYMENT_ORDER_REDIRECT_URL = "http://www.someexample.com";
+    private static final String PAYMENT_ORDER_WEBHOOK_URL = "http://www.somewebhookurl.com/";
 
     private PaymentOrder paymentOrder;
 
@@ -33,6 +34,7 @@ public class PaymentOrderBuilder {
         paymentOrder.setAmount(PAYMENT_ORDER_AMOUNT);
         paymentOrder.setDescription(PAYMENT_ORDER_DESCRIPTION);
         paymentOrder.setRedirectUrl(PAYMENT_ORDER_REDIRECT_URL);
+        paymentOrder.setWebhookUrl(PAYMENT_ORDER_WEBHOOK_URL);
     }
 
     /**
@@ -123,6 +125,16 @@ public class PaymentOrderBuilder {
         return this;
     }
 
+    /**
+     * With webhook url payment order builder.
+     *
+     * @param webhookUrl the webhook url
+     * @return the payment order builder
+     */
+    public PaymentOrderBuilder withWebhookUrl(String webhookUrl) {
+        paymentOrder.setWebhookUrl(webhookUrl);
+        return this;
+    }
     /**
      * Build payment order.
      *
