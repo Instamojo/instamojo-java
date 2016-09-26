@@ -50,10 +50,10 @@ Download `instamojo-java-<version>.jar` from the latest release and the followin
 
 ## Authentication Keys
 Generate CLIENT_ID and CLIENT_SECRET for specific environments from the following links.
+ - [Test Environment](https://test.instamojo.com/integrations)
+ - [Production Environment](https://www.instamojo.com/integrations)
 
-[Test Environment](https://test.instamojo.com/integrations)
-
-[Production Environment](https://www.instamojo.com/integrations)
+Related support article: [How Do I Get My Client ID And Client Secret?](https://support.instamojo.com/hc/en-us/articles/212214265-How-do-I-get-my-Client-ID-and-Client-Secret-)
 
 ## End Points
 ### Test URLs
