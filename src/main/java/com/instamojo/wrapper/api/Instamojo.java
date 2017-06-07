@@ -64,9 +64,4 @@ public interface Instamojo {
 	 * @throws InvalidRefundException the invalid refund exception
 	 */
 	CreateRefundResponse createNewRefund(Refund refund) throws ConnectionException, InvalidRefundException;
-
-	/**
-	 * Clears the current cached Instance
-	 */
-	void ClearInstance();
 }

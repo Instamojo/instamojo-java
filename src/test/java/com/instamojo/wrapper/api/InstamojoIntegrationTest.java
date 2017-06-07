@@ -26,6 +26,7 @@ public class InstamojoIntegrationTest {
 
     @Before
     public void setUp() throws Exception {
+        InstamojoImpl.ClearInstance();
         api = InstamojoImpl.getApi(TestConstants.TEST_CLIENT_ID, TestConstants.TEST_CLIENT_SECRET, TestConstants.INSTAMOJO_TEST_API_ENDPOINT, TestConstants.INSTAMOJO_TEST_AUTH_ENDPOINT);
 //        api = InstamojoImpl.getApi(TestConstants.TEST_CLIENT_ID, TestConstants.TEST_CLIENT_SECRET);
     }

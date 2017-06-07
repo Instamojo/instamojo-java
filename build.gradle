@@ -1,5 +1,5 @@
 group 'com.instamojo'
-version '1.0.2'
+version '1.0.3'
 
 apply plugin: 'java'
 
@@ -34,7 +34,7 @@ ext {
     siteUrl = 'https://github.com/Instamojo/instamojo-java'
     gitUrl = 'https://github.com/Instamojo/instamojo-java.git'
 
-    libraryVersion = '1.0.2'
+    libraryVersion = '1.0.3'
 
     developerId = 'vedhavyas'
     developerName = 'Vedhavyas Singareddi'

@@ -387,8 +387,7 @@ public class InstamojoImpl implements Instamojo {
     /**
      * Clears the current cached Instance
      */
-    @Override
-    public void ClearInstance() {
+    public static void ClearInstance() {
         if (uniqueInstance != null){
             synchronized (InstamojoImpl.class){
                 uniqueInstance=null;
