@@ -385,6 +385,19 @@ public class InstamojoImpl implements Instamojo {
     }
 
     /**
+     * Clears the current cached Instance
+     */
+    @Override
+    public void ClearInstance() {
+        if (uniqueInstance != null){
+            synchronized (InstamojoImpl.class){
+                uniqueInstance=null;
+                accessToken=null;
+            }
+        }
+    }
+
+    /**
      * Gets the authorization.
      *
      * @return the authorization
