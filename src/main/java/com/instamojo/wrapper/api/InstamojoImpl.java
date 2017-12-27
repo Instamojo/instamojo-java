@@ -26,6 +26,14 @@ import com.instamojo.wrapper.util.JsonUtils;
 import org.apache.http.util.Asserts;
 import org.apache.http.util.TextUtils;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * The Class InstamojoImpl.
  */

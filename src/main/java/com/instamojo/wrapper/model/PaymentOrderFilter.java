@@ -2,8 +2,6 @@ package com.instamojo.wrapper.model;
 
 import com.google.gson.annotations.SerializedName;
 
-// TODO: Auto-generated Javadoc
-
 /**
  * The Class PaymentOrderFilter.
  */

@@ -4,7 +4,6 @@ import com.google.gson.annotations.SerializedName;
 import com.instamojo.wrapper.model.PaymentOptions;
 import com.instamojo.wrapper.model.PaymentOrder;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class CreatePaymentOrderResponse.
  */
