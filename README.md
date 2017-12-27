@@ -35,7 +35,7 @@ Java Version : 1.7+
    
 ## Installation [ ![Download](https://api.bintray.com/packages/dev-accounts/maven/wrappers/images/download.svg) ](https://bintray.com/dev-accounts/maven/wrappers/_latestVersion) [![Build Status](https://travis-ci.org/Instamojo/instamojo-java.svg?branch=master)](https://travis-ci.org/Instamojo/instamojo-java)
 ### Gradle
-All the dependencies will be downloded automatically.
+All the dependencies will be downloaded automatically.
 
 `compile group: 'com.instamojo', name: 'instamojo-java', version: '1.0.3'`
 
@@ -149,8 +149,8 @@ if (isOrderValid) {
 2.	Email:  Email address of the customer (max 75 characters).
 3.	Phone:  Phone number of the customer. At this point, the wrapper only supports 10 digit indian phone number without country code.
 4.	Currency:  String identifier for the currency. Currently, only INR (for Indian 	Rupee) is supported.
-5.	Amount:  Amount the customer has to pay. Numbers upto 2 decimal places are supported.
-6.	Transaction ID:  Unique identifier for the order (max 64 characters). Identifier can 	contain alphanumeric characters, hyphens and underscores only. This is generally the unique order id (or primary key) in your system.
+5.	Amount:  Amount the customer has to pay. Numbers up to 2 decimal places are supported.
+6.	Transaction ID:  Unique identifier for the order (max 64 characters). Identifier can contain alphanumeric characters, hyphens and underscores only. This is generally the unique order id (or primary key) in your system.
 7.	Redirect URL:  Full URL to which the customer is redirected after payment. 	Redirection happens even if payment wasn't successful. This URL shouldn't contain any query parameters.
 
 ##### Optional

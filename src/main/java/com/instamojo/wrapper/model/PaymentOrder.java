@@ -250,7 +250,7 @@ public class PaymentOrder implements Serializable {
     }
 
     /**
-     * Sets webhookurl
+     * Sets webhook url
      * @param webhookUrl webhook url for this order
      */
     public void setWebhookUrl(String webhookUrl) {

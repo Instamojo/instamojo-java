@@ -251,7 +251,7 @@ public class PaymentOrderDetailsResponse extends Response {
 
     /**
      * Sets webhook url for this order
-     * @param webhookUrl webhookurl for this order
+     * @param webhookUrl webhook url for this order
      */
     public void setWebhookUrl(String webhookUrl) {
         this.webhookUrl = webhookUrl;
