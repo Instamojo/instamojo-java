@@ -2,7 +2,6 @@ package com.instamojo.wrapper.response;
 
 import com.google.gson.annotations.SerializedName;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class AccessTokenResponse.
  */

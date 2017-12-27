@@ -418,5 +418,4 @@ public class InstamojoImpl implements Instamojo {
         }
         return apiPath;
     }
-
 }
