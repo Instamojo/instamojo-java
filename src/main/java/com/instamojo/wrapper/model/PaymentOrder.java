@@ -1,9 +1,9 @@
 package com.instamojo.wrapper.model;
 
+import java.io.Serializable;
+
 import com.google.gson.annotations.SerializedName;
 import org.apache.http.util.TextUtils;
-
-import java.io.Serializable;
 
 public class PaymentOrder implements Serializable {
 
@@ -521,7 +521,6 @@ public class PaymentOrder implements Serializable {
      * @return the boolean
      */
     public boolean validate() {
-
 		boolean valid = true;
 
 		if (TextUtils.isEmpty(transactionId) || !transactionId.matches(TRANSACTION_ID_MATCHER) || transactionId.length() > MAX_TID_CHAR_LIMIT) {
@@ -564,7 +563,7 @@ public class PaymentOrder implements Serializable {
             this.setRedirectUrlInvalid(true);
 		}
 
-		if (!TextUtils.isEmpty(webhookUrl) && !webhookUrl.matches(URL_MATCHER)){
+		if (!TextUtils.isEmpty(webhookUrl) && !webhookUrl.matches(URL_MATCHER)) {
             valid = false;
             this.setWebhookInvalid(true);
         }

@@ -1,5 +1,13 @@
 package com.instamojo.wrapper.api;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.instamojo.wrapper.exception.ConnectionException;
 import com.instamojo.wrapper.exception.InvalidClientException;
 import com.instamojo.wrapper.exception.InvalidPaymentOrderException;
@@ -17,14 +25,6 @@ import com.instamojo.wrapper.util.HttpUtils;
 import com.instamojo.wrapper.util.JsonUtils;
 import org.apache.http.util.Asserts;
 import org.apache.http.util.TextUtils;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * The Class InstamojoImpl.

@@ -1,9 +1,9 @@
 package com.instamojo.wrapper.model;
 
+import java.io.Serializable;
+
 import com.google.gson.annotations.SerializedName;
 import org.apache.http.util.TextUtils;
-
-import java.io.Serializable;
 
 /**
  * The Class Refund.
@@ -339,5 +339,4 @@ public class Refund implements Serializable {
         }
         return false;
     }
-
 }
