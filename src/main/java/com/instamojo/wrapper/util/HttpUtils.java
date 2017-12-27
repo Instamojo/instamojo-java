@@ -47,7 +47,7 @@ public class HttpUtils {
      * @throws IOException        the io exception
      */
     public static String sendGetRequest(String url, Map<String, String> headers, Map<String, String> params) throws URISyntaxException, IOException {
-        LOGGER.log(Level.INFO, "Sending GET request to the url " + url);
+        LOGGER.log(Level.INFO, "Sending GET request to the url {}", url);
 
         URIBuilder uriBuilder = new URIBuilder(url);
 
@@ -78,7 +78,7 @@ public class HttpUtils {
      * @throws IOException the io exception
      */
     public static String sendPostRequest(String url, Map<String, String> headers, Map<String, String> params) throws IOException {
-        LOGGER.log(Level.INFO, "Sending POST request to the url " + url);
+        LOGGER.log(Level.INFO, "Sending POST request to the url {}", url);
 
         HttpPost httpPost = new HttpPost(url);
 
