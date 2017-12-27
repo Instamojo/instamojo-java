@@ -12,7 +12,6 @@ public class PaymentOrder implements Serializable {
 
 	private static final String TRANSACTION_ID_MATCHER = "[A-Za-z0-9_-]+";
 	private static final String EMAIL_MATCHER = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
-	private static final String PHONE_NUMBER_MATCHER = "^[0-9]{10}$";
 	private static final String URL_MATCHER = "^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
 	private static final double MIN_AMOUNT = 9.00;
 	private static final int MAX_TID_CHAR_LIMIT = 64;
@@ -544,7 +543,7 @@ public class PaymentOrder implements Serializable {
             this.setCurrencyInvalid(true);
 		}
 
-		if (TextUtils.isEmpty(phone) || !phone.matches(PHONE_NUMBER_MATCHER)) {
+		if (TextUtils.isEmpty(phone)) {
             valid = false;
             this.setPhoneInvalid(true);
 		}

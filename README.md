@@ -147,7 +147,7 @@ if (isOrderValid) {
 ##### Required
 1.	Name:  Name of the customer (max 100 characters).
 2.	Email:  Email address of the customer (max 75 characters).
-3.	Phone:  Phone number of the customer. At this point, the wrapper only supports 10 digit indian phone number without country code.
+3.	Phone:  Phone number of the customer. (Non-Indian phone numbers must include country code).
 4.	Currency:  String identifier for the currency. Currently, only INR (for Indian 	Rupee) is supported.
 5.	Amount:  Amount the customer has to pay. Numbers up to 2 decimal places are supported.
 6.	Transaction ID:  Unique identifier for the order (max 64 characters). Identifier can contain alphanumeric characters, hyphens and underscores only. This is generally the unique order id (or primary key) in your system.
