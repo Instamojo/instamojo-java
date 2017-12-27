@@ -37,7 +37,7 @@ Java Version : 1.7+
 ### Gradle
 All the dependencies will be downloaded automatically.
 
-`compile group: 'com.instamojo', name: 'instamojo-java', version: '1.0.3'`
+`compile group: 'com.instamojo', name: 'instamojo-java', version: '1.0.4'`
 
 ### JAR
 Download `instamojo-java-<version>.jar` from the latest release and the following dependencies to the classpath of the Application. 
