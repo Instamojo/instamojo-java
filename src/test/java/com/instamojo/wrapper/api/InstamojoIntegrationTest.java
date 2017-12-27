@@ -32,6 +32,13 @@ public class InstamojoIntegrationTest {
     }
 
     @Test
+    public void createPaymentOrder_ValidateInternationalPhone() {
+        PaymentOrder order = new PaymentOrderBuilder().withPhone("+14155552671").build();
+        assertThat(order.validate()).isTrue();
+        assertThat(order.isPhoneInvalid()).isFalse();
+    }
+
+    @Test
     public void createPaymentOrder_whenNewPaymentOrderIsMade_shouldCreateNewPaymentOrder() throws Exception {
         PaymentOrder order = new PaymentOrderBuilder().build();
 
