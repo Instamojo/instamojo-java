@@ -1,7 +1,5 @@
 package com.instamojo.wrapper.exception;
 
-// TODO: Auto-generated Javadoc
-
 /**
  * The Class InvalidRefundException.
  */

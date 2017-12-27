@@ -2,7 +2,6 @@ package com.instamojo.wrapper.response;
 
 import java.io.Serializable;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Response.
  */
