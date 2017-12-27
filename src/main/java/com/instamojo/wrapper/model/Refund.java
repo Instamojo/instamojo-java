@@ -279,7 +279,6 @@ public class Refund implements Serializable {
 	 *            the new refund amount invalid
 	 */
 	public void setRefundAmountInvalid(boolean refundAmountInvalid) {
-		;
 		this.refundAmountInvalid = refundAmountInvalid;
 	}
 
