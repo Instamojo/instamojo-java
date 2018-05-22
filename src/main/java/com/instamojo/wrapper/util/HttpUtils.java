@@ -1,16 +1,5 @@
 package com.instamojo.wrapper.util;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.message.BasicNameValuePair;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -22,6 +11,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.message.BasicNameValuePair;
 
 /**
  * The type Http utils.
@@ -47,7 +47,7 @@ public class HttpUtils {
      * @throws IOException        the io exception
      */
     public static String sendGetRequest(String url, Map<String, String> headers, Map<String, String> params) throws URISyntaxException, IOException {
-        LOGGER.log(Level.INFO, "Sending GET request to the url " + url);
+        LOGGER.log(Level.INFO, "Sending GET request to the url {}", url);
 
         URIBuilder uriBuilder = new URIBuilder(url);
 
@@ -78,7 +78,7 @@ public class HttpUtils {
      * @throws IOException the io exception
      */
     public static String sendPostRequest(String url, Map<String, String> headers, Map<String, String> params) throws IOException {
-        LOGGER.log(Level.INFO, "Sending POST request to the url " + url);
+        LOGGER.log(Level.INFO, "Sending POST request to the url {}", url);
 
         HttpPost httpPost = new HttpPost(url);
 

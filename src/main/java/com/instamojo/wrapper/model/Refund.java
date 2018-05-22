@@ -1,9 +1,9 @@
 package com.instamojo.wrapper.model;
 
+import java.io.Serializable;
+
 import com.google.gson.annotations.SerializedName;
 import org.apache.http.util.TextUtils;
-
-import java.io.Serializable;
 
 /**
  * The Class Refund.
@@ -66,8 +66,7 @@ public class Refund implements Serializable {
 	/**
 	 * Sets the id.
 	 *
-	 * @param id
-	 *            the new id
+	 * @param id the new id
 	 */
 	public void setId(String id) {
 		this.id = id;
@@ -85,8 +84,7 @@ public class Refund implements Serializable {
 	/**
 	 * Sets the payment id.
 	 *
-	 * @param paymentId
-	 *            the new payment id
+	 * @param paymentId the new payment id
 	 */
 	public void setPaymentId(String paymentId) {
 		this.paymentId = paymentId;
@@ -104,8 +102,7 @@ public class Refund implements Serializable {
 	/**
 	 * Sets the status.
 	 *
-	 * @param status
-	 *            the new status
+	 * @param status the new status
 	 */
 	public void setStatus(String status) {
 		this.status = status;
@@ -123,8 +120,7 @@ public class Refund implements Serializable {
 	/**
 	 * Sets the type.
 	 *
-	 * @param type
-	 *            the new type
+	 * @param type the new type
 	 */
 	public void setType(String type) {
 		this.type = type;
@@ -142,8 +138,7 @@ public class Refund implements Serializable {
 	/**
 	 * Sets the body.
 	 *
-	 * @param body
-	 *            the new body
+	 * @param body the new body
 	 */
 	public void setBody(String body) {
 		this.body = body;
@@ -161,8 +156,7 @@ public class Refund implements Serializable {
 	/**
 	 * Sets the refund amount.
 	 *
-	 * @param refundAmount
-	 *            the new refund amount
+	 * @param refundAmount the new refund amount
 	 */
 	public void setRefundAmount(Double refundAmount) {
 		this.refundAmount = refundAmount;
@@ -180,8 +174,7 @@ public class Refund implements Serializable {
 	/**
 	 * Sets the total amount.
 	 *
-	 * @param totalAmount
-	 *            the new total amount
+	 * @param totalAmount the new total amount
 	 */
 	public void setTotalAmount(Double totalAmount) {
 		this.totalAmount = totalAmount;
@@ -199,8 +192,7 @@ public class Refund implements Serializable {
 	/**
 	 * Sets the created at.
 	 *
-	 * @param createdAt
-	 *            the new created at
+	 * @param createdAt the new created at
 	 */
 	public void setCreatedAt(String createdAt) {
 		this.createdAt = createdAt;
@@ -218,8 +210,7 @@ public class Refund implements Serializable {
 	/**
 	 * Sets the payment id invalid.
 	 *
-	 * @param paymentIdInvalid
-	 *            the new payment id invalid
+	 * @param paymentIdInvalid the new payment id invalid
 	 */
 	public void setPaymentIdInvalid(boolean paymentIdInvalid) {
 		this.paymentIdInvalid = paymentIdInvalid;
@@ -237,8 +228,7 @@ public class Refund implements Serializable {
 	/**
 	 * Sets the type invalid.
 	 *
-	 * @param typeInvalid
-	 *            the new type invalid
+	 * @param typeInvalid the new type invalid
 	 */
 	public void setTypeInvalid(boolean typeInvalid) {
 		this.typeInvalid = typeInvalid;
@@ -256,8 +246,7 @@ public class Refund implements Serializable {
 	/**
 	 * Sets the body invalid.
 	 *
-	 * @param bodyInvalid
-	 *            the new body invalid
+	 * @param bodyInvalid the new body invalid
 	 */
 	public void setBodyInvalid(boolean bodyInvalid) {
 		this.bodyInvalid = bodyInvalid;
@@ -306,7 +295,6 @@ public class Refund implements Serializable {
 	 * @return true, if successful
 	 */
 	public boolean validate() {
-
 		boolean valid = true;
 
 		if (TextUtils.isEmpty(paymentId)) {
@@ -332,10 +320,11 @@ public class Refund implements Serializable {
 		return valid;
 	}
 
-    private boolean isValidRefundType(){
-        for(String refundType: VALID_REFUND_TYPES){
-            if(refundType.equals(type))
-                return true;
+    private boolean isValidRefundType() {
+        for(String refundType: VALID_REFUND_TYPES) {
+            if(refundType.equals(type)) {
+				return true;
+			}
         }
         return false;
     }

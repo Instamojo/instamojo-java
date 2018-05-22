@@ -1,5 +1,13 @@
 package com.instamojo.wrapper.api;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.instamojo.wrapper.exception.ConnectionException;
 import com.instamojo.wrapper.exception.InvalidClientException;
 import com.instamojo.wrapper.exception.InvalidPaymentOrderException;
@@ -418,5 +426,4 @@ public class InstamojoImpl implements Instamojo {
         }
         return apiPath;
     }
-
 }
