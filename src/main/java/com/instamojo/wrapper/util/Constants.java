@@ -15,12 +15,16 @@ public class Constants {
 	 * The Constant INSTAMOJO_API_ENDPOINT. Every API request is made to a
 	 * method on top of this base URL. HTTPS is mandatory.
 	 */
-	public static final String INSTAMOJO_API_ENDPOINT = "https://www.instamojo.com/v2/";
+	public static final String INSTAMOJO_LIVE_API_ENDPOINT = "https://www.instamojo.com/v2/";
+
+	public static final String INSTAMOJO_TEST_API_ENDPOINT = "https://test.instamojo.com/v2/";
 
 	/**
 	 * The constant INSTAMOJO_AUTH_ENDPOINT.
 	 */
-	public static final String INSTAMOJO_AUTH_ENDPOINT = "https://www.instamojo.com/oauth2/token/";
+	public static final String INSTAMOJO_LIVE_AUTH_ENDPOINT = "https://www.instamojo.com/oauth2/token/";
+
+	public static final String INSTAMOJO_TEST_AUTH_ENDPOINT = "https://test.instamojo.com/oauth2/token/";
 
 	/**
 	 * The constant CLIENT_ID.

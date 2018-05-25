@@ -36,6 +36,10 @@ public class InstamojoImpl implements Instamojo {
      */
     private static final Logger LOGGER = Logger.getLogger(InstamojoImpl.class.getName());
 
+    public enum Mode {
+        TEST, LIVE
+    }
+
     private volatile static Instamojo instance;
 
     /*
@@ -58,6 +62,8 @@ public class InstamojoImpl implements Instamojo {
      */
     private String clientSecret;
 
+    private Mode mode;
+
     private InstamojoImpl() {
         // Default private constructor
     }
@@ -65,9 +71,10 @@ public class InstamojoImpl implements Instamojo {
     /*
      * Instantiates a new instamojo impl.
      */
-    private InstamojoImpl(String clientId, String clientSecret) {
+    private InstamojoImpl(String clientId, String clientSecret, Mode mode) {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
+        this.mode = mode;
     }
 
     /**
@@ -76,19 +83,12 @@ public class InstamojoImpl implements Instamojo {
      * @param clientId     the client id
      * @param clientSecret the client secret
      * @return the api
-     * @throws ConnectionException the connection exception
      */
-    public static Instamojo getApi(String clientId, String clientSecret) {
-        Asserts.notEmpty(clientId, "Client Id");
-        Asserts.notEmpty(clientSecret, "Client Secret");
-        return getInstamojo(clientId, clientSecret);
-    }
-
-    private static Instamojo getInstamojo(String clientId, String clientSecret) {
+    public static Instamojo getApi(String clientId, String clientSecret, Mode mode) {
         if (instance == null) {
             synchronized (InstamojoImpl.class) {
                 if (instance == null) {
-                    instance = new InstamojoImpl(clientId, clientSecret);
+                    instance = new InstamojoImpl(clientId, clientSecret, mode);
                 }
             }
         }
@@ -145,7 +145,7 @@ public class InstamojoImpl implements Instamojo {
 
     private void loadAccessToken(Map<String, String> params) throws ConnectionException {
         try {
-            String response = HttpUtils.sendPostRequest(Constants.INSTAMOJO_AUTH_ENDPOINT, null, params);
+            String response = HttpUtils.sendPostRequest(getAuthEndpoint(), null, params);
 
             AccessTokenResponse accessTokenResponse = JsonUtils.convertJsonStringToObject(response,
                     AccessTokenResponse.class);
@@ -396,11 +396,27 @@ public class InstamojoImpl implements Instamojo {
      * Gets the api path.
      */
     private String getApiPath(String path) {
-        String apiPath = Constants.INSTAMOJO_API_ENDPOINT + path;
+        String apiPath = getApiEndpoint() + path;
 
         if (!apiPath.endsWith("/")) {
             apiPath += Character.toString('/');
         }
         return apiPath;
+    }
+
+    private String getApiEndpoint() {
+        if (mode == Mode.TEST) {
+            return Constants.INSTAMOJO_TEST_API_ENDPOINT;
+        }
+
+        return Constants.INSTAMOJO_LIVE_API_ENDPOINT;
+    }
+
+    private String getAuthEndpoint() {
+        if (mode == Mode.TEST) {
+            return Constants.INSTAMOJO_TEST_AUTH_ENDPOINT;
+        }
+
+        return Constants.INSTAMOJO_LIVE_AUTH_ENDPOINT;
     }
 }

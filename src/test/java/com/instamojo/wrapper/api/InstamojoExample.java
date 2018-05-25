@@ -38,12 +38,8 @@ public class InstamojoExample {
 
 		Instamojo api = null;
 
-		try {
-			// gets the reference to the instamojo api
-			api = InstamojoImpl.getApi("[CLIENT_ID]", "[CLIENT_SECRET]", "[API_ENDPOINT]", "[AUTH_ENDPOINT]");
-		} catch (ConnectionException e) {
-			LOGGER.log(Level.SEVERE, e.toString(), e);
-		}
+		// gets the reference to the instamojo api
+		api = InstamojoImpl.getApi("[CLIENT_ID]", "[CLIENT_SECRET]", InstamojoImpl.Mode.TEST);
 
 		boolean isOrderValid = order.validate();
 
