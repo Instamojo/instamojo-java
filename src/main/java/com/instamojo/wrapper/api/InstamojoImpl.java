@@ -26,86 +26,48 @@ import com.instamojo.wrapper.util.JsonUtils;
 import org.apache.http.util.Asserts;
 import org.apache.http.util.TextUtils;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  * The Class InstamojoImpl.
  */
 public class InstamojoImpl implements Instamojo {
 
-    /**
+    /*
      * The Constant LOGGER.
      */
     private static final Logger LOGGER = Logger.getLogger(InstamojoImpl.class.getName());
 
-    private volatile static Instamojo uniqueInstance;
-    /**
-     * The access token.
+    private volatile static Instamojo instance;
+
+    /*
+     * The access token related info
      */
-    private static AccessTokenResponse accessToken;
-    /**
-     * The token creation time.
+    private AccessTokenResponse accessToken;
+
+    /*
+     * The token creation time
      */
-    private static long tokenCreationTime;
-    /**
-     * The client id.
+    private long tokenCreationTime;
+
+    /*
+     * Instamojo client id
      */
     private String clientId;
-    /**
-     * The client secret.
+
+    /*
+     * The client secret
      */
     private String clientSecret;
-    /**
-     * The api endpoint.
-     */
-    private String apiEndpoint;
-    /**
-     * The auth endpoint.
-     */
-    private String authEndpoint;
 
     private InstamojoImpl() {
+        // Default private constructor
     }
 
-    /**
+    /*
      * Instantiates a new instamojo impl.
-     *
-     * @param clientId     the client id
-     * @param clientSecret the client secret
-     * @param apiEndpoint  the api endpoint
-     * @param authEndpoint the auth endpoint
      */
-    private InstamojoImpl(String clientId, String clientSecret, String apiEndpoint, String authEndpoint) {
+    private InstamojoImpl(String clientId, String clientSecret) {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
-        this.apiEndpoint = apiEndpoint;
-        this.authEndpoint = authEndpoint;
-    }
-
-    /**
-     * Gets the api.
-     *
-     * @param clientId     the client id
-     * @param clientSecret the client secret
-     * @param apiEndpoint  the api endpoint
-     * @param authEndpoint the auth endpoint
-     * @return the api
-     * @throws ConnectionException the connection exception
-     */
-    public static Instamojo getApi(String clientId, String clientSecret, String apiEndpoint, String authEndpoint)
-            throws ConnectionException {
-        Asserts.notEmpty(clientId, "Client Id");
-        Asserts.notEmpty(clientSecret, "Client Secret");
-        Asserts.notEmpty(apiEndpoint, "API Endpoint");
-        Asserts.notEmpty(authEndpoint, "AUTH Endpoint");
-
-        return getInstamojo(clientId, clientSecret, apiEndpoint, authEndpoint);
     }
 
     /**
@@ -116,55 +78,74 @@ public class InstamojoImpl implements Instamojo {
      * @return the api
      * @throws ConnectionException the connection exception
      */
-    public static Instamojo getApi(String clientId, String clientSecret) throws ConnectionException {
-        return getApi(clientId, clientSecret, Constants.INSTAMOJO_API_ENDPOINT, Constants.INSTAMOJO_AUTH_ENDPOINT);
+    public static Instamojo getApi(String clientId, String clientSecret) {
+        Asserts.notEmpty(clientId, "Client Id");
+        Asserts.notEmpty(clientSecret, "Client Secret");
+        return getInstamojo(clientId, clientSecret);
     }
 
-    private static Instamojo getInstamojo(String clientId, String clientSecret, String apiEndpoint, String authEndpoint)
-            throws ConnectionException {
-        if (uniqueInstance == null) {
+    private static Instamojo getInstamojo(String clientId, String clientSecret) {
+        if (instance == null) {
             synchronized (InstamojoImpl.class) {
-                if (uniqueInstance == null) {
-                    uniqueInstance = new InstamojoImpl(clientId, clientSecret, apiEndpoint, authEndpoint);
-                    accessToken = getAccessToken(clientId, clientSecret, authEndpoint);
-                }
-            }
-        } else {
-            if (isTokenExpired()) {
-                synchronized (InstamojoImpl.class) {
-                    if (isTokenExpired()) {
-                        accessToken = getAccessToken(clientId, clientSecret, authEndpoint);
-                    }
+                if (instance == null) {
+                    instance = new InstamojoImpl(clientId, clientSecret);
                 }
             }
         }
 
-        return uniqueInstance;
+        return instance;
     }
 
-    private static boolean isTokenExpired() {
+    private boolean isTokenExpired() {
         long durationInSeconds = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime() - tokenCreationTime);
         return durationInSeconds >= (accessToken.getExpiresIn() - 300);
     }
 
-    /**
-     * Gets the access token.
-     *
-     * @param clientId     the client id
-     * @param clientSecret the client secret
-     * @param authEndpoint the auth endpoint
-     * @return the access token @ the instamojo exception
-     */
-    private static AccessTokenResponse getAccessToken(String clientId, String clientSecret, String authEndpoint)
-            throws ConnectionException {
-        Map<String, String> params = new HashMap<>();
+    private void loadOrRefreshAccessToken() throws ConnectionException {
+        if (accessToken == null) {
+            fetchAccessToken();
 
+        } else if (isTokenExpired()) {
+            refreshAccessToken();
+        }
+    }
+
+    /*
+     * Fetch a new access token.
+     */
+    private synchronized void fetchAccessToken() throws ConnectionException {
+        if (accessToken != null) {
+            return;
+        }
+
+        Map<String, String> params = new HashMap<>();
         params.put(Constants.CLIENT_ID, clientId);
         params.put(Constants.CLIENT_SECRET, clientSecret);
         params.put(Constants.GRANT_TYPE, Constants.CLIENT_CREDENTIALS);
 
+        loadAccessToken(params);
+    }
+
+    /*
+     * Refresh an expired access token
+     */
+    private synchronized void refreshAccessToken() throws ConnectionException {
+        if (!isTokenExpired()) {
+            return;
+        }
+
+        Map<String, String> params = new HashMap<>();
+        params.put(Constants.CLIENT_ID, clientId);
+        params.put(Constants.CLIENT_SECRET, clientSecret);
+        params.put(Constants.GRANT_TYPE, Constants.GRAND_REFRESH_TOKEN);
+        params.put(Constants.REFRESH_TOKEN, accessToken.getRefreshToken());
+
+        loadAccessToken(params);
+    }
+
+    private void loadAccessToken(Map<String, String> params) throws ConnectionException {
         try {
-            String response = HttpUtils.sendPostRequest(authEndpoint, null, params);
+            String response = HttpUtils.sendPostRequest(Constants.INSTAMOJO_AUTH_ENDPOINT, null, params);
 
             AccessTokenResponse accessTokenResponse = JsonUtils.convertJsonStringToObject(response,
                     AccessTokenResponse.class);
@@ -174,9 +155,10 @@ public class InstamojoImpl implements Instamojo {
                         "Could not get the access token due to " + accessTokenResponse.getError());
             }
 
-            tokenCreationTime = System.nanoTime();
-            accessTokenResponse.setJsonResponse(response);
-            return accessTokenResponse;
+            this.accessToken = accessTokenResponse;
+            this.accessToken.setJsonResponse(response);
+            this.tokenCreationTime = System.nanoTime();
+
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
             throw new ConnectionException(e.toString(), e);
@@ -226,7 +208,7 @@ public class InstamojoImpl implements Instamojo {
                     paymentOrder.setTransactionIdInvalid(true);
                 }
 
-                if (map != null && map.get(Constants.WEBHOOK_URL) != null){
+                if (map != null && map.get(Constants.WEBHOOK_URL) != null) {
                     paymentOrder.setWebhookInvalid(true);
                 }
 
@@ -349,8 +331,8 @@ public class InstamojoImpl implements Instamojo {
     }
 
     /* (non-Javadoc)
-    * @see com.instamojo.wrapper.api.Instamojo#createNewRefund(com.instamojo.wrapper.model.Refund)
-    */
+     * @see com.instamojo.wrapper.api.Instamojo#createNewRefund(com.instamojo.wrapper.model.Refund)
+     */
     @Override
     public CreateRefundResponse createNewRefund(Refund refund) throws ConnectionException, InvalidRefundException {
         Asserts.notNull(refund, "Refund");
@@ -395,31 +377,26 @@ public class InstamojoImpl implements Instamojo {
      * Clears the current cached Instance
      */
     public static void ClearInstance() {
-        if (uniqueInstance != null){
-            synchronized (InstamojoImpl.class){
-                uniqueInstance=null;
-                accessToken=null;
+        if (instance != null) {
+            synchronized (InstamojoImpl.class) {
+                instance = null;
             }
         }
     }
 
-    /**
+    /*
      * Gets the authorization.
-     *
-     * @return the authorization
      */
-    private String getAuthorization() {
+    private String getAuthorization() throws ConnectionException {
+        loadOrRefreshAccessToken();
         return accessToken.getTokenType() + " " + accessToken.getToken();
     }
 
-    /**
+    /*
      * Gets the api path.
-     *
-     * @param path the path
-     * @return the api path
      */
     private String getApiPath(String path) {
-        String apiPath = this.apiEndpoint + path;
+        String apiPath = Constants.INSTAMOJO_API_ENDPOINT + path;
 
         if (!apiPath.endsWith("/")) {
             apiPath += Character.toString('/');

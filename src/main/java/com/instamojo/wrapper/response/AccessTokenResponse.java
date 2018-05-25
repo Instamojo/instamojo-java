@@ -22,6 +22,10 @@ public class AccessTokenResponse extends Response {
     @SerializedName("expires_in")
     private Long expiresIn;
 
+    /** To refresh the token if it expires */
+    @SerializedName("refresh_token")
+    private String refreshToken;
+
     /** The scope. */
     private String scope;
 
@@ -62,6 +66,14 @@ public class AccessTokenResponse extends Response {
      */
     public void setTokenType(String tokenType) {
         this.tokenType = tokenType;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 
     /**

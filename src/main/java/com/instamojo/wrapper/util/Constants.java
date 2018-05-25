@@ -38,9 +38,19 @@ public class Constants {
 	public static final String GRANT_TYPE = "grant_type";
 
 	/**
+	 * The constant GRANT_TYPE.
+	 */
+	public static final String REFRESH_TOKEN = "refresh_token";
+
+	/**
 	 * The constant CLIENT_CREDENTIALS.
 	 */
 	public static final String CLIENT_CREDENTIALS = "client_credentials";
+
+	/**
+	 * The constant REFRESH_TOKEN.
+	 */
+	public static final String GRAND_REFRESH_TOKEN = "refresh_token";
 
 	/**
 	 * The constant AUTHORIZATION.
