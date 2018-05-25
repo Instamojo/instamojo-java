@@ -18,7 +18,7 @@ import org.junit.Test;
 
 import java.util.UUID;
 
-import static com.instamojo.wrapper.api.InstamojoImpl.*;
+import static com.instamojo.wrapper.api.ApiContext.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class InstamojoIntegrationTest {
@@ -27,9 +27,9 @@ public class InstamojoIntegrationTest {
 
     @Before
     public void setUp() throws Exception {
-        ClearInstance();
-        api = getApi(TestConstants.TEST_CLIENT_ID, TestConstants.TEST_CLIENT_SECRET, Mode.TEST);
-//        api = InstamojoImpl.getApi(TestConstants.TEST_CLIENT_ID, TestConstants.TEST_CLIENT_SECRET);
+        ApiContext.ClearInstance();
+        ApiContext context = ApiContext.create(TestConstants.TEST_CLIENT_ID, TestConstants.TEST_CLIENT_SECRET, Mode.TEST);
+        api = new InstamojoImpl(context);
     }
 
     @Test

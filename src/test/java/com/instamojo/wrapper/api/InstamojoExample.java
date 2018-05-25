@@ -39,7 +39,8 @@ public class InstamojoExample {
 		Instamojo api = null;
 
 		// gets the reference to the instamojo api
-		api = InstamojoImpl.getApi("[CLIENT_ID]", "[CLIENT_SECRET]", InstamojoImpl.Mode.TEST);
+		ApiContext context = ApiContext.create("[CLIENT_ID]", "[CLIENT_SECRET]", ApiContext.Mode.TEST);
+		api = new InstamojoImpl(context);
 
 		boolean isOrderValid = order.validate();
 
