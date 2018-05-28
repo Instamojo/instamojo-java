@@ -16,9 +16,11 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
-import static com.instamojo.wrapper.api.ApiContext.*;
+import static com.instamojo.wrapper.api.ApiContext.Mode;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class InstamojoIntegrationTest {
@@ -177,4 +179,13 @@ public class InstamojoIntegrationTest {
         assertThat(createRefundResponse.getRefund()).isNull();
     }
 
+    @Test
+    public void createWebhookSignature() {
+        Map<String, String> map = new HashMap<>();
+        map.put("foo", "1");
+        map.put("bar", "2");
+        map.put("baz", "3");
+        String signature = api.createWebhookSignature(map, TestConstants.TEST_CLIENT_SALT);
+        assertThat(signature).isEqualTo("a0d60f15eb94cd332bc93edc379bb248b298182a");
+    }
 }

@@ -15,4 +15,6 @@ public class TestConstants {
      * The constant TEST_CLIENT_SECRET.
      */
     public static final String TEST_CLIENT_SECRET = "IDejdccGqKaFlGav9bntKULvMZ0g7twVFolC9gdrh9peMS0megSFr7iDpWwWIDgFUc3W5SlX99fKnhxsoy6ipdAv9JeQwebmOU6VRvOEQnNMWwZnWglYmDGrfgKRheXs";
+
+    public static final String TEST_CLIENT_SALT = "c3a30e80997944b69bf0ac75a1017a4e";
 }

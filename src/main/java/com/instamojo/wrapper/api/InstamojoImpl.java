@@ -13,11 +13,15 @@ import com.instamojo.wrapper.response.PaymentOrderListResponse;
 import com.instamojo.wrapper.util.Constants;
 import com.instamojo.wrapper.util.HttpUtils;
 import com.instamojo.wrapper.util.JsonUtils;
+import org.apache.commons.codec.digest.HmacAlgorithms;
+import org.apache.commons.codec.digest.HmacUtils;
 import org.apache.http.util.Asserts;
 import org.apache.http.util.TextUtils;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -205,5 +209,22 @@ public class InstamojoImpl implements Instamojo {
             LOGGER.log(Level.SEVERE, e.toString(), e);
             throw new ConnectionException(e.toString(), e);
         }
+    }
+
+    @Override
+    public String createWebhookSignature(Map<String, String> data, String salt) {
+
+        ArrayList<String> keys = new ArrayList<>(data.keySet());
+        Collections.sort(keys);
+
+        StringBuilder sb = new StringBuilder();
+        for (int index = 0; index < keys.size(); index++) {
+            sb.append(data.get(keys.get(index)));
+            if (index != keys.size() - 1) {
+                sb.append('|');
+            }
+        }
+
+        return new HmacUtils(HmacAlgorithms.HMAC_SHA_1, salt).hmacHex(sb.toString());
     }
 }

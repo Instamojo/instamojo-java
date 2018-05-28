@@ -11,6 +11,8 @@ import com.instamojo.wrapper.response.CreateRefundResponse;
 import com.instamojo.wrapper.response.PaymentOrderDetailsResponse;
 import com.instamojo.wrapper.response.PaymentOrderListResponse;
 
+import java.util.Map;
+
 /**
  * The Interface Instamojo.
  */
@@ -64,4 +66,6 @@ public interface Instamojo {
 	 * @throws InvalidRefundException the invalid refund exception
 	 */
 	CreateRefundResponse createRefund(Refund refund) throws ConnectionException, InvalidRefundException;
+
+	String createWebhookSignature(Map<String, String> data, String salt);
 }
