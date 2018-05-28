@@ -46,7 +46,7 @@ public class InstamojoExample {
 
 		if (isOrderValid) {
 			try {
-				CreatePaymentOrderResponse createPaymentOrderResponse = api.createNewPaymentOrder(order);
+				CreatePaymentOrderResponse createPaymentOrderResponse = api.createPaymentOrder(order);
 				// print the status of the payment order.
 				System.out.println(createPaymentOrderResponse.getPaymentOrder().getStatus());
 			} catch (InvalidPaymentOrderException e) {
@@ -163,7 +163,7 @@ public class InstamojoExample {
 
 		if (isRefundValid) {
 			try {
-				CreateRefundResponse createRefundResponse = api.createNewRefund(refund);
+				CreateRefundResponse createRefundResponse = api.createRefund(refund);
 				// print the status of the refund.
 				System.out.println(createRefundResponse.getRefund().getStatus());
 			} catch (InvalidRefundException e) {

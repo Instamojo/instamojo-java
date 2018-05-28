@@ -25,7 +25,7 @@ public interface Instamojo {
      * @throws ConnectionException          the connection exception
      * @throws InvalidPaymentOrderException the invalid payment order exception
      */
-    CreatePaymentOrderResponse createNewPaymentOrder(PaymentOrder paymentOrder) throws ConnectionException, InvalidPaymentOrderException;
+    CreatePaymentOrderResponse createPaymentOrder(PaymentOrder paymentOrder) throws ConnectionException, InvalidPaymentOrderException;
 
     /**
      * Get the details of the specified order (identified by id).
@@ -63,5 +63,5 @@ public interface Instamojo {
 	 * @throws ConnectionException the connection exception
 	 * @throws InvalidRefundException the invalid refund exception
 	 */
-	CreateRefundResponse createNewRefund(Refund refund) throws ConnectionException, InvalidRefundException;
+	CreateRefundResponse createRefund(Refund refund) throws ConnectionException, InvalidRefundException;
 }

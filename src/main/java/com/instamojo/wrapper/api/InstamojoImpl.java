@@ -34,7 +34,7 @@ public class InstamojoImpl implements Instamojo {
     }
 
     @Override
-    public CreatePaymentOrderResponse createNewPaymentOrder(PaymentOrder paymentOrder) throws ConnectionException, InvalidPaymentOrderException {
+    public CreatePaymentOrderResponse createPaymentOrder(PaymentOrder paymentOrder) throws ConnectionException, InvalidPaymentOrderException {
         Asserts.notNull(paymentOrder, "Payment Order");
 
         boolean isValid = paymentOrder.validate();
@@ -168,7 +168,7 @@ public class InstamojoImpl implements Instamojo {
     }
 
     @Override
-    public CreateRefundResponse createNewRefund(Refund refund) throws ConnectionException, InvalidRefundException {
+    public CreateRefundResponse createRefund(Refund refund) throws ConnectionException, InvalidRefundException {
         Asserts.notNull(refund, "Refund");
 
         boolean isValid = refund.validate();
