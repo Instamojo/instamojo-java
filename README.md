@@ -95,9 +95,9 @@ boolean isOrderValid = order.validate();
 
 if (isOrderValid) {
 	try {
-		CreatePaymentOrderResponse createPaymentOrderResponse = api.createNewPaymentOrder(order);
+		CreatePaymentOrderResponse paymentOrderResponse = api.createNewPaymentOrder(order);
 	    // print the status of the payment order.
-		System.out.println(createPaymentOrderResponse.getPaymentOrder().getStatus());
+		System.out.println(paymentOrderResponse.getPaymentOrder().getStatus());
 	} catch (InvalidPaymentOrderException e) {
 	    LOGGER.log(Level.SEVERE, e.toString(), e);
 

@@ -1,16 +1,13 @@
-package com.instamojo.wrapper.response;
+package com.instamojo.wrapper.model;
 
 import com.google.gson.annotations.SerializedName;
 import com.instamojo.wrapper.model.PaymentOptions;
 import com.instamojo.wrapper.model.PaymentOrder;
 
 /**
- * The Class CreatePaymentOrderResponse.
+ * The Class PaymentOrderResponse.
  */
-public class CreatePaymentOrderResponse extends Response {
-
-	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = -2402922891686730624L;
+public class PaymentOrderResponse {
 
     /** The payment order. */
     @SerializedName("order")
@@ -56,16 +53,11 @@ public class CreatePaymentOrderResponse extends Response {
 		this.paymentOptions = paymentOptions;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.instamojo.wrapper.response.Response#toString()
-	 */
 	@Override
 	public String toString() {
-		return "CreatePaymentOrderResponse{" + "paymentOrder=" + paymentOrder +
+		return "PaymentOrderResponse{" +
+				"paymentOrder=" + paymentOrder +
 				", paymentOptions=" + paymentOptions +
-				", success=" + success +
-				", message='" + message + '\'' +
-				", jsonResponse='" + jsonResponse + '\'' +
 				'}';
 	}
 }

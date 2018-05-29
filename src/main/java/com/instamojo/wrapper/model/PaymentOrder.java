@@ -1,23 +1,13 @@
 package com.instamojo.wrapper.model;
 
-import java.io.Serializable;
-
 import com.google.gson.annotations.SerializedName;
-import org.apache.http.util.TextUtils;
 
-public class PaymentOrder implements Serializable {
+import java.util.List;
+
+public class PaymentOrder {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 4912793214890694717L;
-
-	private static final String TRANSACTION_ID_MATCHER = "[A-Za-z0-9_-]+";
-	private static final String EMAIL_MATCHER = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
-	private static final String URL_MATCHER = "^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
-	private static final double MIN_AMOUNT = 9.00;
-	private static final int MAX_TID_CHAR_LIMIT = 64;
-	private static final int MAX_EMAIL_CHAR_LIMIT = 75;
-	private static final int MAX_NAME_CHAR_LIMIT = 100;
-	private static final int MAX_DESCRIPTION_CHAR_LIMIT = 255;
 
 	/** The id. */
 	private String id;
@@ -64,17 +54,7 @@ public class PaymentOrder implements Serializable {
 	private String resourceUri;
 
 	/** The payments. */
-	private Object payments;
-
-    private boolean nameInvalid;
-    private boolean emailInvalid;
-    private boolean phoneInvalid;
-    private boolean transactionIdInvalid;
-    private boolean descriptionInvalid;
-    private boolean currencyInvalid;
-    private boolean amountInvalid;
-    private boolean redirectUrlInvalid;
-    private boolean webhookInvalid;
+	private List<Payment> payments;
 
     /**
      * Gets the id.
@@ -317,7 +297,7 @@ public class PaymentOrder implements Serializable {
      *
      * @return the payments
      */
-    public Object getPayments() {
+    public List<Payment> getPayments() {
 		return payments;
 	}
 
@@ -326,247 +306,27 @@ public class PaymentOrder implements Serializable {
      *
      * @param payments the new payments
      */
-    public void setPayments(Object payments) {
+    public void setPayments(List<Payment> payments) {
 		this.payments = payments;
 	}
 
-    /**
-     * Is name invalid boolean.
-     *
-     * @return the boolean
-     */
-    public boolean isNameInvalid() {
-		return nameInvalid;
+	@Override
+	public String toString() {
+		return "PaymentOrder{" +
+				"id='" + id + '\'' +
+				", transactionId='" + transactionId + '\'' +
+				", status='" + status + '\'' +
+				", currency='" + currency + '\'' +
+				", amount=" + amount +
+				", name='" + name + '\'' +
+				", email='" + email + '\'' +
+				", phone='" + phone + '\'' +
+				", description='" + description + '\'' +
+				", webhookUrl='" + webhookUrl + '\'' +
+				", redirectUrl='" + redirectUrl + '\'' +
+				", createdAt='" + createdAt + '\'' +
+				", resourceUri='" + resourceUri + '\'' +
+				", payments=" + payments +
+				'}';
 	}
-
-    /**
-     * Sets name invalid.
-     *
-     * @param nameInvalid the name invalid
-     */
-    public void setNameInvalid(boolean nameInvalid) {
-		this.nameInvalid = nameInvalid;
-	}
-
-    /**
-     * Is email invalid boolean.
-     *
-     * @return the boolean
-     */
-    public boolean isEmailInvalid() {
-		return emailInvalid;
-	}
-
-    /**
-     * Sets email invalid.
-     *
-     * @param emailInvalid the email invalid
-     */
-    public void setEmailInvalid(boolean emailInvalid) {
-		this.emailInvalid = emailInvalid;
-	}
-
-    /**
-     * Is phone invalid boolean.
-     *
-     * @return the boolean
-     */
-    public boolean isPhoneInvalid() {
-		return phoneInvalid;
-	}
-
-    /**
-     * Sets phone invalid.
-     *
-     * @param phoneInvalid the phone invalid
-     */
-    public void setPhoneInvalid(boolean phoneInvalid) {
-		this.phoneInvalid = phoneInvalid;
-	}
-
-    /**
-     * Is transaction id invalid boolean.
-     *
-     * @return the boolean
-     */
-    public boolean isTransactionIdInvalid() {
-		return transactionIdInvalid;
-	}
-
-    /**
-     * Sets transaction id invalid.
-     *
-     * @param transactionIdInvalid the transaction id invalid
-     */
-    public void setTransactionIdInvalid(boolean transactionIdInvalid) {
-		this.transactionIdInvalid = transactionIdInvalid;
-	}
-
-    /**
-     * Is description invalid boolean.
-     *
-     * @return the boolean
-     */
-    public boolean isDescriptionInvalid() {
-		return descriptionInvalid;
-	}
-
-    /**
-     * Sets description invalid.
-     *
-     * @param descriptionInvalid the description invalid
-     */
-    public void setDescriptionInvalid(boolean descriptionInvalid) {
-		this.descriptionInvalid = descriptionInvalid;
-	}
-
-    /**
-     * Is currency invalid boolean.
-     *
-     * @return the boolean
-     */
-    public boolean isCurrencyInvalid() {
-		return currencyInvalid;
-	}
-
-    /**
-     * Sets currency invalid.
-     *
-     * @param currencyInvalid the currency invalid
-     */
-    public void setCurrencyInvalid(boolean currencyInvalid) {
-		this.currencyInvalid = currencyInvalid;
-	}
-
-    /**
-     * Is amount invalid boolean.
-     *
-     * @return the boolean
-     */
-    public boolean isAmountInvalid() {
-		return amountInvalid;
-	}
-
-    /**
-     * Sets amount invalid.
-     *
-     * @param amountInvalid the amount invalid
-     */
-    public void setAmountInvalid(boolean amountInvalid) {
-		this.amountInvalid = amountInvalid;
-	}
-
-    /**
-     * Check if the given webhook is invalid
-     * @return webhookInvalid
-     */
-	public boolean isWebhookInvalid(){
-        return this.webhookInvalid;
-    }
-
-    /**
-     * Sets webhookInvalid
-     * @param webhookInvalid webhookInvalid
-     */
-    public void setWebhookInvalid(boolean webhookInvalid){
-        this.webhookInvalid = webhookInvalid;
-    }
-
-    /**
-     * Is redirect url invalid boolean.
-     *
-     * @return the boolean
-     */
-    public boolean isRedirectUrlInvalid() {
-		return redirectUrlInvalid;
-	}
-
-    /**
-     * Sets redirect url invalid.
-     *
-     * @param redirectUrlInvalid the redirect url invalid
-     */
-    public void setRedirectUrlInvalid(boolean redirectUrlInvalid) {
-		this.redirectUrlInvalid = redirectUrlInvalid;
-	}
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Object#toString()
-     */
-    @Override
-    public String toString() {
-        return "PaymentOrder{" + "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", phone='" + phone + '\'' +
-                ", currency='" + currency + '\'' +
-                ", amount=" + amount +
-                ", description='" + description + '\'' +
-                ", transactionId='" + transactionId + '\'' +
-                ", webhook_url='" + webhookUrl +'\'' +
-                ", redirectUrl='" + redirectUrl + '\'' +
-                ", status='" + status + '\'' +
-                ", createdAt='" + createdAt + '\'' +
-                ", resourceUri='" + resourceUri + '\'' +
-                ", payments='" + payments + '\'' +
-                '}';
-    }
-
-    /**
-     * Validate.
-     *
-     * @return the boolean
-     */
-    public boolean validate() {
-		boolean valid = true;
-
-		if (TextUtils.isEmpty(transactionId) || !transactionId.matches(TRANSACTION_ID_MATCHER) || transactionId.length() > MAX_TID_CHAR_LIMIT) {
-			valid = false;
-			this.setTransactionIdInvalid(true);
-		}
-
-		if (TextUtils.isEmpty(email) || !email.matches(EMAIL_MATCHER) || email.length() > MAX_EMAIL_CHAR_LIMIT) {
-            valid = false;
-            this.setEmailInvalid(true);
-        }
-
-		if (TextUtils.isEmpty(name) || name.length() > MAX_NAME_CHAR_LIMIT) {
-            valid = false;
-            this.setNameInvalid(true);
-		}
-
-		if (TextUtils.isEmpty(currency)) {
-            valid = false;
-            this.setCurrencyInvalid(true);
-		}
-
-		if (TextUtils.isEmpty(phone)) {
-            valid = false;
-            this.setPhoneInvalid(true);
-		}
-
-		if (amount == null || amount < MIN_AMOUNT) {
-            valid = false;
-            this.setAmountInvalid(true);
-		}
-
-        if (!TextUtils.isEmpty(description) && description.length() > MAX_DESCRIPTION_CHAR_LIMIT) {
-            valid = false;
-            this.setDescriptionInvalid(true);
-        }
-
-		if (TextUtils.isEmpty(redirectUrl) || !redirectUrl.matches(URL_MATCHER)) {
-            valid = false;
-            this.setRedirectUrlInvalid(true);
-		}
-
-		if (!TextUtils.isEmpty(webhookUrl) && !webhookUrl.matches(URL_MATCHER)) {
-            valid = false;
-            this.setWebhookInvalid(true);
-        }
-
-	    return valid;
-    }
 }

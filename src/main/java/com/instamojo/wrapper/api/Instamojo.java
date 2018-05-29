@@ -1,16 +1,13 @@
 package com.instamojo.wrapper.api;
 
-import com.instamojo.wrapper.exception.ConnectionException;
-import com.instamojo.wrapper.exception.InvalidPaymentOrderException;
-import com.instamojo.wrapper.exception.InvalidRefundException;
+import com.instamojo.wrapper.exception.*;
+import com.instamojo.wrapper.model.Invoice;
 import com.instamojo.wrapper.model.PaymentOrder;
 import com.instamojo.wrapper.model.PaymentOrderFilter;
 import com.instamojo.wrapper.model.Refund;
-import com.instamojo.wrapper.response.CreatePaymentOrderResponse;
-import com.instamojo.wrapper.response.CreateRefundResponse;
-import com.instamojo.wrapper.response.PaymentOrderDetailsResponse;
-import com.instamojo.wrapper.response.PaymentOrderListResponse;
+import com.instamojo.wrapper.model.PaymentOrderResponse;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -25,9 +22,8 @@ public interface Instamojo {
      * @param paymentOrder the payment order
      * @return the creates the payment order response
      * @throws ConnectionException          the connection exception
-     * @throws InvalidPaymentOrderException the invalid payment order exception
      */
-    CreatePaymentOrderResponse createPaymentOrder(PaymentOrder paymentOrder) throws ConnectionException, InvalidPaymentOrderException;
+    PaymentOrderResponse createPaymentOrder(PaymentOrder paymentOrder) throws InstamojoBaseException, InstamojoClientException;
 
     /**
      * Get the details of the specified order (identified by id).
@@ -36,7 +32,7 @@ public interface Instamojo {
      * @return the payment order details
      * @throws ConnectionException the connection exception
      */
-    PaymentOrderDetailsResponse getPaymentOrderDetails(String id) throws ConnectionException;
+	PaymentOrder getPaymentOrderDetails(String id) throws ConnectionException;
 
     /**
      * Get the details of the specified order (identified by transaction id).
@@ -45,7 +41,7 @@ public interface Instamojo {
      * @return the payment order details by transaction id
      * @throws ConnectionException the connection exception
      */
-    PaymentOrderDetailsResponse getPaymentOrderDetailsByTransactionId(String transactionId) throws ConnectionException;
+	PaymentOrder getPaymentOrderDetailsByTransactionId(String transactionId) throws ConnectionException;
 
     /**
      * Gets the payment order list.
@@ -55,7 +51,7 @@ public interface Instamojo {
      * @return the payment order list
      * @throws ConnectionException the connection exception
      */
-    PaymentOrderListResponse getPaymentOrderList(PaymentOrderFilter paymentOrderFilter) throws ConnectionException;
+	List<PaymentOrder> getPaymentOrderList(PaymentOrderFilter paymentOrderFilter) throws ConnectionException;
 
 	/**
 	 * Creates the new refund.
@@ -63,9 +59,10 @@ public interface Instamojo {
 	 * @param refund the refund
 	 * @return the creates the refund response
 	 * @throws ConnectionException the connection exception
-	 * @throws InvalidRefundException the invalid refund exception
 	 */
-	CreateRefundResponse createRefund(Refund refund) throws ConnectionException, InvalidRefundException;
+	Refund createRefund(Refund refund) throws InstamojoBaseException, InstamojoClientException;
 
 	String createWebhookSignature(Map<String, String> data, String salt);
+
+	List<Invoice> getInvoices() throws ConnectionException;
 }

@@ -1,11 +1,11 @@
 package com.instamojo.wrapper.api;
 
+import com.google.gson.Gson;
 import com.instamojo.wrapper.exception.ConnectionException;
 import com.instamojo.wrapper.exception.InvalidClientException;
-import com.instamojo.wrapper.response.AccessTokenResponse;
+import com.instamojo.wrapper.model.AccessToken;
 import com.instamojo.wrapper.util.Constants;
 import com.instamojo.wrapper.util.HttpUtils;
-import com.instamojo.wrapper.util.JsonUtils;
 import org.apache.http.util.TextUtils;
 
 import java.io.IOException;
@@ -34,7 +34,7 @@ public class ApiContext {
     /*
      * The access token related info
      */
-    private AccessTokenResponse accessToken;
+    private AccessToken accessToken;
 
     /*
      * The token creation time
@@ -134,10 +134,10 @@ public class ApiContext {
 
     private void loadAccessToken(Map<String, String> params) throws ConnectionException {
         try {
-            String response = HttpUtils.sendPostRequest(getAuthEndpoint(), null, params);
+            String response = HttpUtils.post(getAuthEndpoint(), null, params);
 
-            AccessTokenResponse accessTokenResponse = JsonUtils.convertJsonStringToObject(response,
-                    AccessTokenResponse.class);
+            AccessToken accessTokenResponse = new Gson().fromJson(response,
+                    AccessToken.class);
 
             if (TextUtils.isEmpty(accessTokenResponse.getToken())) {
                 throw new InvalidClientException(
@@ -145,7 +145,6 @@ public class ApiContext {
             }
 
             this.accessToken = accessTokenResponse;
-            this.accessToken.setJsonResponse(response);
             this.tokenCreationTime = System.nanoTime();
 
         } catch (IOException e) {

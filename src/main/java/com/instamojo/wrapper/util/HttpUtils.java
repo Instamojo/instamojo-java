@@ -1,17 +1,7 @@
 package com.instamojo.wrapper.util;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.net.URISyntaxException;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+import com.instamojo.wrapper.exception.InstamojoBaseException;
+import com.instamojo.wrapper.exception.InstamojoClientException;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -20,8 +10,19 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * The type Http utils.
@@ -46,7 +47,7 @@ public class HttpUtils {
      * @throws URISyntaxException the uri syntax exception
      * @throws IOException        the io exception
      */
-    public static String sendGetRequest(String url, Map<String, String> headers, Map<String, String> params) throws URISyntaxException, IOException {
+    public static String get(String url, Map<String, String> headers, Map<String, String> params) throws URISyntaxException, IOException {
         LOGGER.log(Level.INFO, "Sending GET request to the url {0}", url);
 
         URIBuilder uriBuilder = new URIBuilder(url);
@@ -64,8 +65,7 @@ public class HttpUtils {
         HttpClient httpClient = HttpClientBuilder.create().build();
 
         HttpResponse httpResponse = httpClient.execute(httpGet);
-
-        return getHttpResponseAsString(httpResponse);
+        return EntityUtils.toString(httpResponse.getEntity(), StandardCharsets.UTF_8);
     }
 
     /**
@@ -77,7 +77,7 @@ public class HttpUtils {
      * @return the string
      * @throws IOException the io exception
      */
-    public static String sendPostRequest(String url, Map<String, String> headers, Map<String, String> params) throws IOException {
+    public static String post(String url, Map<String, String> headers, Map<String, String> params) throws IOException {
         LOGGER.log(Level.INFO, "Sending POST request to the url {0}", url);
 
         HttpPost httpPost = new HttpPost(url);
@@ -95,8 +95,34 @@ public class HttpUtils {
         HttpClient httpClient = HttpClientBuilder.create().build();
 
         HttpResponse httpResponse = httpClient.execute(httpPost);
+        return EntityUtils.toString(httpResponse.getEntity(), StandardCharsets.UTF_8);
+    }
 
-        return getHttpResponseAsString(httpResponse);
+    public static String post(String url, Map<String, String> headers, String jsonPayload) throws IOException, InstamojoClientException {
+        LOGGER.log(Level.INFO, "Sending POST request to the url {0}", url);
+        HttpPost httpPost = new HttpPost(url);
+
+        addHeadersToHttpRequest(httpPost, headers);
+        httpPost.addHeader("Accept", "application/json");
+        httpPost.addHeader("Content-Type", "application/json");
+
+        httpPost.setEntity(new StringEntity(jsonPayload));
+        HttpClient httpClient = HttpClientBuilder.create().build();
+        HttpResponse httpResponse = httpClient.execute(httpPost);
+
+        if (isErrorStatus(httpResponse.getStatusLine().getStatusCode())) {
+            throw new InstamojoClientException();
+        }
+
+        return EntityUtils.toString(httpResponse.getEntity(), StandardCharsets.UTF_8);
+    }
+
+    private static boolean isErrorStatus(int statusCode) {
+        if (statusCode >= 400 && statusCode <= 500) {
+            return true;
+        }
+
+        return false;
     }
 
     private static void addHeadersToHttpRequest(HttpRequestBase httpRequestBase, Map<String, String> headers) {
@@ -105,22 +131,5 @@ public class HttpUtils {
                 httpRequestBase.addHeader(header.getKey(), header.getValue());
             }
         }
-    }
-
-    private static String getHttpResponseAsString(HttpResponse httpResponse) {
-        StringBuilder stringResponse = new StringBuilder();
-        try {
-            Reader reader = new InputStreamReader(httpResponse.getEntity().getContent(),
-                    Charset.forName("UTF-8"));
-            BufferedReader br = new BufferedReader(reader);
-            String output;
-            while ((output = br.readLine()) != null) {
-                stringResponse.append(output);
-            }
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
-        }
-
-        return stringResponse.toString();
     }
 }
