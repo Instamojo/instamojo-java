@@ -92,4 +92,6 @@ public class Constants {
 	public static final String REFUND_API_PATH = "payments/";
 
 	public static final String INVOICE_API_PATH = "invoices/";
+
+	public static final String PAYOUT_API_PATH = "payouts/";
 }

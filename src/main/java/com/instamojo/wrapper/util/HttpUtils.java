@@ -1,6 +1,5 @@
 package com.instamojo.wrapper.util;
 
-import com.instamojo.wrapper.exception.InstamojoBaseException;
 import com.instamojo.wrapper.exception.InstamojoClientException;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -37,6 +36,10 @@ public class HttpUtils {
     private HttpUtils() {
     }
 
+    public static String get(String url, Map<String, String> headers) throws URISyntaxException, IOException, InstamojoClientException {
+        return get(url, headers, null);
+    }
+
     /**
      * Send get request.
      *
@@ -47,7 +50,7 @@ public class HttpUtils {
      * @throws URISyntaxException the uri syntax exception
      * @throws IOException        the io exception
      */
-    public static String get(String url, Map<String, String> headers, Map<String, String> params) throws URISyntaxException, IOException {
+    public static String get(String url, Map<String, String> headers, Map<String, String> params) throws URISyntaxException, IOException, InstamojoClientException {
         LOGGER.log(Level.INFO, "Sending GET request to the url {0}", url);
 
         URIBuilder uriBuilder = new URIBuilder(url);
@@ -65,6 +68,10 @@ public class HttpUtils {
         HttpClient httpClient = HttpClientBuilder.create().build();
 
         HttpResponse httpResponse = httpClient.execute(httpGet);
+        if (isErrorStatus(httpResponse.getStatusLine().getStatusCode())) {
+            throw new InstamojoClientException();
+        }
+
         return EntityUtils.toString(httpResponse.getEntity(), StandardCharsets.UTF_8);
     }
 
@@ -77,7 +84,7 @@ public class HttpUtils {
      * @return the string
      * @throws IOException the io exception
      */
-    public static String post(String url, Map<String, String> headers, Map<String, String> params) throws IOException {
+    public static String post(String url, Map<String, String> headers, Map<String, String> params) throws IOException, InstamojoClientException {
         LOGGER.log(Level.INFO, "Sending POST request to the url {0}", url);
 
         HttpPost httpPost = new HttpPost(url);
@@ -95,6 +102,9 @@ public class HttpUtils {
         HttpClient httpClient = HttpClientBuilder.create().build();
 
         HttpResponse httpResponse = httpClient.execute(httpPost);
+        if (isErrorStatus(httpResponse.getStatusLine().getStatusCode())) {
+            throw new InstamojoClientException();
+        }
         return EntityUtils.toString(httpResponse.getEntity(), StandardCharsets.UTF_8);
     }
 

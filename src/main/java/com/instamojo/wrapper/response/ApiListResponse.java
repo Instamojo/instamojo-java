@@ -8,7 +8,7 @@ public class ApiListResponse<T> {
 
     // HACK This is to accommodate the results field having different serialized names
     // Should have been a generic name like 'results'
-    @SerializedName(value = "invoices", alternate = "orders")
+    @SerializedName(value = "invoices", alternate = {"orders", "payouts"})
     private List<T> results;
 
     private Boolean success;

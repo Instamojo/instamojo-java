@@ -53,7 +53,7 @@ public class InstamojoImpl implements Instamojo {
     }
 
     @Override
-    public PaymentOrder getPaymentOrderDetails(String id) throws ConnectionException {
+    public PaymentOrder getPaymentOrderDetails(String id) throws ConnectionException, InstamojoClientException {
         Asserts.notEmpty(id, "Order Id");
 
         Map<String, String> headers = new HashMap<>();
@@ -73,7 +73,7 @@ public class InstamojoImpl implements Instamojo {
     }
 
     @Override
-    public PaymentOrder getPaymentOrderDetailsByTransactionId(String transactionId) throws ConnectionException {
+    public PaymentOrder getPaymentOrderDetailsByTransactionId(String transactionId) throws ConnectionException, InstamojoClientException {
         Asserts.notEmpty(transactionId, "Transaction Id");
 
         Map<String, String> headers = new HashMap<>();
@@ -93,7 +93,7 @@ public class InstamojoImpl implements Instamojo {
     }
 
     @Override
-    public List<PaymentOrder> getPaymentOrderList(PaymentOrderFilter paymentOrderFilter) throws ConnectionException {
+    public List<PaymentOrder> getPaymentOrderList(PaymentOrderFilter paymentOrderFilter) throws ConnectionException, InstamojoClientException {
         Asserts.notNull(paymentOrderFilter, "Payment Order Filter");
 
         Map<String, String> headers = new HashMap<>();
@@ -173,7 +173,7 @@ public class InstamojoImpl implements Instamojo {
     }
 
     @Override
-    public List<Invoice> getInvoices() throws ConnectionException {
+    public List<Invoice> getInvoices() throws ConnectionException, InstamojoClientException {
         Map<String, String> headers = new HashMap<>();
         headers.put(Constants.AUTHORIZATION, context.getAuthorization());
         Map<String, String> params = new HashMap<>();
@@ -184,6 +184,45 @@ public class InstamojoImpl implements Instamojo {
             Type type = new TypeToken<ApiListResponse<Invoice>>(){}.getType();
             ApiListResponse<Invoice> invoices = gson.fromJson(response, type);
             return invoices.getResults();
+
+        } catch (IOException | URISyntaxException e) {
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+            throw new ConnectionException(e.toString(), e);
+        }
+    }
+
+    @Override
+    public List<Payout> getPayouts() throws ConnectionException, InstamojoClientException {
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Constants.AUTHORIZATION, context.getAuthorization());
+        Map<String, String> params = new HashMap<>();
+
+        try {
+            String response = HttpUtils.get(context.getApiPath(Constants.PAYOUT_API_PATH), headers, params);
+
+            Type type = new TypeToken<ApiListResponse<Payout>>(){}.getType();
+            ApiListResponse<Payout> invoices = gson.fromJson(response, type);
+            return invoices.getResults();
+
+        } catch (IOException | URISyntaxException e) {
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+            throw new ConnectionException(e.toString(), e);
+        }
+    }
+
+    @Override
+    public Payout getPayout(String id) throws ConnectionException, InstamojoClientException {
+        Asserts.notEmpty(id, "Payout Id");
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Constants.AUTHORIZATION, context.getAuthorization());
+
+        try {
+            String response = HttpUtils.get(context.getApiPath(Constants.PAYOUT_API_PATH + "id:" + id + "/"), headers);
+
+            Type type = new TypeToken<ApiResponse<Payout>>(){}.getType();
+            ApiResponse<Payout> payoutResponse = gson.fromJson(response, type);
+            return payoutResponse.getResult();
 
         } catch (IOException | URISyntaxException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);

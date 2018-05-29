@@ -1,11 +1,7 @@
 package com.instamojo.wrapper.api;
 
 import com.instamojo.wrapper.exception.*;
-import com.instamojo.wrapper.model.Invoice;
-import com.instamojo.wrapper.model.PaymentOrder;
-import com.instamojo.wrapper.model.PaymentOrderFilter;
-import com.instamojo.wrapper.model.Refund;
-import com.instamojo.wrapper.model.PaymentOrderResponse;
+import com.instamojo.wrapper.model.*;
 
 import java.util.List;
 import java.util.Map;
@@ -32,7 +28,7 @@ public interface Instamojo {
      * @return the payment order details
      * @throws ConnectionException the connection exception
      */
-	PaymentOrder getPaymentOrderDetails(String id) throws ConnectionException;
+	PaymentOrder getPaymentOrderDetails(String id) throws ConnectionException, InstamojoClientException;
 
     /**
      * Get the details of the specified order (identified by transaction id).
@@ -41,7 +37,7 @@ public interface Instamojo {
      * @return the payment order details by transaction id
      * @throws ConnectionException the connection exception
      */
-	PaymentOrder getPaymentOrderDetailsByTransactionId(String transactionId) throws ConnectionException;
+	PaymentOrder getPaymentOrderDetailsByTransactionId(String transactionId) throws ConnectionException, InstamojoClientException;
 
     /**
      * Gets the payment order list.
@@ -51,7 +47,7 @@ public interface Instamojo {
      * @return the payment order list
      * @throws ConnectionException the connection exception
      */
-	List<PaymentOrder> getPaymentOrderList(PaymentOrderFilter paymentOrderFilter) throws ConnectionException;
+	List<PaymentOrder> getPaymentOrderList(PaymentOrderFilter paymentOrderFilter) throws ConnectionException, InstamojoClientException;
 
 	/**
 	 * Creates the new refund.
@@ -64,5 +60,9 @@ public interface Instamojo {
 
 	String createWebhookSignature(Map<String, String> data, String salt);
 
-	List<Invoice> getInvoices() throws ConnectionException;
+	List<Invoice> getInvoices() throws ConnectionException, InstamojoClientException;
+
+	List<Payout> getPayouts() throws ConnectionException, InstamojoClientException;
+
+	Payout getPayout(String id) throws ConnectionException, InstamojoClientException;
 }

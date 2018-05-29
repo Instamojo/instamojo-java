@@ -194,4 +194,20 @@ public class InstamojoIntegrationTest {
             System.out.println(invoice);
         }
     }
+
+    @Test
+    public void getPayoutList() throws Exception {
+
+        List<Payout> payouts = api.getPayouts();
+        for (Payout payout : payouts) {
+            System.out.println(payout);
+        }
+    }
+
+    @Test(expected = InstamojoClientException.class)
+    public void getPayoutById() throws Exception {
+
+        Payout payout = api.getPayout("asdasdasdasdasd");
+        System.out.println(payout);
+    }
 }
