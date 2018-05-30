@@ -1,6 +1,7 @@
 package com.instamojo.wrapper.api;
 
-import com.instamojo.wrapper.exception.*;
+import com.instamojo.wrapper.exception.ConnectionException;
+import com.instamojo.wrapper.exception.HTTPException;
 import com.instamojo.wrapper.model.PaymentOrder;
 import com.instamojo.wrapper.model.PaymentOrderFilter;
 import com.instamojo.wrapper.model.PaymentOrderResponse;
@@ -32,11 +33,9 @@ public class InstamojoExample {
         order.setWebhookUrl("http://www.someurl.com/");
         order.setTransactionId("dxg234");
 
-        Instamojo api = null;
-
         // gets the reference to the instamojo api
         ApiContext context = ApiContext.create("[CLIENT_ID]", "[CLIENT_SECRET]", ApiContext.Mode.TEST);
-        api = new InstamojoImpl(context);
+        Instamojo api = new InstamojoImpl(context);
 
         try {
             PaymentOrderResponse paymentOrderResponse = api.createPaymentOrder(order);
