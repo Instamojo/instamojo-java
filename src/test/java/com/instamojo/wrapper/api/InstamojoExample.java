@@ -14,7 +14,7 @@ public class InstamojoExample {
 
     private static final Logger LOGGER = Logger.getLogger(InstamojoExample.class.getName());
 
-    public static void main(String args[]) throws InstamojoClientException, InstamojoBaseException {
+    public static void main(String args[]) throws HTTPException {
 
         /*
          * Create a new payment order **************************************
@@ -42,7 +42,7 @@ public class InstamojoExample {
             PaymentOrderResponse paymentOrderResponse = api.createPaymentOrder(order);
             // print the status of the payment order.
             System.out.println(paymentOrderResponse.getPaymentOrder().getStatus());
-        } catch (InstamojoClientException e) {
+        } catch (HTTPException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
             System.out.println(e.getMessage());
 
@@ -55,7 +55,7 @@ public class InstamojoExample {
          */
 
         try {
-            PaymentOrder paymentOrderDetailsResponse = api.getPaymentOrderDetails("[PAYMENT_ORDER_ID]");
+            PaymentOrder paymentOrderDetailsResponse = api.getPaymentOrder("[PAYMENT_ORDER_ID]");
 
             if (paymentOrderDetailsResponse.getId() != null) {
                 // print the status of the payment order.
@@ -72,7 +72,7 @@ public class InstamojoExample {
          */
 
         try {
-            PaymentOrder paymentOrderDetailsResponse = api.getPaymentOrderDetailsByTransactionId("[TRANSACTION_ID]");
+            PaymentOrder paymentOrderDetailsResponse = api.getPaymentOrderByTransactionId("[TRANSACTION_ID]");
 
             if (paymentOrderDetailsResponse.getId() != null) {
                 // print the status of the payment order.
@@ -91,7 +91,7 @@ public class InstamojoExample {
         try {
             PaymentOrderFilter paymentOrderFilter = new PaymentOrderFilter();
 
-            List<PaymentOrder> paymentOrderListResponse = api.getPaymentOrderList(paymentOrderFilter);
+            List<PaymentOrder> paymentOrderListResponse = api.getPaymentOrders(paymentOrderFilter);
 
             // Loop over all of the payment orders and print status of each
             // payment order.
@@ -121,7 +121,7 @@ public class InstamojoExample {
             Refund createRefundResponse = api.createRefund(refund);
             // print the status of the refund.
             System.out.println(createRefundResponse.getStatus());
-        } catch (InstamojoClientException e) {
+        } catch (HTTPException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
             System.out.println(e.getMessage());
 

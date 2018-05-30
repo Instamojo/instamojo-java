@@ -1,65 +1,37 @@
 package com.instamojo.wrapper.model;
 
-import java.io.Serializable;
+public class Payment {
 
-public class Payment implements Serializable {
+    /**
+     * The id.
+     */
+    private String id;
 
-	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = 5246047430600267758L;
+    /**
+     * The status.
+     */
+    private String status;
 
-	/** The id. */
-	private String id;
+    public String getId() {
+        return id;
+    }
 
-	/** The status. */
-	private String status;
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	/**
-	 * Gets the id.
-	 *
-	 * @return the id
-	 */
-	public String getId() {
-		return id;
-	}
+    public String getStatus() {
+        return status;
+    }
 
-	/**
-	 * Sets the id.
-	 *
-	 * @param id
-	 *            the new id
-	 */
-	public void setId(String id) {
-		this.id = id;
-	}
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
-	/**
-	 * Gets the status.
-	 *
-	 * @return the status
-	 */
-	public String getStatus() {
-		return status;
-	}
-
-	/**
-	 * Sets the status.
-	 *
-	 * @param status
-	 *            the new status
-	 */
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "Payment{" + "id='" + id + '\'' +
-				", status='" + status + '\'' +
-				'}';
-	}
+    @Override
+    public String toString() {
+        return "Payment{" + "id='" + id + '\'' +
+                ", status='" + status + '\'' +
+                '}';
+    }
 }

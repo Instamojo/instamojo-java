@@ -6,55 +6,80 @@ import java.util.List;
 
 public class PaymentOrder {
 
-	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = 4912793214890694717L;
+    /**
+     * The id.
+     */
+    private String id;
 
-	/** The id. */
-	private String id;
+    /**
+     * The transaction id.
+     */
+    @SerializedName("transaction_id")
+    private String transactionId;
 
-	/** The transaction id. */
-	@SerializedName("transaction_id")
-	private String transactionId;
+    /**
+     * The status.
+     */
+    private String status;
 
-	/** The status. */
-	private String status;
+    /**
+     * The currency.
+     */
+    private String currency;
 
-	/** The currency. */
-	private String currency;
+    /**
+     * The amount.
+     */
+    private Double amount;
 
-	/** The amount. */
-	private Double amount;
+    /**
+     * The name.
+     */
+    private String name;
 
-	/** The name. */
-	private String name;
+    /**
+     * The email.
+     */
+    private String email;
 
-	/** The email. */
-	private String email;
+    /**
+     * The phone.
+     */
+    private String phone;
 
-	/** The phone. */
-	private String phone;
+    /**
+     * The description.
+     */
+    private String description;
 
-	/** The description. */
-	private String description;
+    /**
+     * Webhook URL
+     */
+    @SerializedName("webhook_url")
+    private String webhookUrl;
 
-	/** Webhook URL */
-	@SerializedName("webhook_url")
-	private String webhookUrl;
+    /**
+     * The redirect url.
+     */
+    @SerializedName("redirect_url")
+    private String redirectUrl;
 
-	/** The redirect url. */
-	@SerializedName("redirect_url")
-	private String redirectUrl;
+    /**
+     * The created at.
+     */
+    @SerializedName("created_at")
+    private String createdAt;
 
-	/** The created at. */
-	@SerializedName("created_at")
-	private String createdAt;
+    /**
+     * The resource uri.
+     */
+    @SerializedName("resource_uri")
+    private String resourceUri;
 
-	/** The resource uri. */
-	@SerializedName("resource_uri")
-	private String resourceUri;
-
-	/** The payments. */
-	private List<Payment> payments;
+    /**
+     * The payments.
+     */
+    private List<Payment> payments;
 
     /**
      * Gets the id.
@@ -62,8 +87,8 @@ public class PaymentOrder {
      * @return the id
      */
     public String getId() {
-		return id;
-	}
+        return id;
+    }
 
     /**
      * Sets the id.
@@ -71,8 +96,8 @@ public class PaymentOrder {
      * @param id the new id
      */
     public void setId(String id) {
-		this.id = id;
-	}
+        this.id = id;
+    }
 
     /**
      * Gets the transaction id.
@@ -80,8 +105,8 @@ public class PaymentOrder {
      * @return the transaction id
      */
     public String getTransactionId() {
-		return transactionId;
-	}
+        return transactionId;
+    }
 
     /**
      * Sets Unique identifier for the order (max 64 characters). Identifier can
@@ -91,8 +116,8 @@ public class PaymentOrder {
      * @param transactionId the new transaction id
      */
     public void setTransactionId(String transactionId) {
-		this.transactionId = transactionId;
-	}
+        this.transactionId = transactionId;
+    }
 
     /**
      * Gets the status.
@@ -100,8 +125,8 @@ public class PaymentOrder {
      * @return the status
      */
     public String getStatus() {
-		return status;
-	}
+        return status;
+    }
 
     /**
      * Sets the status.
@@ -109,8 +134,8 @@ public class PaymentOrder {
      * @param status the new status
      */
     public void setStatus(String status) {
-		this.status = status;
-	}
+        this.status = status;
+    }
 
     /**
      * Gets the currency.
@@ -118,8 +143,8 @@ public class PaymentOrder {
      * @return the currency
      */
     public String getCurrency() {
-		return currency;
-	}
+        return currency;
+    }
 
     /**
      * Sets the String identifier for the currency.
@@ -127,8 +152,8 @@ public class PaymentOrder {
      * @param currency the new currency
      */
     public void setCurrency(String currency) {
-		this.currency = currency;
-	}
+        this.currency = currency;
+    }
 
     /**
      * Gets the amount.
@@ -136,8 +161,8 @@ public class PaymentOrder {
      * @return the amount
      */
     public Double getAmount() {
-		return amount;
-	}
+        return amount;
+    }
 
     /**
      * Sets the Amount the customer has to pay.
@@ -145,8 +170,8 @@ public class PaymentOrder {
      * @param amount the new amount
      */
     public void setAmount(Double amount) {
-		this.amount = amount;
-	}
+        this.amount = amount;
+    }
 
     /**
      * Gets the name.
@@ -154,8 +179,8 @@ public class PaymentOrder {
      * @return the name
      */
     public String getName() {
-		return name;
-	}
+        return name;
+    }
 
     /**
      * Sets the Name of the customer .
@@ -163,8 +188,8 @@ public class PaymentOrder {
      * @param name the new name
      */
     public void setName(String name) {
-		this.name = name;
-	}
+        this.name = name;
+    }
 
     /**
      * Gets the email.
@@ -172,8 +197,8 @@ public class PaymentOrder {
      * @return the email
      */
     public String getEmail() {
-		return email;
-	}
+        return email;
+    }
 
     /**
      * Sets the Email address of the customer.
@@ -181,8 +206,8 @@ public class PaymentOrder {
      * @param email the new email
      */
     public void setEmail(String email) {
-		this.email = email;
-	}
+        this.email = email;
+    }
 
     /**
      * Gets the phone.
@@ -190,8 +215,8 @@ public class PaymentOrder {
      * @return the phone
      */
     public String getPhone() {
-		return phone;
-	}
+        return phone;
+    }
 
     /**
      * Sets the Phone number of the customer.
@@ -199,8 +224,8 @@ public class PaymentOrder {
      * @param phone the new phone
      */
     public void setPhone(String phone) {
-		this.phone = phone;
-	}
+        this.phone = phone;
+    }
 
     /**
      * Gets the description.
@@ -208,8 +233,8 @@ public class PaymentOrder {
      * @return the description
      */
     public String getDescription() {
-		return description;
-	}
+        return description;
+    }
 
     /**
      * Sets the Short description of the order.
@@ -217,11 +242,12 @@ public class PaymentOrder {
      * @param description the new description
      */
     public void setDescription(String description) {
-		this.description = description;
-	}
+        this.description = description;
+    }
 
     /**
      * Gets Webhook URL for this order
+     *
      * @return webhook url
      */
     public String getWebhookUrl() {
@@ -230,6 +256,7 @@ public class PaymentOrder {
 
     /**
      * Sets webhook url
+     *
      * @param webhookUrl webhook url for this order
      */
     public void setWebhookUrl(String webhookUrl) {
@@ -242,8 +269,8 @@ public class PaymentOrder {
      * @return the redirect url
      */
     public String getRedirectUrl() {
-		return redirectUrl;
-	}
+        return redirectUrl;
+    }
 
     /**
      * Sets the redirect url. Full URL to which the customer is redirected after
@@ -253,8 +280,8 @@ public class PaymentOrder {
      * @param redirectUrl the new redirect url
      */
     public void setRedirectUrl(String redirectUrl) {
-		this.redirectUrl = redirectUrl;
-	}
+        this.redirectUrl = redirectUrl;
+    }
 
     /**
      * Gets the created at.
@@ -262,8 +289,8 @@ public class PaymentOrder {
      * @return the created at
      */
     public String getCreatedAt() {
-		return createdAt;
-	}
+        return createdAt;
+    }
 
     /**
      * Sets the created at.
@@ -271,8 +298,8 @@ public class PaymentOrder {
      * @param createdAt the new created at
      */
     public void setCreatedAt(String createdAt) {
-		this.createdAt = createdAt;
-	}
+        this.createdAt = createdAt;
+    }
 
     /**
      * Gets the resource uri.
@@ -280,8 +307,8 @@ public class PaymentOrder {
      * @return the resource uri
      */
     public String getResourceUri() {
-		return resourceUri;
-	}
+        return resourceUri;
+    }
 
     /**
      * Sets the resource uri.
@@ -289,8 +316,8 @@ public class PaymentOrder {
      * @param resourceUri the new resource uri
      */
     public void setResourceUri(String resourceUri) {
-		this.resourceUri = resourceUri;
-	}
+        this.resourceUri = resourceUri;
+    }
 
     /**
      * Gets the payments.
@@ -298,8 +325,8 @@ public class PaymentOrder {
      * @return the payments
      */
     public List<Payment> getPayments() {
-		return payments;
-	}
+        return payments;
+    }
 
     /**
      * Sets the payments.
@@ -307,26 +334,26 @@ public class PaymentOrder {
      * @param payments the new payments
      */
     public void setPayments(List<Payment> payments) {
-		this.payments = payments;
-	}
+        this.payments = payments;
+    }
 
-	@Override
-	public String toString() {
-		return "PaymentOrder{" +
-				"id='" + id + '\'' +
-				", transactionId='" + transactionId + '\'' +
-				", status='" + status + '\'' +
-				", currency='" + currency + '\'' +
-				", amount=" + amount +
-				", name='" + name + '\'' +
-				", email='" + email + '\'' +
-				", phone='" + phone + '\'' +
-				", description='" + description + '\'' +
-				", webhookUrl='" + webhookUrl + '\'' +
-				", redirectUrl='" + redirectUrl + '\'' +
-				", createdAt='" + createdAt + '\'' +
-				", resourceUri='" + resourceUri + '\'' +
-				", payments=" + payments +
-				'}';
-	}
+    @Override
+    public String toString() {
+        return "PaymentOrder{" +
+                "id='" + id + '\'' +
+                ", transactionId='" + transactionId + '\'' +
+                ", status='" + status + '\'' +
+                ", currency='" + currency + '\'' +
+                ", amount=" + amount +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", description='" + description + '\'' +
+                ", webhookUrl='" + webhookUrl + '\'' +
+                ", redirectUrl='" + redirectUrl + '\'' +
+                ", createdAt='" + createdAt + '\'' +
+                ", resourceUri='" + resourceUri + '\'' +
+                ", payments=" + payments +
+                '}';
+    }
 }

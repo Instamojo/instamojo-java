@@ -2,10 +2,9 @@ package com.instamojo.wrapper.model;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
 import java.util.Date;
 
-public class Invoice implements Serializable {
+public class Invoice {
 
     private String id;
 

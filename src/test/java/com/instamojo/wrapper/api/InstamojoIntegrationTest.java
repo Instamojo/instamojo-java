@@ -2,7 +2,7 @@ package com.instamojo.wrapper.api;
 
 import com.instamojo.wrapper.builder.PaymentOrderBuilder;
 import com.instamojo.wrapper.builder.RefundBuilder;
-import com.instamojo.wrapper.exception.InstamojoClientException;
+import com.instamojo.wrapper.exception.HTTPException;
 import com.instamojo.wrapper.model.*;
 import com.instamojo.wrapper.util.TestConstants;
 import org.junit.Before;
@@ -45,7 +45,7 @@ public class InstamojoIntegrationTest {
         assertThat(paymentOrderResponse.getPaymentOrder().getTransactionId()).isEqualTo(order.getTransactionId());
     }
 
-    @Test(expected = InstamojoClientException.class)
+    @Test(expected = HTTPException.class)
     public void createOrder_whenWebhookIsInvalid_shouldThrowException() throws Exception {
         PaymentOrder order = new PaymentOrderBuilder()
                 .withWebhookUrl("invalid_url")
@@ -63,7 +63,7 @@ public class InstamojoIntegrationTest {
         assertThat(order.getWebhookUrl()).isNull();
     }
 
-    @Test(expected = InstamojoClientException.class)
+    @Test(expected = HTTPException.class)
     public void createPaymentOrder_whenInvalidPaymentOrderIsMade_shouldThrowException() throws Exception {
         PaymentOrder order = new PaymentOrderBuilder()
                 .withEmail(null)
@@ -73,7 +73,7 @@ public class InstamojoIntegrationTest {
         api.createPaymentOrder(order);
     }
 
-    @Test(expected = InstamojoClientException.class)
+    @Test(expected = HTTPException.class)
     public void createPaymentOrder_whenSameTransactionIdIsGiven_shouldThrowException() throws Exception {
         PaymentOrder order = new PaymentOrderBuilder().build();
 
@@ -84,7 +84,7 @@ public class InstamojoIntegrationTest {
         assertThat(duplicateOrder.getPaymentOrder()).isNull();
     }
 
-    @Test(expected = InstamojoClientException.class)
+    @Test(expected = HTTPException.class)
     public void createPaymentOrder_whenUnsupportedCurrencyIsGiven_shouldThrowException() throws Exception {
         PaymentOrder order = new PaymentOrderBuilder()
                 .withCurrency("unsupported currency")
@@ -103,7 +103,7 @@ public class InstamojoIntegrationTest {
         PaymentOrderResponse paymentOrderResponse = api.createPaymentOrder(order);
         String paymentOrderId = paymentOrderResponse.getPaymentOrder().getId();
 
-        PaymentOrder paymentOrderDetailsResponse = api.getPaymentOrderDetails(paymentOrderId);
+        PaymentOrder paymentOrderDetailsResponse = api.getPaymentOrder(paymentOrderId);
 
         assertThat(paymentOrderDetailsResponse).isNotNull();
         assertThat(paymentOrderDetailsResponse.getId()).isEqualTo(paymentOrderId);
@@ -116,7 +116,7 @@ public class InstamojoIntegrationTest {
         PaymentOrder order = new PaymentOrderBuilder().withTransactionId(transactionId).build();
 
         PaymentOrderResponse paymentOrderResponse = api.createPaymentOrder(order);
-        PaymentOrder paymentOrderDetailsResponse = api.getPaymentOrderDetailsByTransactionId(transactionId);
+        PaymentOrder paymentOrderDetailsResponse = api.getPaymentOrderByTransactionId(transactionId);
 
         assertThat(paymentOrderDetailsResponse).isNotNull();
         assertThat(paymentOrderDetailsResponse.getTransactionId()).isEqualTo(transactionId);
@@ -128,7 +128,7 @@ public class InstamojoIntegrationTest {
         PaymentOrderFilter paymentOrderFilter = new PaymentOrderFilter();
         paymentOrderFilter.setLimit(2);
 
-        List<PaymentOrder> paymentOrderListResponse = api.getPaymentOrderList(paymentOrderFilter);
+        List<PaymentOrder> paymentOrderListResponse = api.getPaymentOrders(paymentOrderFilter);
 
         for (PaymentOrder paymentOrder : paymentOrderListResponse) {
             System.out.println(paymentOrder);
@@ -154,7 +154,7 @@ public class InstamojoIntegrationTest {
         assertThat(createRefundResponse.getPaymentId()).isNotEmpty();
     }
 
-    @Test(expected = InstamojoClientException.class)
+    @Test(expected = HTTPException.class)
     public void createRefund_whenInvalidRefundIsMade_shouldThrowException() throws Exception {
         Refund refund = new RefundBuilder()
                 .withRefundAmount(7D)
@@ -164,7 +164,7 @@ public class InstamojoIntegrationTest {
         api.createRefund(refund);
     }
 
-    @Test(expected = InstamojoClientException.class)
+    @Test(expected = HTTPException.class)
     public void createRefund_whenUnsupportedTypeIsGiven_shouldThrowException() throws Exception {
         Refund refund = new RefundBuilder()
                 .withType("Unsupported Type")
@@ -179,7 +179,7 @@ public class InstamojoIntegrationTest {
         map.put("foo", "1");
         map.put("bar", "2");
         map.put("baz", "3");
-        String signature = api.createWebhookSignature(map, TestConstants.TEST_CLIENT_SALT);
+        String signature = api.generateWebhookSignature(map, TestConstants.TEST_CLIENT_SALT);
         assertThat(signature).isEqualTo("a0d60f15eb94cd332bc93edc379bb248b298182a");
     }
 
@@ -201,7 +201,7 @@ public class InstamojoIntegrationTest {
         }
     }
 
-    @Test(expected = InstamojoClientException.class)
+    @Test(expected = HTTPException.class)
     public void getPayoutById() throws Exception {
         Payout payout = api.getPayout("asdasdasdasdasd");
     }

@@ -3,7 +3,7 @@ package com.instamojo.wrapper.api;
 import com.google.gson.Gson;
 import com.instamojo.wrapper.exception.ConnectionException;
 import com.instamojo.wrapper.exception.InvalidClientException;
-import com.instamojo.wrapper.exception.InstamojoClientException;
+import com.instamojo.wrapper.exception.HTTPException;
 import com.instamojo.wrapper.model.AccessToken;
 import com.instamojo.wrapper.util.Constants;
 import com.instamojo.wrapper.util.HttpUtils;
@@ -91,7 +91,7 @@ public class ApiContext {
         return durationInSeconds >= (accessToken.getExpiresIn() - 300);
     }
 
-    private void loadOrRefreshAccessToken() throws ConnectionException, InstamojoClientException {
+    private void loadOrRefreshAccessToken() throws ConnectionException, HTTPException {
         if (accessToken == null) {
             fetchAccessToken();
 
@@ -103,7 +103,7 @@ public class ApiContext {
     /*
      * Fetch a new access token.
      */
-    private synchronized void fetchAccessToken() throws ConnectionException, InstamojoClientException {
+    private synchronized void fetchAccessToken() throws ConnectionException, HTTPException {
         if (accessToken != null) {
             return;
         }
@@ -119,7 +119,7 @@ public class ApiContext {
     /*
      * Refresh an expired access token
      */
-    private synchronized void refreshAccessToken() throws ConnectionException, InstamojoClientException {
+    private synchronized void refreshAccessToken() throws ConnectionException, HTTPException {
         if (!isTokenExpired()) {
             return;
         }
@@ -133,7 +133,7 @@ public class ApiContext {
         loadAccessToken(params);
     }
 
-    private void loadAccessToken(Map<String, String> params) throws ConnectionException, InstamojoClientException {
+    private void loadAccessToken(Map<String, String> params) throws ConnectionException, HTTPException {
         try {
             String response = HttpUtils.post(getAuthEndpoint(), null, params);
 
@@ -168,7 +168,7 @@ public class ApiContext {
     /*
      * Gets the authorization.
      */
-    public String getAuthorization() throws ConnectionException, InstamojoClientException {
+    public String getAuthorization() throws ConnectionException, HTTPException {
         loadOrRefreshAccessToken();
         return accessToken.getTokenType() + " " + accessToken.getToken();
     }

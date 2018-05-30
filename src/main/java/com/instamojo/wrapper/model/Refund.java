@@ -2,14 +2,10 @@ package com.instamojo.wrapper.model;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
-
 /**
  * The Class Refund.
  */
-public class Refund implements Serializable {
-
-    private static final long serialVersionUID = -1417045152436410779L;
+public class Refund {
 
     /**
      * The id.
