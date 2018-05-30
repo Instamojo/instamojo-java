@@ -65,4 +65,14 @@ public interface Instamojo {
 	List<Payout> getPayouts() throws ConnectionException, InstamojoClientException;
 
 	Payout getPayout(String id) throws ConnectionException, InstamojoClientException;
+
+	PaymentRequest createPaymentRequest(PaymentRequest paymentRequest) throws ConnectionException, InstamojoClientException;
+
+	List<PaymentRequest> getPaymentRequests() throws ConnectionException, InstamojoClientException;
+
+	PaymentRequest getPaymentRequest(String id) throws ConnectionException, InstamojoClientException;
+
+	Boolean enablePaymentRequest(String id) throws ConnectionException, InstamojoClientException;
+
+	Boolean disablePaymentRequest(String id) throws ConnectionException, InstamojoClientException;
 }

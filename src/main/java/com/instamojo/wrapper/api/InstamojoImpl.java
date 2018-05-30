@@ -122,7 +122,8 @@ public class InstamojoImpl implements Instamojo {
             String response = HttpUtils.get(context.getApiPath(Constants.PAYMENT_ORDER_API_PATH), headers,
                     params);
 
-            Type type = new TypeToken<ApiListResponse<PaymentOrder>>(){}.getType();
+            Type type = new TypeToken<ApiListResponse<PaymentOrder>>() {
+            }.getType();
             ApiListResponse<PaymentOrder> paymentOrderListResponse = gson.fromJson(response, type);
 
             return paymentOrderListResponse.getResults();
@@ -145,7 +146,8 @@ public class InstamojoImpl implements Instamojo {
                     context.getApiPath(Constants.REFUND_API_PATH + refund.getPaymentId() + "" +
                             "/refund/"), headers, gson.toJson(refund));
 
-            Type type = new TypeToken<ApiResponse<Refund>>(){}.getType();
+            Type type = new TypeToken<ApiResponse<Refund>>() {
+            }.getType();
             ApiResponse<Refund> createRefundResponse = gson.fromJson(response, type);
             return createRefundResponse.getResult();
 
@@ -181,7 +183,8 @@ public class InstamojoImpl implements Instamojo {
         try {
             String response = HttpUtils.get(context.getApiPath(Constants.INVOICE_API_PATH), headers, params);
 
-            Type type = new TypeToken<ApiListResponse<Invoice>>(){}.getType();
+            Type type = new TypeToken<ApiListResponse<Invoice>>() {
+            }.getType();
             ApiListResponse<Invoice> invoices = gson.fromJson(response, type);
             return invoices.getResults();
 
@@ -200,7 +203,8 @@ public class InstamojoImpl implements Instamojo {
         try {
             String response = HttpUtils.get(context.getApiPath(Constants.PAYOUT_API_PATH), headers, params);
 
-            Type type = new TypeToken<ApiListResponse<Payout>>(){}.getType();
+            Type type = new TypeToken<ApiListResponse<Payout>>() {
+            }.getType();
             ApiListResponse<Payout> invoices = gson.fromJson(response, type);
             return invoices.getResults();
 
@@ -220,11 +224,99 @@ public class InstamojoImpl implements Instamojo {
         try {
             String response = HttpUtils.get(context.getApiPath(Constants.PAYOUT_API_PATH + "id:" + id + "/"), headers);
 
-            Type type = new TypeToken<ApiResponse<Payout>>(){}.getType();
+            Type type = new TypeToken<ApiResponse<Payout>>() {
+            }.getType();
             ApiResponse<Payout> payoutResponse = gson.fromJson(response, type);
             return payoutResponse.getResult();
 
         } catch (IOException | URISyntaxException e) {
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+            throw new ConnectionException(e.toString(), e);
+        }
+    }
+
+    @Override
+    public PaymentRequest createPaymentRequest(PaymentRequest paymentRequest) throws ConnectionException, InstamojoClientException {
+        Asserts.notNull(paymentRequest, "payment request");
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Constants.AUTHORIZATION, context.getAuthorization());
+
+        try {
+            String response = HttpUtils.post(
+                    context.getApiPath(Constants.PAYMENT_REQUEST_API_PATH), headers, gson.toJson(paymentRequest));
+
+            PaymentRequest createRapResponse = gson.fromJson(response, PaymentRequest.class);
+            return createRapResponse;
+
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+            throw new ConnectionException(e.toString(), e);
+        }
+    }
+
+    @Override
+    public List<PaymentRequest> getPaymentRequests() throws ConnectionException, InstamojoClientException {
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Constants.AUTHORIZATION, context.getAuthorization());
+
+        try {
+            String response = HttpUtils.get(context.getApiPath(Constants.PAYMENT_REQUEST_API_PATH), headers);
+
+            Type type = new TypeToken<ApiListResponse<PaymentRequest>>() {
+            }.getType();
+            ApiListResponse<PaymentRequest> rapResponse = gson.fromJson(response, type);
+            return rapResponse.getResults();
+
+        } catch (IOException | URISyntaxException e) {
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+            throw new ConnectionException(e.toString(), e);
+        }
+    }
+
+    @Override
+    public PaymentRequest getPaymentRequest(String id) throws ConnectionException, InstamojoClientException {
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Constants.AUTHORIZATION, context.getAuthorization());
+
+        try {
+            String response = HttpUtils.get(context.getApiPath(Constants.PAYMENT_REQUEST_API_PATH + id + "/"), headers);
+            PaymentRequest rapResponse = gson.fromJson(response, PaymentRequest.class);
+            return rapResponse;
+
+        } catch (IOException | URISyntaxException e) {
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+            throw new ConnectionException(e.toString(), e);
+        }
+    }
+
+    @Override
+    public Boolean enablePaymentRequest(String id) throws ConnectionException, InstamojoClientException {
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Constants.AUTHORIZATION, context.getAuthorization());
+
+        try {
+            String response = HttpUtils.post(context.getApiPath(Constants.PAYMENT_REQUEST_API_PATH + id + "/enable/"), headers);
+            ApiResponse rapResponse = gson.fromJson(response, ApiResponse.class);
+            return rapResponse.getSuccess();
+
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+            throw new ConnectionException(e.toString(), e);
+        }
+    }
+
+    @Override
+    public Boolean disablePaymentRequest(String id) throws ConnectionException, InstamojoClientException {
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Constants.AUTHORIZATION, context.getAuthorization());
+
+        try {
+            String response = HttpUtils.post(context.getApiPath(Constants.PAYMENT_REQUEST_API_PATH + id + "/disable/"), headers);
+            ApiResponse rapResponse = gson.fromJson(response, ApiResponse.class);
+            return rapResponse.getSuccess();
+
+        } catch (IOException e) {
             LOGGER.log(Level.SEVERE, e.toString(), e);
             throw new ConnectionException(e.toString(), e);
         }

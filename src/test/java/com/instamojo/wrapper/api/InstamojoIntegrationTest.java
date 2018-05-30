@@ -46,7 +46,7 @@ public class InstamojoIntegrationTest {
     }
 
     @Test(expected = InstamojoClientException.class)
-    public void createOrder_whenWebhookIsInvalid_shouldThrowException() throws Exception{
+    public void createOrder_whenWebhookIsInvalid_shouldThrowException() throws Exception {
         PaymentOrder order = new PaymentOrderBuilder()
                 .withWebhookUrl("invalid_url")
                 .build();
@@ -171,9 +171,6 @@ public class InstamojoIntegrationTest {
                 .build();
 
         Refund createRefundResponse = api.createRefund(refund);
-
-        assertThat(createRefundResponse).isNotNull();
-        assertThat(createRefundResponse).isNull();
     }
 
     @Test
@@ -206,8 +203,64 @@ public class InstamojoIntegrationTest {
 
     @Test(expected = InstamojoClientException.class)
     public void getPayoutById() throws Exception {
-
         Payout payout = api.getPayout("asdasdasdasdasd");
-        System.out.println(payout);
+    }
+
+    @Test
+    public void createPaymentRequest() throws Exception {
+
+        PaymentRequest rap = new PaymentRequest();
+        rap.setAmount(10.0);
+        rap.setEmail("vijith@instamojo.com");
+        rap.setPurpose("testing rap");
+
+        PaymentRequest createdRap = api.createPaymentRequest(rap);
+        assertThat(createdRap).isNotNull();
+    }
+
+    @Test
+    public void getPaymentRequests() throws Exception {
+
+        List<PaymentRequest> raps = api.getPaymentRequests();
+        assertThat(raps).isNotNull();
+    }
+
+    @Test
+    public void getPaymentRequest() throws Exception {
+        PaymentRequest rap = new PaymentRequest();
+        rap.setAmount(10.0);
+        rap.setEmail("vijith@instamojo.com");
+        rap.setPurpose("testing rap");
+
+        PaymentRequest createdRap = api.createPaymentRequest(rap);
+
+        PaymentRequest retrievedRap = api.getPaymentRequest(createdRap.getId());
+        assertThat(retrievedRap).isNotNull();
+    }
+
+    @Test
+    public void enablePaymentRequest() throws Exception {
+        PaymentRequest rap = new PaymentRequest();
+        rap.setAmount(10.0);
+        rap.setEmail("vijith@instamojo.com");
+        rap.setPurpose("testing rap");
+
+        PaymentRequest createdRap = api.createPaymentRequest(rap);
+
+        Boolean success = api.enablePaymentRequest(createdRap.getId());
+        assertThat(success).isTrue();
+    }
+
+    @Test
+    public void disablePaymentRequest() throws Exception {
+        PaymentRequest rap = new PaymentRequest();
+        rap.setAmount(10.0);
+        rap.setEmail("vijith@instamojo.com");
+        rap.setPurpose("testing rap");
+
+        PaymentRequest createdRap = api.createPaymentRequest(rap);
+
+        Boolean success = api.disablePaymentRequest(createdRap.getId());
+        assertThat(success).isTrue();
     }
 }

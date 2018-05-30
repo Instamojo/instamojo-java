@@ -14,8 +14,12 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -68,8 +72,11 @@ public class HttpUtils {
         HttpClient httpClient = HttpClientBuilder.create().build();
 
         HttpResponse httpResponse = httpClient.execute(httpGet);
-        if (isErrorStatus(httpResponse.getStatusLine().getStatusCode())) {
-            throw new InstamojoClientException();
+
+        int statusCode = httpResponse.getStatusLine().getStatusCode();
+        if (isErrorStatus(statusCode)) {
+            String jsonErrorResponse = EntityUtils.toString(httpResponse.getEntity(), StandardCharsets.UTF_8);
+            throw new InstamojoClientException(statusCode, httpResponse.getStatusLine().getReasonPhrase(), jsonErrorResponse);
         }
 
         return EntityUtils.toString(httpResponse.getEntity(), StandardCharsets.UTF_8);
@@ -102,10 +109,18 @@ public class HttpUtils {
         HttpClient httpClient = HttpClientBuilder.create().build();
 
         HttpResponse httpResponse = httpClient.execute(httpPost);
-        if (isErrorStatus(httpResponse.getStatusLine().getStatusCode())) {
-            throw new InstamojoClientException();
+
+        int statusCode = httpResponse.getStatusLine().getStatusCode();
+        if (isErrorStatus(statusCode)) {
+            String jsonErrorResponse = EntityUtils.toString(httpResponse.getEntity(), StandardCharsets.UTF_8);
+            throw new InstamojoClientException(statusCode, httpResponse.getStatusLine().getReasonPhrase(), jsonErrorResponse);
         }
+
         return EntityUtils.toString(httpResponse.getEntity(), StandardCharsets.UTF_8);
+    }
+
+    public static String post(String url, Map<String, String> headers) throws IOException, InstamojoClientException {
+        return post(url, headers, "");
     }
 
     public static String post(String url, Map<String, String> headers, String jsonPayload) throws IOException, InstamojoClientException {
@@ -116,12 +131,17 @@ public class HttpUtils {
         httpPost.addHeader("Accept", "application/json");
         httpPost.addHeader("Content-Type", "application/json");
 
-        httpPost.setEntity(new StringEntity(jsonPayload));
+        if (jsonPayload != null || !jsonPayload.isEmpty()) {
+            httpPost.setEntity(new StringEntity(jsonPayload));
+        }
+
         HttpClient httpClient = HttpClientBuilder.create().build();
         HttpResponse httpResponse = httpClient.execute(httpPost);
 
-        if (isErrorStatus(httpResponse.getStatusLine().getStatusCode())) {
-            throw new InstamojoClientException();
+        int statusCode = httpResponse.getStatusLine().getStatusCode();
+        if (isErrorStatus(statusCode)) {
+            String jsonErrorResponse = EntityUtils.toString(httpResponse.getEntity(), StandardCharsets.UTF_8);
+            throw new InstamojoClientException(statusCode, httpResponse.getStatusLine().getReasonPhrase(), jsonErrorResponse);
         }
 
         return EntityUtils.toString(httpResponse.getEntity(), StandardCharsets.UTF_8);
@@ -141,5 +161,22 @@ public class HttpUtils {
                 httpRequestBase.addHeader(header.getKey(), header.getValue());
             }
         }
+    }
+
+    private static String getHttpResponseAsString(HttpResponse httpResponse) {
+        StringBuilder stringResponse = new StringBuilder();
+        try {
+            Reader reader = new InputStreamReader(httpResponse.getEntity().getContent(),
+                    Charset.forName("UTF-8"));
+            BufferedReader br = new BufferedReader(reader);
+            String output;
+            while ((output = br.readLine()) != null) {
+                stringResponse.append(output);
+            }
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, e.toString(), e);
+        }
+
+        return stringResponse.toString();
     }
 }

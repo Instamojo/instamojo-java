@@ -94,4 +94,8 @@ public class Constants {
 	public static final String INVOICE_API_PATH = "invoices/";
 
 	public static final String PAYOUT_API_PATH = "payouts/";
+
+	public static final String PAYMENT_REQUEST_API_PATH = "payment_requests/";
+
+	public static final String BULK_PAYMENT_REQUEST_API_PATH = "bulk-payment-requests/";
 }
