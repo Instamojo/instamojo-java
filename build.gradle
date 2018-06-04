@@ -35,7 +35,9 @@ ext {
     gitUrl = 'https://github.com/Instamojo/instamojo-java.git'
 
     libraryVersion = '1.1.0'
-    developerEmail = 'platform-team@instamojo.com'
+    developerId = 'vedhavyas'
+    developerName = 'Vedhavyas Singareddi'
+    developerEmail = 'vedhavyas@instamojo.com'
 
     licenseName = 'MIT License'
     licenseUrl = 'https://opensource.org/licenses/MIT'
