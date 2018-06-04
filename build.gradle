@@ -1,5 +1,5 @@
 group 'com.instamojo'
-version '1.0.4'
+version '1.1.0'
 
 apply plugin: 'java'
 
@@ -34,11 +34,8 @@ ext {
     siteUrl = 'https://github.com/Instamojo/instamojo-java'
     gitUrl = 'https://github.com/Instamojo/instamojo-java.git'
 
-    libraryVersion = '1.0.4'
-
-    developerId = 'vedhavyas'
-    developerName = 'Vedhavyas Singareddi'
-    developerEmail = 'vedhavyas@instamojo.com'
+    libraryVersion = '1.1.0'
+    developerEmail = 'platform-team@instamojo.com'
 
     licenseName = 'MIT License'
     licenseUrl = 'https://opensource.org/licenses/MIT'
