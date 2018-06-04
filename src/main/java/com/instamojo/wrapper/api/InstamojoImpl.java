@@ -25,6 +25,8 @@ public class InstamojoImpl implements Instamojo {
 
     private Gson gson;
 
+    private HttpUtils httpUtils;
+
     public InstamojoImpl(ApiContext context) {
         this.context = context;
         this.gson = new Gson();
