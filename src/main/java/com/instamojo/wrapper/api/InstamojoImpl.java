@@ -2,11 +2,10 @@ package com.instamojo.wrapper.api;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.instamojo.wrapper.filter.PaymentOrderFilter;
-import com.instamojo.wrapper.filter.PaymentRequestFilter;
-import com.instamojo.wrapper.filter.PayoutFilter;
 import com.instamojo.wrapper.exception.ConnectionException;
 import com.instamojo.wrapper.exception.HTTPException;
+import com.instamojo.wrapper.filter.PaymentRequestFilter;
+import com.instamojo.wrapper.filter.PayoutFilter;
 import com.instamojo.wrapper.model.*;
 import com.instamojo.wrapper.response.ApiListResponse;
 import com.instamojo.wrapper.response.ApiResponse;
@@ -77,18 +76,8 @@ public class InstamojoImpl implements Instamojo {
 
     @Override
     public List<PaymentOrder> getPaymentOrders(int page, int limit) throws ConnectionException, HTTPException {
-        return getPaymentOrders(null, page, limit);
-    }
-
-    @Override
-    public List<PaymentOrder> getPaymentOrders(Map<PaymentOrderFilter, String> filter, int page, int limit) throws ConnectionException, HTTPException {
 
         Map<String, String> params = new HashMap<>();
-        if (filter != null) {
-            for (Map.Entry<PaymentOrderFilter, String> entry : filter.entrySet()) {
-                params.put(entry.getKey().name().toLowerCase(), entry.getValue());
-            }
-        }
         params.put("page", String.valueOf(page));
         params.put("limit", String.valueOf(limit));
 
@@ -240,7 +229,7 @@ public class InstamojoImpl implements Instamojo {
         params.put("limit", String.valueOf(limit));
 
         try {
-            String response = HttpUtils.get(context.getApiPath(Constants.PAYMENT_REQUEST_API_PATH), getHeaders());
+            String response = HttpUtils.get(context.getApiPath(Constants.PAYMENT_REQUEST_API_PATH), getHeaders(), params);
 
             Type type = new TypeToken<ApiListResponse<PaymentRequest>>() {
             }.getType();

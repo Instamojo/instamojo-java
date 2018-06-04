@@ -1,6 +1,5 @@
 package com.instamojo.wrapper.api;
 
-import com.instamojo.wrapper.filter.PaymentOrderFilter;
 import com.instamojo.wrapper.filter.PaymentRequestFilter;
 import com.instamojo.wrapper.filter.PayoutFilter;
 import com.instamojo.wrapper.exception.ConnectionException;
@@ -57,18 +56,6 @@ public interface Instamojo {
      * @throws HTTPException       on a failure response from Instamojo
      */
     List<PaymentOrder> getPaymentOrders(int page, int limit) throws ConnectionException, HTTPException;
-
-    /**
-     * Gets the payment order list.
-     * This endpoint returns paginated results of all your payment orders.
-     * This endpoint also supports filtering by some parameters.
-     *
-     * @param filter the payment order filter
-     * @return the payment order list
-     * @throws ConnectionException on a failure communicating with Instamojo
-     * @throws HTTPException       on a failure response from Instamojo
-     */
-    List<PaymentOrder> getPaymentOrders(Map<PaymentOrderFilter, String> filter, int page, int limit) throws ConnectionException, HTTPException;
 
     /**
      * Creates the new refund.

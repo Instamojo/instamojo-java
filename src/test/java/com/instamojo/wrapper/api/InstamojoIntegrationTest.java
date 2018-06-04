@@ -2,6 +2,7 @@ package com.instamojo.wrapper.api;
 
 import com.instamojo.wrapper.builder.PaymentOrderBuilder;
 import com.instamojo.wrapper.exception.HTTPException;
+import com.instamojo.wrapper.filter.PaymentRequestFilter;
 import com.instamojo.wrapper.model.*;
 import com.instamojo.wrapper.util.TestConstants;
 import org.junit.Before;
@@ -98,10 +99,11 @@ public class InstamojoIntegrationTest {
 
     @Test
     public void getPaymentOrdersByFilter() throws Exception {
-        List<PaymentOrder> paymentOrders = api.getPaymentOrders(1, 2);
+        PaymentOrder order = new PaymentOrderBuilder().build();
+        PaymentOrderResponse paymentOrderResponse = api.createPaymentOrder(order);
 
-        assertNotNull(paymentOrders);
-        assertEquals(2, paymentOrders.size());
+        List<PaymentOrder> paymentOrders = api.getPaymentOrders(1, 1);
+        assertEquals(1, paymentOrders.size());
     }
 
     @Test
@@ -112,18 +114,6 @@ public class InstamojoIntegrationTest {
         map.put("baz", "3");
         String signature = api.generateWebhookSignature(map, TestConstants.TEST_CLIENT_SALT);
         assertEquals(signature, "a0d60f15eb94cd332bc93edc379bb248b298182a");
-    }
-
-    @Test
-    public void getInvoicesByFilter() throws Exception {
-        List<Invoice> invoices = api.getInvoices(1, 2);
-        assertNotNull(invoices);
-    }
-
-    @Test
-    public void getPayoutsByFilter() throws Exception {
-        List<Payout> payouts = api.getPayouts(1, 2);
-        assertNotNull(payouts);
     }
 
     @Test
@@ -147,8 +137,19 @@ public class InstamojoIntegrationTest {
 
     @Test
     public void getPaymentRequestsByFilter() throws Exception {
-        List<PaymentRequest> raps = api.getPaymentRequests(1, 2);
-        assertNotNull(raps);
+        PaymentRequest rap = new PaymentRequest();
+        rap.setAmount(10.0);
+        rap.setEmail("vijith@instamojo.com");
+        rap.setPurpose("testing rap");
+        rap.setPhone("9999999999");
+        api.createPaymentRequest(rap);
+
+        Map<PaymentRequestFilter, String> filter = new HashMap<>();
+        filter.put(PaymentRequestFilter.PHONE, "9999999999");
+
+        List<PaymentRequest> raps = api.getPaymentRequests(filter, 1, 1);
+        assertEquals(1, raps.size());
+        assertEquals(rap.getPhone(), raps.get(0).getPhone());
     }
 
     @Test
