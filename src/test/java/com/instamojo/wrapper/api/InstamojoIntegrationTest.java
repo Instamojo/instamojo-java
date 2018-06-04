@@ -98,9 +98,7 @@ public class InstamojoIntegrationTest {
 
     @Test
     public void getPaymentOrdersByFilter() throws Exception {
-        PaymentOrderFilter paymentOrderFilter = new PaymentOrderFilter();
-        paymentOrderFilter.setLimit(2);
-        List<PaymentOrder> paymentOrders = api.getPaymentOrders(paymentOrderFilter);
+        List<PaymentOrder> paymentOrders = api.getPaymentOrders(1, 2);
 
         assertNotNull(paymentOrders);
         assertEquals(2, paymentOrders.size());
@@ -118,13 +116,13 @@ public class InstamojoIntegrationTest {
 
     @Test
     public void getInvoicesByFilter() throws Exception {
-        List<Invoice> invoices = api.getInvoices();
+        List<Invoice> invoices = api.getInvoices(1, 2);
         assertNotNull(invoices);
     }
 
     @Test
     public void getPayoutsByFilter() throws Exception {
-        List<Payout> payouts = api.getPayouts();
+        List<Payout> payouts = api.getPayouts(1, 2);
         assertNotNull(payouts);
     }
 
@@ -149,7 +147,7 @@ public class InstamojoIntegrationTest {
 
     @Test
     public void getPaymentRequestsByFilter() throws Exception {
-        List<PaymentRequest> raps = api.getPaymentRequests();
+        List<PaymentRequest> raps = api.getPaymentRequests(1, 2);
         assertNotNull(raps);
     }
 

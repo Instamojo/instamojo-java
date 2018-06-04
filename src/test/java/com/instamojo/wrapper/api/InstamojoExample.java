@@ -3,12 +3,10 @@ package com.instamojo.wrapper.api;
 import com.instamojo.wrapper.exception.ConnectionException;
 import com.instamojo.wrapper.exception.HTTPException;
 import com.instamojo.wrapper.model.PaymentOrder;
-import com.instamojo.wrapper.model.PaymentOrderFilter;
 import com.instamojo.wrapper.model.PaymentOrderResponse;
 import com.instamojo.wrapper.model.Refund;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 public class InstamojoExample {
 
@@ -85,8 +83,7 @@ public class InstamojoExample {
          * Get list of all payment orders
          */
         try {
-            PaymentOrderFilter paymentOrderFilter = new PaymentOrderFilter();
-            List<PaymentOrder> paymentOrders = api.getPaymentOrders(paymentOrderFilter);
+            List<PaymentOrder> paymentOrders = api.getPaymentOrders(0, 10);
 
             // Loop over all of the payment orders and print status of each
             // payment order.

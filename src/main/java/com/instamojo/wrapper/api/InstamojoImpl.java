@@ -2,6 +2,9 @@ package com.instamojo.wrapper.api;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.instamojo.wrapper.filter.PaymentOrderFilter;
+import com.instamojo.wrapper.filter.PaymentRequestFilter;
+import com.instamojo.wrapper.filter.PayoutFilter;
 import com.instamojo.wrapper.exception.ConnectionException;
 import com.instamojo.wrapper.exception.HTTPException;
 import com.instamojo.wrapper.model.*;
@@ -12,7 +15,6 @@ import com.instamojo.wrapper.util.HttpUtils;
 import org.apache.commons.codec.digest.HmacAlgorithms;
 import org.apache.commons.codec.digest.HmacUtils;
 import org.apache.http.util.Asserts;
-import org.apache.http.util.TextUtils;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -24,8 +26,6 @@ public class InstamojoImpl implements Instamojo {
     private ApiContext context;
 
     private Gson gson;
-
-    private HttpUtils httpUtils;
 
     public InstamojoImpl(ApiContext context) {
         this.context = context;
@@ -76,31 +76,24 @@ public class InstamojoImpl implements Instamojo {
     }
 
     @Override
-    public List<PaymentOrder> getPaymentOrders(PaymentOrderFilter paymentOrderFilter) throws ConnectionException, HTTPException {
-        Asserts.notNull(paymentOrderFilter, "Payment Order Filter");
+    public List<PaymentOrder> getPaymentOrders(int page, int limit) throws ConnectionException, HTTPException {
+        return getPaymentOrders(null, page, limit);
+    }
+
+    @Override
+    public List<PaymentOrder> getPaymentOrders(Map<PaymentOrderFilter, String> filter, int page, int limit) throws ConnectionException, HTTPException {
 
         Map<String, String> params = new HashMap<>();
-        String id = paymentOrderFilter.getId();
-        String transactionId = paymentOrderFilter.getTransactionId();
-        Integer page = paymentOrderFilter.getPage();
-        Integer limit = paymentOrderFilter.getLimit();
-
-        if (!TextUtils.isEmpty(id)) {
-            params.put("id", id);
+        if (filter != null) {
+            for (Map.Entry<PaymentOrderFilter, String> entry : filter.entrySet()) {
+                params.put(entry.getKey().name().toLowerCase(), entry.getValue());
+            }
         }
-        if (!TextUtils.isEmpty(transactionId)) {
-            params.put("transaction_id", transactionId);
-        }
-        if (page != null && page != 0) {
-            params.put("page", String.valueOf(page));
-        }
-        if (limit != null && limit != 0) {
-            params.put("limit", String.valueOf(limit));
-        }
+        params.put("page", String.valueOf(page));
+        params.put("limit", String.valueOf(limit));
 
         try {
-            String response = HttpUtils.get(context.getApiPath(Constants.PAYMENT_ORDER_API_PATH), getHeaders(),
-                    params);
+            String response = HttpUtils.get(context.getApiPath(Constants.PAYMENT_ORDER_API_PATH), getHeaders(), params);
 
             Type type = new TypeToken<ApiListResponse<PaymentOrder>>() {
             }.getType();
@@ -148,8 +141,11 @@ public class InstamojoImpl implements Instamojo {
     }
 
     @Override
-    public List<Invoice> getInvoices() throws ConnectionException, HTTPException {
+    public List<Invoice> getInvoices(int page, int limit) throws ConnectionException, HTTPException {
+
         Map<String, String> params = new HashMap<>();
+        params.put("page", String.valueOf(page));
+        params.put("limit", String.valueOf(limit));
 
         try {
             String response = HttpUtils.get(context.getApiPath(Constants.INVOICE_API_PATH), getHeaders(), params);
@@ -165,8 +161,21 @@ public class InstamojoImpl implements Instamojo {
     }
 
     @Override
-    public List<Payout> getPayouts() throws ConnectionException, HTTPException {
+    public List<Payout> getPayouts(int page, int limit) throws ConnectionException, HTTPException {
+        return getPayouts(null, page, limit);
+    }
+
+    @Override
+    public List<Payout> getPayouts(Map<PayoutFilter, String> filter, int page, int limit) throws ConnectionException, HTTPException {
+
         Map<String, String> params = new HashMap<>();
+        if (filter != null) {
+            for (Map.Entry<PayoutFilter, String> entry : filter.entrySet()) {
+                params.put(entry.getKey().name().toLowerCase(), entry.getValue());
+            }
+        }
+        params.put("page", String.valueOf(page));
+        params.put("limit", String.valueOf(limit));
 
         try {
             String response = HttpUtils.get(context.getApiPath(Constants.PAYOUT_API_PATH), getHeaders(), params);
@@ -214,7 +223,22 @@ public class InstamojoImpl implements Instamojo {
     }
 
     @Override
-    public List<PaymentRequest> getPaymentRequests() throws ConnectionException, HTTPException {
+    public List<PaymentRequest> getPaymentRequests(int page, int limit) throws ConnectionException, HTTPException {
+        return getPaymentRequests(null, page, limit);
+    }
+
+    @Override
+    public List<PaymentRequest> getPaymentRequests(Map<PaymentRequestFilter, String> filter, int page, int limit) throws ConnectionException, HTTPException {
+
+        Map<String, String> params = new HashMap<>();
+        if (filter != null) {
+            for (Map.Entry<PaymentRequestFilter, String> entry : filter.entrySet()) {
+                params.put(entry.getKey().name().toLowerCase(), entry.getValue());
+            }
+        }
+        params.put("page", String.valueOf(page));
+        params.put("limit", String.valueOf(limit));
+
         try {
             String response = HttpUtils.get(context.getApiPath(Constants.PAYMENT_REQUEST_API_PATH), getHeaders());
 
