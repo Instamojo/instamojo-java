@@ -36,21 +36,21 @@ public class HttpUtils {
     private HttpUtils() {
     }
 
-    public static String get(String url, Map<String, String> headers) throws URISyntaxException, IOException, HTTPException {
-        return get(url, headers, null);
+    public static String get(String url, Map<String, String> customHeaders) throws URISyntaxException, IOException, HTTPException {
+        return get(url, customHeaders, null);
     }
 
     /**
      * Send get request.
      *
-     * @param url     the url
-     * @param headers the headers
-     * @param params  the params
+     * @param url           the url
+     * @param customHeaders the customHeaders
+     * @param params        the params
      * @return the string
      * @throws URISyntaxException the uri syntax exception
      * @throws IOException        the io exception
      */
-    public static String get(String url, Map<String, String> headers, Map<String, String> params) throws URISyntaxException, IOException, HTTPException {
+    public static String get(String url, Map<String, String> customHeaders, Map<String, String> params) throws URISyntaxException, IOException, HTTPException {
         LOGGER.log(Level.INFO, "Sending GET request to the url {0}", url);
 
         URIBuilder uriBuilder = new URIBuilder(url);
@@ -63,7 +63,7 @@ public class HttpUtils {
 
         HttpGet httpGet = new HttpGet(uriBuilder.build());
 
-        addHeadersToHttpRequest(httpGet, headers);
+        populateHeaders(httpGet, customHeaders);
 
         HttpClient httpClient = HttpClientBuilder.create().build();
 
@@ -81,18 +81,18 @@ public class HttpUtils {
     /**
      * Send post request.
      *
-     * @param url     the url
-     * @param headers the headers
-     * @param params  the params
+     * @param url           the url
+     * @param customHeaders the customHeaders
+     * @param params        the params
      * @return the string
      * @throws IOException the io exception
      */
-    public static String post(String url, Map<String, String> headers, Map<String, String> params) throws IOException, HTTPException {
+    public static String post(String url, Map<String, String> customHeaders, Map<String, String> params) throws IOException, HTTPException {
         LOGGER.log(Level.INFO, "Sending POST request to the url {0}", url);
 
         HttpPost httpPost = new HttpPost(url);
 
-        addHeadersToHttpRequest(httpPost, headers);
+        populateHeaders(httpPost, customHeaders);
 
         if (params != null && params.size() > 0) {
             List<NameValuePair> nameValuePairs = new ArrayList<>();
@@ -115,17 +115,18 @@ public class HttpUtils {
         return EntityUtils.toString(httpResponse.getEntity(), StandardCharsets.UTF_8);
     }
 
-    public static String post(String url, Map<String, String> headers) throws IOException, HTTPException {
-        return post(url, headers, "");
+    public static String post(String url, Map<String, String> customHeaders) throws IOException, HTTPException {
+        return post(url, customHeaders, "");
     }
 
-    public static String post(String url, Map<String, String> headers, String jsonPayload) throws IOException, HTTPException {
+    public static String post(String url, Map<String, String> customHeaders, String jsonPayload) throws IOException, HTTPException {
         LOGGER.log(Level.INFO, "Sending POST request to the url {0}", url);
         HttpPost httpPost = new HttpPost(url);
 
-        addHeadersToHttpRequest(httpPost, headers);
-        httpPost.addHeader("Accept", "application/json");
-        httpPost.addHeader("Content-Type", "application/json");
+        customHeaders.put("Accept", "application/json");
+        customHeaders.put("Content-Type", "application/json");
+
+        populateHeaders(httpPost, customHeaders);
 
         if (jsonPayload != null || !jsonPayload.isEmpty()) {
             httpPost.setEntity(new StringEntity(jsonPayload));
@@ -151,9 +152,12 @@ public class HttpUtils {
         return false;
     }
 
-    private static void addHeadersToHttpRequest(HttpRequestBase httpRequestBase, Map<String, String> headers) {
-        if (headers != null && headers.size() > 0) {
-            for (Map.Entry<String, String> header : headers.entrySet()) {
+    private static void populateHeaders(HttpRequestBase httpRequestBase, Map<String, String> customHeaders) {
+        // Adding default headers
+        httpRequestBase.addHeader("User-Agent", "instamojo-java");
+
+        if (customHeaders != null && customHeaders.size() > 0) {
+            for (Map.Entry<String, String> header : customHeaders.entrySet()) {
                 httpRequestBase.addHeader(header.getKey(), header.getValue());
             }
         }
