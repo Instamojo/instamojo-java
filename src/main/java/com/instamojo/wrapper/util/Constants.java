@@ -17,14 +17,14 @@ public class Constants {
 	 */
 	public static final String INSTAMOJO_LIVE_API_ENDPOINT = "https://www.instamojo.com/v2/";
 
-	public static final String INSTAMOJO_TEST_API_ENDPOINT = "http://localhost:5000/v2/";
+	public static final String INSTAMOJO_TEST_API_ENDPOINT = "https://test.instamojo.com/v2/";
 
 	/**
 	 * The constant INSTAMOJO_AUTH_ENDPOINT.
 	 */
 	public static final String INSTAMOJO_LIVE_AUTH_ENDPOINT = "https://www.instamojo.com/oauth2/token/";
 
-	public static final String INSTAMOJO_TEST_AUTH_ENDPOINT = "http://localhost:5000/oauth2/token/";
+	public static final String INSTAMOJO_TEST_AUTH_ENDPOINT = "https://test.instamojo.com/oauth2/token/";
 
 	/**
 	 * The constant CLIENT_ID.

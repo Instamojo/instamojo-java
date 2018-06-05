@@ -141,11 +141,11 @@ public class InstamojoIntegrationTest {
         rap.setAmount(10.0);
         rap.setEmail("vijith@instamojo.com");
         rap.setPurpose("testing rap");
-        rap.setPhone("9999999999");
+        rap.setPhone("+919999999999");
         api.createPaymentRequest(rap);
 
         Map<PaymentRequestFilter, String> filter = new HashMap<>();
-        filter.put(PaymentRequestFilter.PHONE, "9999999999");
+        filter.put(PaymentRequestFilter.PHONE, "+919999999999");
 
         List<PaymentRequest> raps = api.getPaymentRequests(filter, 1, 1);
         assertEquals(1, raps.size());
