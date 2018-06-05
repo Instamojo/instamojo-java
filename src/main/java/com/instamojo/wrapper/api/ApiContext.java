@@ -2,8 +2,8 @@ package com.instamojo.wrapper.api;
 
 import com.google.gson.Gson;
 import com.instamojo.wrapper.exception.ConnectionException;
-import com.instamojo.wrapper.exception.InvalidClientException;
 import com.instamojo.wrapper.exception.HTTPException;
+import com.instamojo.wrapper.exception.InvalidClientException;
 import com.instamojo.wrapper.model.AccessToken;
 import com.instamojo.wrapper.util.Constants;
 import com.instamojo.wrapper.util.HttpUtils;
@@ -21,9 +21,6 @@ import java.util.logging.Logger;
  */
 public class ApiContext {
 
-    /*
-     * The Constant LOGGER.
-     */
     private static final Logger LOGGER = Logger.getLogger(ApiContext.class.getName());
 
     public enum Mode {
@@ -54,13 +51,6 @@ public class ApiContext {
 
     private Mode mode;
 
-    private ApiContext() {
-        // Default private constructor
-    }
-
-    /*
-     * Instantiates a new instamojo impl.
-     */
     private ApiContext(String clientId, String clientSecret, Mode mode) {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
@@ -68,10 +58,11 @@ public class ApiContext {
     }
 
     /**
-     * Gets api.
+     * Create a context
      *
      * @param clientId     the client id
      * @param clientSecret the client secret
+     * @param mode         TEST or LIVE
      * @return the api
      */
     public static ApiContext create(String clientId, String clientSecret, Mode mode) {
