@@ -15,7 +15,7 @@ public class InstamojoExample {
         /*
          * Get a reference to the instamojo api
          */
-        ApiContext context = ApiContext.create("[CLIENT_ID]", "[CLIENT_SECRET]", ApiContext.Mode.TEST);
+        ApiContext context = ApiContext.create("[PARAM_CLIENT_ID]", "[PARAM_CLIENT_SECRET]", ApiContext.Mode.TEST);
         Instamojo api = new InstamojoImpl(context);
 
         /*

@@ -27,55 +27,64 @@ public class Constants {
     public static final String INSTAMOJO_TEST_AUTH_ENDPOINT = "https://test.instamojo.com/oauth2/token/";
 
     /**
-     * The constant CLIENT_ID.
+     * The constant PARAM_CLIENT_ID.
      */
-    public static final String CLIENT_ID = "client_id";
+    public static final String PARAM_CLIENT_ID = "client_id";
 
     /**
-     * The constant CLIENT_SECRET.
+     * The constant PARAM_CLIENT_SECRET.
      */
-    public static final String CLIENT_SECRET = "client_secret";
+    public static final String PARAM_CLIENT_SECRET = "client_secret";
 
     /**
-     * The constant GRANT_TYPE.
+     * The constant PARAM_GRANT_TYPE.
      */
-    public static final String GRANT_TYPE = "grant_type";
+    public static final String PARAM_GRANT_TYPE = "grant_type";
+
+    public static final String PARAM_USERNAME = "username";
 
     /**
-     * The constant GRANT_TYPE.
+     * The constant PARAM_GRANT_TYPE.
      */
-    public static final String REFRESH_TOKEN = "refresh_token";
+    public static final String PARAM_REFRESH_TOKEN = "refresh_token";
 
     /**
-     * The constant CLIENT_CREDENTIALS.
+     * The constant PARAM_PASSWORD.
      */
-    public static final String CLIENT_CREDENTIALS = "client_credentials";
+    public static final String PARAM_PASSWORD = "password";
 
     /**
-     * The constant REFRESH_TOKEN.
+     * The constant GRAND_TYPE_CLIENT_CREDENTIALS.
      */
-    public static final String GRAND_REFRESH_TOKEN = "refresh_token";
+    public static final String GRAND_TYPE_CLIENT_CREDENTIALS = "client_credentials";
 
     /**
-     * The constant AUTHORIZATION.
+     * The constant PARAM_REFRESH_TOKEN.
      */
-    public static final String AUTHORIZATION = "Authorization";
+    public static final String GRAND_TYPE_REFRESH_TOKEN = "refresh_token";
 
     /**
-     * The constant PAYMENT_ORDER_API_PATH.
+     * The constant HEADER_AUTHORIZATION.
      */
-    public static final String PAYMENT_ORDER_API_PATH = "gateway/orders/";
+    public static final String HEADER_AUTHORIZATION = "Authorization";
+
+    public static final String HEADER_CONTENT_TYPE = "Content-Type";
+
+    public static final String HEADER_ACCEPT = "Accept";
 
     /**
-     * The constant REFUND_API_PATH.
+     * The constant PATH_PAYMENT_ORDER.
      */
-    public static final String REFUND_API_PATH = "payments/";
+    public static final String PATH_PAYMENT_ORDER = "gateway/orders/";
 
-    public static final String INVOICE_API_PATH = "invoices/";
+    /**
+     * The constant PATH_REFUND.
+     */
+    public static final String PATH_REFUND = "payments/";
 
-    public static final String PAYOUT_API_PATH = "payouts/";
+    public static final String PATH_INVOICE = "invoices/";
 
-    public static final String PAYMENT_REQUEST_API_PATH = "payment_requests/";
+    public static final String PATH_PAYOUT = "payouts/";
 
-    public static final String BULK_PAYMENT_REQUEST_API_PATH = "bulk-payment-requests/";
+    public static final String PATH_PAYMENT_REQUEST = "payment_requests/";
 }

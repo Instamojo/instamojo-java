@@ -49,12 +49,22 @@ public class ApiContext {
      */
     private String clientSecret;
 
+    private String username;
+
+    private String password;
+
     private Mode mode;
 
     private ApiContext(String clientId, String clientSecret, Mode mode) {
+        this(clientId, clientSecret, null, null, mode);
+    }
+
+    private ApiContext(String clientId, String clientSecret, String username, String password, Mode mode) {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.mode = mode;
+        this.username = username;
+        this.password = password;
     }
 
     /**
@@ -70,6 +80,28 @@ public class ApiContext {
             synchronized (ApiContext.class) {
                 if (instance == null) {
                     instance = new ApiContext(clientId, clientSecret, mode);
+                }
+            }
+        }
+
+        return instance;
+    }
+
+    /**
+     * Create a context
+     *
+     * @param clientId     the client id
+     * @param clientSecret the client secret
+     * @param username     user's username
+     * @param password     user's password
+     * @param mode         TEST or LIVE
+     * @return the api
+     */
+    public static ApiContext create(String clientId, String clientSecret, String username, String password, Mode mode) {
+        if (instance == null) {
+            synchronized (ApiContext.class) {
+                if (instance == null) {
+                    instance = new ApiContext(clientId, clientSecret, username, password, mode);
                 }
             }
         }
@@ -100,9 +132,17 @@ public class ApiContext {
         }
 
         Map<String, String> params = new HashMap<>();
-        params.put(Constants.CLIENT_ID, clientId);
-        params.put(Constants.CLIENT_SECRET, clientSecret);
-        params.put(Constants.GRANT_TYPE, Constants.CLIENT_CREDENTIALS);
+        params.put(Constants.PARAM_CLIENT_ID, clientId);
+        params.put(Constants.PARAM_CLIENT_SECRET, clientSecret);
+
+        if (isUserAuthFlow()) {
+            params.put(Constants.PARAM_GRANT_TYPE, Constants.PARAM_PASSWORD);
+            params.put(Constants.PARAM_USERNAME, username);
+            params.put(Constants.PARAM_PASSWORD, password);
+
+        } else {
+            params.put(Constants.PARAM_GRANT_TYPE, Constants.GRAND_TYPE_CLIENT_CREDENTIALS);
+        }
 
         loadAccessToken(params);
     }
@@ -116,10 +156,18 @@ public class ApiContext {
         }
 
         Map<String, String> params = new HashMap<>();
-        params.put(Constants.CLIENT_ID, clientId);
-        params.put(Constants.CLIENT_SECRET, clientSecret);
-        params.put(Constants.GRANT_TYPE, Constants.GRAND_REFRESH_TOKEN);
-        params.put(Constants.REFRESH_TOKEN, accessToken.getRefreshToken());
+        params.put(Constants.PARAM_CLIENT_ID, clientId);
+        params.put(Constants.PARAM_CLIENT_SECRET, clientSecret);
+
+        if (isUserAuthFlow() && accessToken.getRefreshToken() != null) {
+            // For user based authentication, refresh the token
+            params.put(Constants.PARAM_GRANT_TYPE, Constants.GRAND_TYPE_REFRESH_TOKEN);
+            params.put(Constants.PARAM_REFRESH_TOKEN, accessToken.getRefreshToken());
+
+        } else {
+            // For app based authentication, reload the token
+            params.put(Constants.PARAM_GRANT_TYPE, Constants.GRAND_TYPE_CLIENT_CREDENTIALS);
+        }
 
         loadAccessToken(params);
     }
@@ -190,5 +238,9 @@ public class ApiContext {
         }
 
         return Constants.INSTAMOJO_LIVE_AUTH_ENDPOINT;
+    }
+
+    private boolean isUserAuthFlow() {
+        return (username != null && password != null);
     }
 }

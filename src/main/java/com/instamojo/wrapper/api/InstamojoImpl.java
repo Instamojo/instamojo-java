@@ -36,7 +36,7 @@ public class InstamojoImpl implements Instamojo {
         Asserts.notNull(paymentOrder, "Payment Order");
 
         try {
-            String response = HttpUtils.post(context.getApiPath(Constants.PAYMENT_ORDER_API_PATH), getHeaders(),
+            String response = HttpUtils.post(context.getApiPath(Constants.PATH_PAYMENT_ORDER), getHeaders(),
                     gson.toJson(paymentOrder));
             return gson.fromJson(response, PaymentOrderResponse.class);
 
@@ -50,7 +50,7 @@ public class InstamojoImpl implements Instamojo {
         Asserts.notEmpty(id, "Order Id");
 
         try {
-            String response = HttpUtils.get(context.getApiPath(Constants.PAYMENT_ORDER_API_PATH + "id:" + id + "/"),
+            String response = HttpUtils.get(context.getApiPath(Constants.PATH_PAYMENT_ORDER + "id:" + id + "/"),
                     getHeaders());
             return gson.fromJson(response, PaymentOrder.class);
 
@@ -65,7 +65,7 @@ public class InstamojoImpl implements Instamojo {
 
         try {
             String response = HttpUtils.get(
-                    context.getApiPath(Constants.PAYMENT_ORDER_API_PATH + "transaction_id:" + transactionId + "/"),
+                    context.getApiPath(Constants.PATH_PAYMENT_ORDER + "transaction_id:" + transactionId + "/"),
                     getHeaders());
             return gson.fromJson(response, PaymentOrder.class);
 
@@ -82,7 +82,7 @@ public class InstamojoImpl implements Instamojo {
         params.put("limit", String.valueOf(limit));
 
         try {
-            String response = HttpUtils.get(context.getApiPath(Constants.PAYMENT_ORDER_API_PATH), getHeaders(), params);
+            String response = HttpUtils.get(context.getApiPath(Constants.PATH_PAYMENT_ORDER), getHeaders(), params);
 
             Type type = new TypeToken<ApiListResponse<PaymentOrder>>() {
             }.getType();
@@ -99,7 +99,7 @@ public class InstamojoImpl implements Instamojo {
         Asserts.notNull(refund, "Refund");
 
         try {
-            String response = HttpUtils.post(context.getApiPath(Constants.REFUND_API_PATH + refund.getPaymentId() + "" +
+            String response = HttpUtils.post(context.getApiPath(Constants.PATH_REFUND + refund.getPaymentId() + "" +
                     "/refund/"), getHeaders(), gson.toJson(refund));
 
             Type type = new TypeToken<ApiResponse<Refund>>() {
@@ -137,7 +137,7 @@ public class InstamojoImpl implements Instamojo {
         params.put("limit", String.valueOf(limit));
 
         try {
-            String response = HttpUtils.get(context.getApiPath(Constants.INVOICE_API_PATH), getHeaders(), params);
+            String response = HttpUtils.get(context.getApiPath(Constants.PATH_INVOICE), getHeaders(), params);
 
             Type type = new TypeToken<ApiListResponse<Invoice>>() {
             }.getType();
@@ -167,7 +167,7 @@ public class InstamojoImpl implements Instamojo {
         params.put("limit", String.valueOf(limit));
 
         try {
-            String response = HttpUtils.get(context.getApiPath(Constants.PAYOUT_API_PATH), getHeaders(), params);
+            String response = HttpUtils.get(context.getApiPath(Constants.PATH_PAYOUT), getHeaders(), params);
 
             Type type = new TypeToken<ApiListResponse<Payout>>() {
             }.getType();
@@ -184,7 +184,7 @@ public class InstamojoImpl implements Instamojo {
         Asserts.notEmpty(id, "Payout Id");
 
         try {
-            String response = HttpUtils.get(context.getApiPath(Constants.PAYOUT_API_PATH + "id:" + id + "/"),
+            String response = HttpUtils.get(context.getApiPath(Constants.PATH_PAYOUT + "id:" + id + "/"),
                     getHeaders());
 
             Type type = new TypeToken<ApiResponse<Payout>>() {
@@ -203,7 +203,7 @@ public class InstamojoImpl implements Instamojo {
 
         try {
             String response = HttpUtils.post(
-                    context.getApiPath(Constants.PAYMENT_REQUEST_API_PATH), getHeaders(), gson.toJson(paymentRequest));
+                    context.getApiPath(Constants.PATH_PAYMENT_REQUEST), getHeaders(), gson.toJson(paymentRequest));
             return gson.fromJson(response, PaymentRequest.class);
 
         } catch (IOException e) {
@@ -229,7 +229,7 @@ public class InstamojoImpl implements Instamojo {
         params.put("limit", String.valueOf(limit));
 
         try {
-            String response = HttpUtils.get(context.getApiPath(Constants.PAYMENT_REQUEST_API_PATH), getHeaders(), params);
+            String response = HttpUtils.get(context.getApiPath(Constants.PATH_PAYMENT_REQUEST), getHeaders(), params);
 
             Type type = new TypeToken<ApiListResponse<PaymentRequest>>() {
             }.getType();
@@ -244,7 +244,7 @@ public class InstamojoImpl implements Instamojo {
     @Override
     public PaymentRequest getPaymentRequest(String id) throws ConnectionException, HTTPException {
         try {
-            String response = HttpUtils.get(context.getApiPath(Constants.PAYMENT_REQUEST_API_PATH + id + "/"),
+            String response = HttpUtils.get(context.getApiPath(Constants.PATH_PAYMENT_REQUEST + id + "/"),
                     getHeaders());
             return gson.fromJson(response, PaymentRequest.class);
 
@@ -256,7 +256,7 @@ public class InstamojoImpl implements Instamojo {
     @Override
     public Boolean enablePaymentRequest(String id) throws ConnectionException, HTTPException {
         try {
-            String response = HttpUtils.post(context.getApiPath(Constants.PAYMENT_REQUEST_API_PATH + id + "/enable/"),
+            String response = HttpUtils.post(context.getApiPath(Constants.PATH_PAYMENT_REQUEST + id + "/enable/"),
                     getHeaders());
             ApiResponse rapResponse = gson.fromJson(response, ApiResponse.class);
             return rapResponse.getSuccess();
@@ -269,7 +269,7 @@ public class InstamojoImpl implements Instamojo {
     @Override
     public Boolean disablePaymentRequest(String id) throws ConnectionException, HTTPException {
         try {
-            String response = HttpUtils.post(context.getApiPath(Constants.PAYMENT_REQUEST_API_PATH + id + "/disable/"),
+            String response = HttpUtils.post(context.getApiPath(Constants.PATH_PAYMENT_REQUEST + id + "/disable/"),
                     getHeaders());
             ApiResponse rapResponse = gson.fromJson(response, ApiResponse.class);
             return rapResponse.getSuccess();
@@ -281,7 +281,7 @@ public class InstamojoImpl implements Instamojo {
 
     private Map<String, String> getHeaders() throws ConnectionException, HTTPException {
         Map<String, String> headers = new HashMap<>();
-        headers.put(Constants.AUTHORIZATION, context.getAuthorization());
+        headers.put(Constants.HEADER_AUTHORIZATION, context.getAuthorization());
         return headers;
     }
 }

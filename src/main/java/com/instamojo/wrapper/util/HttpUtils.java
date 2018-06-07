@@ -123,8 +123,8 @@ public class HttpUtils {
         LOGGER.log(Level.INFO, "Sending POST request to the url {0}", url);
         HttpPost httpPost = new HttpPost(url);
 
-        customHeaders.put("Accept", "application/json");
-        customHeaders.put("Content-Type", "application/json");
+        customHeaders.put(Constants.HEADER_ACCEPT, "application/json");
+        customHeaders.put(Constants.HEADER_CONTENT_TYPE, "application/json");
 
         populateHeaders(httpPost, customHeaders);
 
