@@ -78,6 +78,7 @@ public class ApiListResponse<T> {
                 "count=" + count +
                 ", next='" + next + '\'' +
                 ", previous='" + previous + '\'' +
+                ", results='" + results + '\''+
                 '}';
     }
 }

@@ -34,10 +34,10 @@ ext {
     siteUrl = 'https://github.com/Instamojo/instamojo-java'
     gitUrl = 'https://github.com/Instamojo/instamojo-java.git'
 
-    libraryVersion = '1.1.0'
-    developerId = 'vedhavyas'
-    developerName = 'Vedhavyas Singareddi'
-    developerEmail = 'vedhavyas@instamojo.com'
+    libraryVersion = '2.0.0'
+    developerId = 'vijith'
+    developerName = 'Vijith Kumar'
+    developerEmail = 'support@instamojo.com'
 
     licenseName = 'MIT License'
     licenseUrl = 'https://opensource.org/licenses/MIT'
