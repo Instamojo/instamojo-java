@@ -1,14 +1,11 @@
-package com.instamojo.wrapper.response;
+package com.instamojo.wrapper.model;
 
 import com.google.gson.annotations.SerializedName;
 
 /**
- * The Class AccessTokenResponse.
+ * The Class AccessToken.
  */
-public class AccessTokenResponse extends Response {
-
-    /** The Constant serialVersionUID. */
-    private static final long serialVersionUID = 6676032026345798360L;
+public class AccessToken {
 
     /** The token. */
     @SerializedName("access_token")
@@ -21,6 +18,10 @@ public class AccessTokenResponse extends Response {
     /** The expires in. */
     @SerializedName("expires_in")
     private Long expiresIn;
+
+    /** To refresh the token if it expires */
+    @SerializedName("refresh_token")
+    private String refreshToken;
 
     /** The scope. */
     private String scope;
@@ -62,6 +63,14 @@ public class AccessTokenResponse extends Response {
      */
     public void setTokenType(String tokenType) {
         this.tokenType = tokenType;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 
     /**
@@ -119,18 +128,15 @@ public class AccessTokenResponse extends Response {
         this.error = error;
     }
 
-    /* (non-Javadoc)
-     * @see com.instamojo.wrapper.response.Response#toString()
-     */
     @Override
     public String toString() {
-        return "AccessTokenResponse{" +
+        return "AccessToken{" +
                 "token='" + token + '\'' +
                 ", tokenType='" + tokenType + '\'' +
                 ", expiresIn=" + expiresIn +
+                ", refreshToken='" + refreshToken + '\'' +
                 ", scope='" + scope + '\'' +
                 ", error='" + error + '\'' +
-                ", jsonResponse='" + jsonResponse + '\'' +
                 '}';
     }
 }

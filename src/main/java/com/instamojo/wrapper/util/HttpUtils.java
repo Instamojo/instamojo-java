@@ -1,17 +1,6 @@
 package com.instamojo.wrapper.util;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.net.URISyntaxException;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+import com.instamojo.wrapper.exception.HTTPException;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -20,8 +9,19 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * The type Http utils.
@@ -36,18 +36,22 @@ public class HttpUtils {
     private HttpUtils() {
     }
 
+    public static String get(String url, Map<String, String> customHeaders) throws URISyntaxException, IOException, HTTPException {
+        return get(url, customHeaders, null);
+    }
+
     /**
      * Send get request.
      *
-     * @param url     the url
-     * @param headers the headers
-     * @param params  the params
+     * @param url           the url
+     * @param customHeaders the customHeaders
+     * @param params        the params
      * @return the string
      * @throws URISyntaxException the uri syntax exception
      * @throws IOException        the io exception
      */
-    public static String sendGetRequest(String url, Map<String, String> headers, Map<String, String> params) throws URISyntaxException, IOException {
-        LOGGER.log(Level.INFO, "Sending GET request to the url {}", url);
+    public static String get(String url, Map<String, String> customHeaders, Map<String, String> params) throws URISyntaxException, IOException, HTTPException {
+        LOGGER.log(Level.INFO, "Sending GET request to the url {0}", url);
 
         URIBuilder uriBuilder = new URIBuilder(url);
 
@@ -59,30 +63,36 @@ public class HttpUtils {
 
         HttpGet httpGet = new HttpGet(uriBuilder.build());
 
-        addHeadersToHttpRequest(httpGet, headers);
+        populateHeaders(httpGet, customHeaders);
 
         HttpClient httpClient = HttpClientBuilder.create().build();
 
         HttpResponse httpResponse = httpClient.execute(httpGet);
 
-        return getHttpResponseAsString(httpResponse);
+        int statusCode = httpResponse.getStatusLine().getStatusCode();
+        if (isErrorStatus(statusCode)) {
+            String jsonErrorResponse = EntityUtils.toString(httpResponse.getEntity(), StandardCharsets.UTF_8);
+            throw new HTTPException(statusCode, httpResponse.getStatusLine().getReasonPhrase(), jsonErrorResponse);
+        }
+
+        return EntityUtils.toString(httpResponse.getEntity(), StandardCharsets.UTF_8);
     }
 
     /**
      * Send post request.
      *
-     * @param url     the url
-     * @param headers the headers
-     * @param params  the params
+     * @param url           the url
+     * @param customHeaders the customHeaders
+     * @param params        the params
      * @return the string
      * @throws IOException the io exception
      */
-    public static String sendPostRequest(String url, Map<String, String> headers, Map<String, String> params) throws IOException {
-        LOGGER.log(Level.INFO, "Sending POST request to the url {}", url);
+    public static String post(String url, Map<String, String> customHeaders, Map<String, String> params) throws IOException, HTTPException {
+        LOGGER.log(Level.INFO, "Sending POST request to the url {0}", url);
 
         HttpPost httpPost = new HttpPost(url);
 
-        addHeadersToHttpRequest(httpPost, headers);
+        populateHeaders(httpPost, customHeaders);
 
         if (params != null && params.size() > 0) {
             List<NameValuePair> nameValuePairs = new ArrayList<>();
@@ -96,31 +106,60 @@ public class HttpUtils {
 
         HttpResponse httpResponse = httpClient.execute(httpPost);
 
-        return getHttpResponseAsString(httpResponse);
+        int statusCode = httpResponse.getStatusLine().getStatusCode();
+        if (isErrorStatus(statusCode)) {
+            String jsonErrorResponse = EntityUtils.toString(httpResponse.getEntity(), StandardCharsets.UTF_8);
+            throw new HTTPException(statusCode, httpResponse.getStatusLine().getReasonPhrase(), jsonErrorResponse);
+        }
+
+        return EntityUtils.toString(httpResponse.getEntity(), StandardCharsets.UTF_8);
     }
 
-    private static void addHeadersToHttpRequest(HttpRequestBase httpRequestBase, Map<String, String> headers) {
-        if (headers != null && headers.size() > 0) {
-            for (Map.Entry<String, String> header : headers.entrySet()) {
+    public static String post(String url, Map<String, String> customHeaders) throws IOException, HTTPException {
+        return post(url, customHeaders, "");
+    }
+
+    public static String post(String url, Map<String, String> customHeaders, String jsonPayload) throws IOException, HTTPException {
+        LOGGER.log(Level.INFO, "Sending POST request to the url {0}", url);
+        HttpPost httpPost = new HttpPost(url);
+
+        customHeaders.put(Constants.HEADER_ACCEPT, "application/json");
+        customHeaders.put(Constants.HEADER_CONTENT_TYPE, "application/json");
+
+        populateHeaders(httpPost, customHeaders);
+
+        if (jsonPayload != null || !jsonPayload.isEmpty()) {
+            httpPost.setEntity(new StringEntity(jsonPayload));
+        }
+
+        HttpClient httpClient = HttpClientBuilder.create().build();
+        HttpResponse httpResponse = httpClient.execute(httpPost);
+
+        int statusCode = httpResponse.getStatusLine().getStatusCode();
+        if (isErrorStatus(statusCode)) {
+            String jsonErrorResponse = EntityUtils.toString(httpResponse.getEntity(), StandardCharsets.UTF_8);
+            throw new HTTPException(statusCode, httpResponse.getStatusLine().getReasonPhrase(), jsonErrorResponse);
+        }
+
+        return EntityUtils.toString(httpResponse.getEntity(), StandardCharsets.UTF_8);
+    }
+
+    private static boolean isErrorStatus(int statusCode) {
+        if (statusCode >= 400 && statusCode < 600) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private static void populateHeaders(HttpRequestBase httpRequestBase, Map<String, String> customHeaders) {
+        // Adding default headers
+        httpRequestBase.addHeader("User-Agent", "instamojo-java");
+
+        if (customHeaders != null && customHeaders.size() > 0) {
+            for (Map.Entry<String, String> header : customHeaders.entrySet()) {
                 httpRequestBase.addHeader(header.getKey(), header.getValue());
             }
         }
-    }
-
-    private static String getHttpResponseAsString(HttpResponse httpResponse) {
-        StringBuilder stringResponse = new StringBuilder();
-        try {
-            Reader reader = new InputStreamReader(httpResponse.getEntity().getContent(),
-                    Charset.forName("UTF-8"));
-            BufferedReader br = new BufferedReader(reader);
-            String output;
-            while ((output = br.readLine()) != null) {
-                stringResponse.append(output);
-            }
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
-        }
-
-        return stringResponse.toString();
     }
 }
