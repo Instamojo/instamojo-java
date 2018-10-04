@@ -5,8 +5,9 @@ import com.instamojo.wrapper.exception.HTTPException;
 import com.instamojo.wrapper.model.PaymentOrder;
 import com.instamojo.wrapper.model.PaymentOrderResponse;
 import com.instamojo.wrapper.model.Refund;
+import com.instamojo.wrapper.response.ApiListResponse;
 
-import java.util.List;
+
 
 public class InstamojoExample {
 
@@ -83,11 +84,11 @@ public class InstamojoExample {
          * Get list of all payment orders
          */
         try {
-            List<PaymentOrder> paymentOrders = api.getPaymentOrders(0, 10);
+            ApiListResponse<PaymentOrder> paymentOrders = api.getPaymentOrders(0, 10);
 
             // Loop over all of the payment orders and print status of each
             // payment order.
-            for (PaymentOrder paymentOrder : paymentOrders) {
+            for (PaymentOrder paymentOrder : paymentOrders.getResults()) {
                 System.out.println("Result = " + paymentOrder.getStatus());
             }
             System.out.println(paymentOrders);

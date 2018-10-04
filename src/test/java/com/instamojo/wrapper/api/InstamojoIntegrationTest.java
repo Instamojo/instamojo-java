@@ -4,6 +4,7 @@ import com.instamojo.wrapper.builder.PaymentOrderBuilder;
 import com.instamojo.wrapper.exception.HTTPException;
 import com.instamojo.wrapper.filter.PaymentRequestFilter;
 import com.instamojo.wrapper.model.*;
+import com.instamojo.wrapper.response.ApiListResponse;
 import com.instamojo.wrapper.util.TestConstants;
 import org.junit.Before;
 import org.junit.Rule;
@@ -11,7 +12,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -101,9 +101,9 @@ public class InstamojoIntegrationTest {
     public void getPaymentOrdersByFilter() throws Exception {
         PaymentOrder order = new PaymentOrderBuilder().build();
         PaymentOrderResponse paymentOrderResponse = api.createPaymentOrder(order);
-
-        List<PaymentOrder> paymentOrders = api.getPaymentOrders(1, 1);
-        assertEquals(1, paymentOrders.size());
+        ApiListResponse<PaymentOrder> paymentOrders = api.getPaymentOrders(1, 1);
+        System.out.println(paymentOrders.getCount().intValue());
+        assert paymentOrders.getCount().intValue() > 0;
     }
 
     @Test
@@ -143,13 +143,11 @@ public class InstamojoIntegrationTest {
         rap.setPurpose("testing rap");
         rap.setPhone("+919999999999");
         api.createPaymentRequest(rap);
-
         Map<PaymentRequestFilter, String> filter = new HashMap<>();
         filter.put(PaymentRequestFilter.PHONE, "+919999999999");
-
-        List<PaymentRequest> raps = api.getPaymentRequests(filter, 1, 1);
-        assertEquals(1, raps.size());
-        assertEquals(rap.getPhone(), raps.get(0).getPhone());
+        ApiListResponse<PaymentRequest> raps = api.getPaymentRequests(filter, 1, 1);
+        assert raps.getCount().intValue() > 0;
+        assertEquals(rap.getPhone(), raps.getResults().get(0).getPhone());
     }
 
     @Test

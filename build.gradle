@@ -15,6 +15,8 @@ buildscript {
     }
 }
 
+
+
 allprojects {
     repositories {
         jcenter()
@@ -34,10 +36,10 @@ ext {
     siteUrl = 'https://github.com/Instamojo/instamojo-java'
     gitUrl = 'https://github.com/Instamojo/instamojo-java.git'
 
-    libraryVersion = '1.1.0'
-    developerId = 'vedhavyas'
-    developerName = 'Vedhavyas Singareddi'
-    developerEmail = 'vedhavyas@instamojo.com'
+    libraryVersion = '2.0.0'
+    developerId = 'vijith'
+    developerName = 'Vijith Kumar'
+    developerEmail = 'support@instamojo.com'
 
     licenseName = 'MIT License'
     licenseUrl = 'https://opensource.org/licenses/MIT'
@@ -56,6 +58,8 @@ dependencies {
     compile group: 'commons-logging', name: 'commons-logging', version: '1.2'
     compile group: 'com.google.code.gson', name: 'gson', version: '2.6.2'
 }
+
+
 
 apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
 apply from: './bintrayv1.gradle'

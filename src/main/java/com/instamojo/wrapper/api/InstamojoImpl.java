@@ -75,7 +75,7 @@ public class InstamojoImpl implements Instamojo {
     }
 
     @Override
-    public List<PaymentOrder> getPaymentOrders(int page, int limit) throws ConnectionException, HTTPException {
+    public ApiListResponse<PaymentOrder> getPaymentOrders(int page, int limit) throws ConnectionException, HTTPException {
 
         Map<String, String> params = new HashMap<>();
         params.put("page", String.valueOf(page));
@@ -86,8 +86,7 @@ public class InstamojoImpl implements Instamojo {
 
             Type type = new TypeToken<ApiListResponse<PaymentOrder>>() {
             }.getType();
-            ApiListResponse<PaymentOrder> paymentOrderListResponse = gson.fromJson(response, type);
-            return paymentOrderListResponse.getResults();
+            return gson.fromJson(response, type);
 
         } catch (IOException | URISyntaxException e) {
             throw new ConnectionException(e.getMessage(), e);
@@ -130,7 +129,7 @@ public class InstamojoImpl implements Instamojo {
     }
 
     @Override
-    public List<Invoice> getInvoices(int page, int limit) throws ConnectionException, HTTPException {
+    public ApiListResponse<Invoice> getInvoices(int page, int limit) throws ConnectionException, HTTPException {
 
         Map<String, String> params = new HashMap<>();
         params.put("page", String.valueOf(page));
@@ -141,8 +140,7 @@ public class InstamojoImpl implements Instamojo {
 
             Type type = new TypeToken<ApiListResponse<Invoice>>() {
             }.getType();
-            ApiListResponse<Invoice> invoices = gson.fromJson(response, type);
-            return invoices.getResults();
+            return gson.fromJson(response, type);
 
         } catch (IOException | URISyntaxException e) {
             throw new ConnectionException(e.getMessage(), e);
@@ -150,12 +148,12 @@ public class InstamojoImpl implements Instamojo {
     }
 
     @Override
-    public List<Payout> getPayouts(int page, int limit) throws ConnectionException, HTTPException {
+    public ApiListResponse<Payout> getPayouts(int page, int limit) throws ConnectionException, HTTPException {
         return getPayouts(null, page, limit);
     }
 
     @Override
-    public List<Payout> getPayouts(Map<PayoutFilter, String> filter, int page, int limit) throws ConnectionException, HTTPException {
+    public ApiListResponse<Payout> getPayouts(Map<PayoutFilter, String> filter, int page, int limit) throws ConnectionException, HTTPException {
 
         Map<String, String> params = new HashMap<>();
         if (filter != null) {
@@ -171,8 +169,7 @@ public class InstamojoImpl implements Instamojo {
 
             Type type = new TypeToken<ApiListResponse<Payout>>() {
             }.getType();
-            ApiListResponse<Payout> invoices = gson.fromJson(response, type);
-            return invoices.getResults();
+            return gson.fromJson(response, type);
 
         } catch (IOException | URISyntaxException e) {
             throw new ConnectionException(e.getMessage(), e);
@@ -212,12 +209,12 @@ public class InstamojoImpl implements Instamojo {
     }
 
     @Override
-    public List<PaymentRequest> getPaymentRequests(int page, int limit) throws ConnectionException, HTTPException {
+    public ApiListResponse<PaymentRequest> getPaymentRequests(int page, int limit) throws ConnectionException, HTTPException {
         return getPaymentRequests(null, page, limit);
     }
 
     @Override
-    public List<PaymentRequest> getPaymentRequests(Map<PaymentRequestFilter, String> filter, int page, int limit) throws ConnectionException, HTTPException {
+    public ApiListResponse<PaymentRequest> getPaymentRequests(Map<PaymentRequestFilter, String> filter, int page, int limit) throws ConnectionException, HTTPException {
 
         Map<String, String> params = new HashMap<>();
         if (filter != null) {
@@ -233,8 +230,7 @@ public class InstamojoImpl implements Instamojo {
 
             Type type = new TypeToken<ApiListResponse<PaymentRequest>>() {
             }.getType();
-            ApiListResponse<PaymentRequest> rapResponse = gson.fromJson(response, type);
-            return rapResponse.getResults();
+            return gson.fromJson(response, type);
 
         } catch (IOException | URISyntaxException e) {
             throw new ConnectionException(e.getMessage(), e);

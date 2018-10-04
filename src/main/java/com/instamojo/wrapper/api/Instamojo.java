@@ -5,6 +5,7 @@ import com.instamojo.wrapper.filter.PayoutFilter;
 import com.instamojo.wrapper.exception.ConnectionException;
 import com.instamojo.wrapper.exception.HTTPException;
 import com.instamojo.wrapper.model.*;
+import com.instamojo.wrapper.response.ApiListResponse;
 
 import java.util.List;
 import java.util.Map;
@@ -55,7 +56,7 @@ public interface Instamojo {
      * @throws ConnectionException on a failure communicating with Instamojo
      * @throws HTTPException       on a failure response from Instamojo
      */
-    List<PaymentOrder> getPaymentOrders(int page, int limit) throws ConnectionException, HTTPException;
+    ApiListResponse<PaymentOrder> getPaymentOrders(int page, int limit) throws ConnectionException, HTTPException;
 
     /**
      * Creates the new refund.
@@ -84,7 +85,7 @@ public interface Instamojo {
      * @throws ConnectionException on a failure communicating with Instamojo
      * @throws HTTPException       on a failure response from Instamojo
      */
-    List<Invoice> getInvoices(int page, int limit) throws ConnectionException, HTTPException;
+    ApiListResponse<Invoice> getInvoices(int page, int limit) throws ConnectionException, HTTPException;
 
     /**
      * Get all payouts of an Instamojo account
@@ -93,7 +94,7 @@ public interface Instamojo {
      * @throws ConnectionException on a failure communicating with Instamojo
      * @throws HTTPException       on a failure response from Instamojo
      */
-    List<Payout> getPayouts(int page, int limit) throws ConnectionException, HTTPException;
+    ApiListResponse<Payout> getPayouts(int page, int limit) throws ConnectionException, HTTPException;
 
     /**
      * Get all payouts of an Instamojo account
@@ -103,7 +104,7 @@ public interface Instamojo {
      * @throws ConnectionException on a failure communicating with Instamojo
      * @throws HTTPException       on a failure response from Instamojo
      */
-    List<Payout> getPayouts(Map<PayoutFilter, String> filter, int page, int limit) throws ConnectionException, HTTPException;
+    ApiListResponse<Payout> getPayouts(Map<PayoutFilter, String> filter, int page, int limit) throws ConnectionException, HTTPException;
 
     /**
      * Get payout by id
@@ -130,7 +131,7 @@ public interface Instamojo {
      * @throws ConnectionException on a failure communicating with Instamojo
      * @throws HTTPException       on a failure response from Instamojo
      */
-    List<PaymentRequest> getPaymentRequests(int page, int limit) throws ConnectionException, HTTPException;
+    ApiListResponse<PaymentRequest> getPaymentRequests(int page, int limit) throws ConnectionException, HTTPException;
 
     /**
      * Get all PaymentRequests
@@ -140,7 +141,7 @@ public interface Instamojo {
      * @throws ConnectionException on a failure communicating with Instamojo
      * @throws HTTPException       on a failure response from Instamojo
      */
-    List<PaymentRequest> getPaymentRequests(Map<PaymentRequestFilter, String> filter, int page, int limit) throws ConnectionException, HTTPException;
+    ApiListResponse<PaymentRequest> getPaymentRequests(Map<PaymentRequestFilter, String> filter, int page, int limit) throws ConnectionException, HTTPException;
 
     /**
      * Get PaymentRequest by id
