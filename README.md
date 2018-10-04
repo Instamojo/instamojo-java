@@ -37,14 +37,14 @@ Java Version : 1.7+
 ### Gradle
 All the dependencies will be downloaded automatically.
 
-`compile group: 'com.instamojo', name: 'instamojo-java', version: '1.1.0'`
+`compile group: 'com.instamojo', name: 'instamojo-java', version: '2.0.0'`
 
 ### JAR
 Download `instamojo-java-<version>.jar` from the latest release and the following dependencies to the classpath of the Application. 
 
 1. [Apache HttpClient v4.5.2](http://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient/4.5.2)
 2. [Apache HttpCore v4.4.4](http://mvnrepository.com/artifact/org.apache.httpcomponents/httpcore/4.4.4)
-3. [Apache Commons Codec v1.9](http://mvnrepository.com/artifact/commons-codec/commons-codec/1.9)
+3. [Apache Commons Codec v1.11](http://mvnrepository.com/artifact/commons-codec/commons-codec/1.11)
 4. [Apache Commons Logging v1.2](http://mvnrepository.com/artifact/commons-logging/commons-logging/1.2)
 5. [Gson v2.6.2](http://mvnrepository.com/artifact/com.google.code.gson/gson/2.6.2)
 
