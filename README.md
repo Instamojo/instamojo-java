@@ -164,11 +164,11 @@ try {
  */
 try {
     PaymentOrderFilter paymentOrderFilter = new PaymentOrderFilter();
-    List<PaymentOrder> paymentOrders = api.getPaymentOrders(paymentOrderFilter);
+    ApiListResponse<PaymentOrder> paymentOrders = api.getPaymentOrders(paymentOrderFilter);
 
     // Loop over all of the payment orders and print status of each
     // payment order.
-    for (PaymentOrder paymentOrder : paymentOrders) {
+    for (PaymentOrder paymentOrder : paymentOrders.getResults()) {
         System.out.println("Result = " + paymentOrder.getStatus());
     }
     System.out.println(paymentOrders);

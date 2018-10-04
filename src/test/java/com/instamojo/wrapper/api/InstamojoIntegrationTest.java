@@ -102,8 +102,7 @@ public class InstamojoIntegrationTest {
         PaymentOrder order = new PaymentOrderBuilder().build();
         PaymentOrderResponse paymentOrderResponse = api.createPaymentOrder(order);
         ApiListResponse<PaymentOrder> paymentOrders = api.getPaymentOrders(1, 1);
-        System.out.println(paymentOrders.getCount().intValue());
-        assert paymentOrders.getCount().intValue() > 0;
+        assertEquals(1, paymentOrders.getResults().size());
     }
 
     @Test
@@ -146,7 +145,7 @@ public class InstamojoIntegrationTest {
         Map<PaymentRequestFilter, String> filter = new HashMap<>();
         filter.put(PaymentRequestFilter.PHONE, "+919999999999");
         ApiListResponse<PaymentRequest> raps = api.getPaymentRequests(filter, 1, 1);
-        assert raps.getCount().intValue() > 0;
+        assertEquals(1, raps.getResults().size());
         assertEquals(rap.getPhone(), raps.getResults().get(0).getPhone());
     }
 
