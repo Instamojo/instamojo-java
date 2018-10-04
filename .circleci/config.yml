@@ -1,0 +1,41 @@
+version: 2
+jobs:
+ build:
+   working_directory: ~/imojo
+
+   docker:
+     - image: circleci/openjdk:8-jdk
+
+   environment:
+     JVM_OPTS: -Xmx3200m
+     TERM: dumb
+
+   steps:
+     - checkout
+
+     - restore_cache:
+         keys:
+         - dependency-cache-{{ checksum "build.gradle" }}
+
+     - run:
+        name: Downloading dependencies
+        command: gradle dependencies
+
+     - save_cache:
+         paths:
+           - ~/.gradle
+         key: dependency-cache-{{ checksum "build.gradle" }}
+
+     - run:
+        name: Running tests
+        command: gradle test
+
+     - run:
+        name: Saving test results
+        command: |
+          mkdir -p ~/test-results/
+          find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/test-results/ \;
+        when: always
+
+     - store_test_results:
+         path: ~/test-results

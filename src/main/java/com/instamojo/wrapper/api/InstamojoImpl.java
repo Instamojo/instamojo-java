@@ -1,422 +1,283 @@
 package com.instamojo.wrapper.api;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.instamojo.wrapper.exception.ConnectionException;
-import com.instamojo.wrapper.exception.InvalidClientException;
-import com.instamojo.wrapper.exception.InvalidPaymentOrderException;
-import com.instamojo.wrapper.exception.InvalidRefundException;
-import com.instamojo.wrapper.model.PaymentOrder;
-import com.instamojo.wrapper.model.PaymentOrderFilter;
-import com.instamojo.wrapper.model.Refund;
-import com.instamojo.wrapper.response.AccessTokenResponse;
-import com.instamojo.wrapper.response.CreatePaymentOrderResponse;
-import com.instamojo.wrapper.response.CreateRefundResponse;
-import com.instamojo.wrapper.response.PaymentOrderDetailsResponse;
-import com.instamojo.wrapper.response.PaymentOrderListResponse;
+import com.instamojo.wrapper.exception.HTTPException;
+import com.instamojo.wrapper.filter.PaymentRequestFilter;
+import com.instamojo.wrapper.filter.PayoutFilter;
+import com.instamojo.wrapper.model.*;
+import com.instamojo.wrapper.response.ApiListResponse;
+import com.instamojo.wrapper.response.ApiResponse;
 import com.instamojo.wrapper.util.Constants;
 import com.instamojo.wrapper.util.HttpUtils;
-import com.instamojo.wrapper.util.JsonUtils;
+import org.apache.commons.codec.digest.HmacAlgorithms;
+import org.apache.commons.codec.digest.HmacUtils;
 import org.apache.http.util.Asserts;
-import org.apache.http.util.TextUtils;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.*;
 
-/**
- * The Class InstamojoImpl.
- */
 public class InstamojoImpl implements Instamojo {
 
-    /**
-     * The Constant LOGGER.
-     */
-    private static final Logger LOGGER = Logger.getLogger(InstamojoImpl.class.getName());
+    private ApiContext context;
 
-    private volatile static Instamojo uniqueInstance;
-    /**
-     * The access token.
-     */
-    private static AccessTokenResponse accessToken;
-    /**
-     * The token creation time.
-     */
-    private static long tokenCreationTime;
-    /**
-     * The client id.
-     */
-    private String clientId;
-    /**
-     * The client secret.
-     */
-    private String clientSecret;
-    /**
-     * The api endpoint.
-     */
-    private String apiEndpoint;
-    /**
-     * The auth endpoint.
-     */
-    private String authEndpoint;
+    private Gson gson;
 
-    private InstamojoImpl() {
+    public InstamojoImpl(ApiContext context) {
+        this.context = context;
+        this.gson = new Gson();
     }
 
-    /**
-     * Instantiates a new instamojo impl.
-     *
-     * @param clientId     the client id
-     * @param clientSecret the client secret
-     * @param apiEndpoint  the api endpoint
-     * @param authEndpoint the auth endpoint
-     */
-    private InstamojoImpl(String clientId, String clientSecret, String apiEndpoint, String authEndpoint) {
-        this.clientId = clientId;
-        this.clientSecret = clientSecret;
-        this.apiEndpoint = apiEndpoint;
-        this.authEndpoint = authEndpoint;
-    }
-
-    /**
-     * Gets the api.
-     *
-     * @param clientId     the client id
-     * @param clientSecret the client secret
-     * @param apiEndpoint  the api endpoint
-     * @param authEndpoint the auth endpoint
-     * @return the api
-     * @throws ConnectionException the connection exception
-     */
-    public static Instamojo getApi(String clientId, String clientSecret, String apiEndpoint, String authEndpoint)
-            throws ConnectionException {
-        Asserts.notEmpty(clientId, "Client Id");
-        Asserts.notEmpty(clientSecret, "Client Secret");
-        Asserts.notEmpty(apiEndpoint, "API Endpoint");
-        Asserts.notEmpty(authEndpoint, "AUTH Endpoint");
-
-        return getInstamojo(clientId, clientSecret, apiEndpoint, authEndpoint);
-    }
-
-    /**
-     * Gets api.
-     *
-     * @param clientId     the client id
-     * @param clientSecret the client secret
-     * @return the api
-     * @throws ConnectionException the connection exception
-     */
-    public static Instamojo getApi(String clientId, String clientSecret) throws ConnectionException {
-        return getApi(clientId, clientSecret, Constants.INSTAMOJO_API_ENDPOINT, Constants.INSTAMOJO_AUTH_ENDPOINT);
-    }
-
-    private static Instamojo getInstamojo(String clientId, String clientSecret, String apiEndpoint, String authEndpoint)
-            throws ConnectionException {
-        if (uniqueInstance == null) {
-            synchronized (InstamojoImpl.class) {
-                if (uniqueInstance == null) {
-                    uniqueInstance = new InstamojoImpl(clientId, clientSecret, apiEndpoint, authEndpoint);
-                    accessToken = getAccessToken(clientId, clientSecret, authEndpoint);
-                }
-            }
-        } else {
-            if (isTokenExpired()) {
-                synchronized (InstamojoImpl.class) {
-                    if (isTokenExpired()) {
-                        accessToken = getAccessToken(clientId, clientSecret, authEndpoint);
-                    }
-                }
-            }
-        }
-
-        return uniqueInstance;
-    }
-
-    private static boolean isTokenExpired() {
-        long durationInSeconds = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime() - tokenCreationTime);
-        return durationInSeconds >= (accessToken.getExpiresIn() - 300);
-    }
-
-    /**
-     * Gets the access token.
-     *
-     * @param clientId     the client id
-     * @param clientSecret the client secret
-     * @param authEndpoint the auth endpoint
-     * @return the access token @ the instamojo exception
-     */
-    private static AccessTokenResponse getAccessToken(String clientId, String clientSecret, String authEndpoint)
-            throws ConnectionException {
-        Map<String, String> params = new HashMap<>();
-
-        params.put(Constants.CLIENT_ID, clientId);
-        params.put(Constants.CLIENT_SECRET, clientSecret);
-        params.put(Constants.GRANT_TYPE, Constants.CLIENT_CREDENTIALS);
-
-        try {
-            String response = HttpUtils.sendPostRequest(authEndpoint, null, params);
-
-            AccessTokenResponse accessTokenResponse = JsonUtils.convertJsonStringToObject(response,
-                    AccessTokenResponse.class);
-
-            if (TextUtils.isEmpty(accessTokenResponse.getToken())) {
-                throw new InvalidClientException(
-                        "Could not get the access token due to " + accessTokenResponse.getError());
-            }
-
-            tokenCreationTime = System.nanoTime();
-            accessTokenResponse.setJsonResponse(response);
-            return accessTokenResponse;
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
-            throw new ConnectionException(e.toString(), e);
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.instamojo.wrapper.api.Instamojo#createNewPaymentOrder(com.instamojo.
-     * wrapper.model.PaymentOrder)
-     */
     @Override
-    public CreatePaymentOrderResponse createNewPaymentOrder(PaymentOrder paymentOrder)
-            throws ConnectionException, InvalidPaymentOrderException {
+    public PaymentOrderResponse createPaymentOrder(PaymentOrder paymentOrder) throws HTTPException, ConnectionException {
         Asserts.notNull(paymentOrder, "Payment Order");
 
-        boolean isValid = paymentOrder.validate();
-
-        if (!isValid) {
-            throw new InvalidPaymentOrderException();
-        }
-
-        Map<String, String> headers = new HashMap<>();
-        headers.put(Constants.AUTHORIZATION, getAuthorization());
-        Map<String, String> params = new HashMap<>();
-
-        params.put("name", paymentOrder.getName());
-        params.put("email", paymentOrder.getEmail());
-        params.put("phone", paymentOrder.getPhone());
-        params.put("currency", paymentOrder.getCurrency());
-        params.put("amount", String.valueOf(paymentOrder.getAmount()));
-        params.put("description", paymentOrder.getDescription());
-        params.put("transaction_id", paymentOrder.getTransactionId());
-        params.put("redirect_url", paymentOrder.getRedirectUrl());
-        params.put("webhook_url", paymentOrder.getWebhookUrl());
-
         try {
-            String response = HttpUtils.sendPostRequest(this.getApiPath(Constants.PAYMENT_ORDER_API_PATH), headers,
-                    params);
-            CreatePaymentOrderResponse createPaymentOrderResponse = JsonUtils.convertJsonStringToObject(response,
-                    CreatePaymentOrderResponse.class);
-            if (createPaymentOrderResponse.getPaymentOrder() == null) {
-                Map<String, Object> map = JsonUtils.convertJsonStringToMap(response);
-                if (map != null && map.get(Constants.TRANSACTION_ID) != null) {
-                    paymentOrder.setTransactionIdInvalid(true);
-                }
+            String response = HttpUtils.post(context.getApiPath(Constants.PATH_PAYMENT_ORDER), getHeaders(),
+                    gson.toJson(paymentOrder));
+            return gson.fromJson(response, PaymentOrderResponse.class);
 
-                if (map != null && map.get(Constants.WEBHOOK_URL) != null){
-                    paymentOrder.setWebhookInvalid(true);
-                }
-
-                if (map != null && map.get(Constants.CURRENCY) != null) {
-                    paymentOrder.setCurrencyInvalid(true);
-                }
-                throw new InvalidPaymentOrderException();
-            }
-            createPaymentOrderResponse.setJsonResponse(response);
-            return createPaymentOrderResponse;
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
-            throw new ConnectionException(e.toString(), e);
+            throw new ConnectionException(e.getMessage(), e);
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.instamojo.wrapper.api.Instamojo#getPaymentOrderDetails(java.lang.
-     * String)
-     */
     @Override
-    public PaymentOrderDetailsResponse getPaymentOrderDetails(String id) throws ConnectionException {
+    public PaymentOrder getPaymentOrder(String id) throws ConnectionException, HTTPException {
         Asserts.notEmpty(id, "Order Id");
 
-        Map<String, String> headers = new HashMap<>();
-        headers.put(Constants.AUTHORIZATION, getAuthorization());
-
         try {
-            String response = HttpUtils.sendGetRequest(
-                    this.getApiPath(Constants.PAYMENT_ORDER_API_PATH + "id:" + id + "/"), headers,
-                    null);
-            PaymentOrderDetailsResponse paymentOrderDetailsResponse = JsonUtils.convertJsonStringToObject(response,
-                    PaymentOrderDetailsResponse.class);
+            String response = HttpUtils.get(context.getApiPath(Constants.PATH_PAYMENT_ORDER + "id:" + id + "/"),
+                    getHeaders());
+            return gson.fromJson(response, PaymentOrder.class);
 
-            paymentOrderDetailsResponse.setJsonResponse(response);
-            return paymentOrderDetailsResponse;
         } catch (IOException | URISyntaxException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
-            throw new ConnectionException(e.toString(), e);
+            throw new ConnectionException(e.getMessage(), e);
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.instamojo.wrapper.api.Instamojo#getPaymentOrderDetailsByTransactionId
-     * (java.lang.String)
-     */
     @Override
-    public PaymentOrderDetailsResponse getPaymentOrderDetailsByTransactionId(String transactionId)
-            throws ConnectionException {
+    public PaymentOrder getPaymentOrderByTransactionId(String transactionId) throws ConnectionException, HTTPException {
         Asserts.notEmpty(transactionId, "Transaction Id");
 
-        Map<String, String> headers = new HashMap<>();
-        headers.put(Constants.AUTHORIZATION, getAuthorization());
-
         try {
-            String response = HttpUtils.sendGetRequest(
-                    this.getApiPath(Constants.PAYMENT_ORDER_API_PATH + "transaction_id:" + transactionId + "/"),
-                    headers, null);
-            PaymentOrderDetailsResponse paymentOrderDetailsResponse = JsonUtils.convertJsonStringToObject(response,
-                    PaymentOrderDetailsResponse.class);
-            paymentOrderDetailsResponse.setJsonResponse(response);
-            return paymentOrderDetailsResponse;
+            String response = HttpUtils.get(
+                    context.getApiPath(Constants.PATH_PAYMENT_ORDER + "transaction_id:" + transactionId + "/"),
+                    getHeaders());
+            return gson.fromJson(response, PaymentOrder.class);
+
         } catch (IOException | URISyntaxException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
-            throw new ConnectionException(e.toString(), e);
+            throw new ConnectionException(e.getMessage(), e);
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.instamojo.wrapper.api.Instamojo#getPaymentOrderList(com.instamojo.
-     * wrapper.model.PaymentOrderFilter)
-     */
     @Override
-    public PaymentOrderListResponse getPaymentOrderList(PaymentOrderFilter paymentOrderFilter)
-            throws ConnectionException {
-        Asserts.notNull(paymentOrderFilter, "Payment Order Filter");
+    public ApiListResponse<PaymentOrder> getPaymentOrders(int page, int limit) throws ConnectionException, HTTPException {
 
-        Map<String, String> headers = new HashMap<>();
-        headers.put(Constants.AUTHORIZATION, getAuthorization());
         Map<String, String> params = new HashMap<>();
-
-        String id = paymentOrderFilter.getId();
-        String transactionId = paymentOrderFilter.getTransactionId();
-        Integer page = paymentOrderFilter.getPage();
-        Integer limit = paymentOrderFilter.getLimit();
-
-        if (!TextUtils.isEmpty(id)) {
-            params.put("id", id);
-        }
-        if (!TextUtils.isEmpty(transactionId)) {
-            params.put("transaction_id", transactionId);
-        }
-        if (page != null && page != 0) {
-            params.put("page", String.valueOf(page));
-        }
-        if (limit != null && limit != 0) {
-            params.put("limit", String.valueOf(limit));
-        }
+        params.put("page", String.valueOf(page));
+        params.put("limit", String.valueOf(limit));
 
         try {
-            String response = HttpUtils.sendGetRequest(this.getApiPath(Constants.PAYMENT_ORDER_API_PATH), headers,
-                    params);
-            PaymentOrderListResponse paymentOrderListResponse = JsonUtils.convertJsonStringToObject(response,
-                    PaymentOrderListResponse.class);
-            paymentOrderListResponse.setJsonResponse(response);
-            return paymentOrderListResponse;
+            String response = HttpUtils.get(context.getApiPath(Constants.PATH_PAYMENT_ORDER), getHeaders(), params);
+
+            Type type = new TypeToken<ApiListResponse<PaymentOrder>>() {
+            }.getType();
+            return gson.fromJson(response, type);
+
         } catch (IOException | URISyntaxException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
-            throw new ConnectionException(e.toString(), e);
+            throw new ConnectionException(e.getMessage(), e);
         }
     }
 
-    /* (non-Javadoc)
-    * @see com.instamojo.wrapper.api.Instamojo#createNewRefund(com.instamojo.wrapper.model.Refund)
-    */
     @Override
-    public CreateRefundResponse createNewRefund(Refund refund) throws ConnectionException, InvalidRefundException {
+    public Refund createRefund(Refund refund) throws HTTPException, ConnectionException {
         Asserts.notNull(refund, "Refund");
 
-        boolean isValid = refund.validate();
+        try {
+            String response = HttpUtils.post(context.getApiPath(Constants.PATH_REFUND + refund.getPaymentId() + "" +
+                    "/refund/"), getHeaders(), gson.toJson(refund));
 
-        if (!isValid) {
-            throw new InvalidRefundException();
+            Type type = new TypeToken<ApiResponse<Refund>>() {
+            }.getType();
+            ApiResponse<Refund> createRefundResponse = gson.fromJson(response, type);
+            return createRefundResponse.getResult();
+
+        } catch (IOException e) {
+            throw new ConnectionException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public String generateWebhookSignature(Map<String, String> data, String salt) {
+
+        ArrayList<String> keys = new ArrayList<>(data.keySet());
+        Collections.sort(keys);
+
+        StringBuilder sb = new StringBuilder();
+        for (int index = 0; index < keys.size(); index++) {
+            sb.append(data.get(keys.get(index)));
+            if (index != keys.size() - 1) {
+                sb.append('|');
+            }
         }
 
-        Map<String, String> headers = new HashMap<>();
-        headers.put(Constants.AUTHORIZATION, getAuthorization());
+        return new HmacUtils(HmacAlgorithms.HMAC_SHA_1, salt).hmacHex(sb.toString());
+    }
+
+    @Override
+    public ApiListResponse<Invoice> getInvoices(int page, int limit) throws ConnectionException, HTTPException {
 
         Map<String, String> params = new HashMap<>();
-        params.put("payment_id", refund.getPaymentId());
-        params.put("type", refund.getType());
-        params.put("body", refund.getBody());
-        params.put("refund_amount", String.valueOf(refund.getRefundAmount()));
+        params.put("page", String.valueOf(page));
+        params.put("limit", String.valueOf(limit));
 
         try {
-            String response = HttpUtils.sendPostRequest(
-                    this.getApiPath(Constants.REFUND_API_PATH + refund.getPaymentId() + "/refund/"), headers, params);
-            CreateRefundResponse createRefundResponse = JsonUtils.convertJsonStringToObject(response,
-                    CreateRefundResponse.class);
+            String response = HttpUtils.get(context.getApiPath(Constants.PATH_INVOICE), getHeaders(), params);
 
-            if (createRefundResponse.getRefund() == null) {
-                Map<String, Object> map = JsonUtils.convertJsonStringToMap(response);
-                if (map != null && map.get(Constants.TYPE) != null) {
-                    refund.setTypeInvalid(true);
-                }
-                throw new InvalidRefundException();
+            Type type = new TypeToken<ApiListResponse<Invoice>>() {
+            }.getType();
+            return gson.fromJson(response, type);
+
+        } catch (IOException | URISyntaxException e) {
+            throw new ConnectionException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public ApiListResponse<Payout> getPayouts(int page, int limit) throws ConnectionException, HTTPException {
+        return getPayouts(null, page, limit);
+    }
+
+    @Override
+    public ApiListResponse<Payout> getPayouts(Map<PayoutFilter, String> filter, int page, int limit) throws ConnectionException, HTTPException {
+
+        Map<String, String> params = new HashMap<>();
+        if (filter != null) {
+            for (Map.Entry<PayoutFilter, String> entry : filter.entrySet()) {
+                params.put(entry.getKey().name().toLowerCase(), entry.getValue());
             }
-            createRefundResponse.setJsonResponse(response);
-            return createRefundResponse;
+        }
+        params.put("page", String.valueOf(page));
+        params.put("limit", String.valueOf(limit));
+
+        try {
+            String response = HttpUtils.get(context.getApiPath(Constants.PATH_PAYOUT), getHeaders(), params);
+
+            Type type = new TypeToken<ApiListResponse<Payout>>() {
+            }.getType();
+            return gson.fromJson(response, type);
+
+        } catch (IOException | URISyntaxException e) {
+            throw new ConnectionException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public Payout getPayout(String id) throws ConnectionException, HTTPException {
+        Asserts.notEmpty(id, "Payout Id");
+
+        try {
+            String response = HttpUtils.get(context.getApiPath(Constants.PATH_PAYOUT + "id:" + id + "/"),
+                    getHeaders());
+
+            Type type = new TypeToken<ApiResponse<Payout>>() {
+            }.getType();
+            ApiResponse<Payout> payoutResponse = gson.fromJson(response, type);
+            return payoutResponse.getResult();
+
+        } catch (IOException | URISyntaxException e) {
+            throw new ConnectionException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public PaymentRequest createPaymentRequest(PaymentRequest paymentRequest) throws ConnectionException, HTTPException {
+        Asserts.notNull(paymentRequest, "payment request");
+
+        try {
+            String response = HttpUtils.post(
+                    context.getApiPath(Constants.PATH_PAYMENT_REQUEST), getHeaders(), gson.toJson(paymentRequest));
+            return gson.fromJson(response, PaymentRequest.class);
+
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, e.toString(), e);
-            throw new ConnectionException(e.toString(), e);
+            throw new ConnectionException(e.getMessage(), e);
         }
     }
 
-    /**
-     * Clears the current cached Instance
-     */
-    public static void ClearInstance() {
-        if (uniqueInstance != null){
-            synchronized (InstamojoImpl.class){
-                uniqueInstance=null;
-                accessToken=null;
+    @Override
+    public ApiListResponse<PaymentRequest> getPaymentRequests(int page, int limit) throws ConnectionException, HTTPException {
+        return getPaymentRequests(null, page, limit);
+    }
+
+    @Override
+    public ApiListResponse<PaymentRequest> getPaymentRequests(Map<PaymentRequestFilter, String> filter, int page, int limit) throws ConnectionException, HTTPException {
+
+        Map<String, String> params = new HashMap<>();
+        if (filter != null) {
+            for (Map.Entry<PaymentRequestFilter, String> entry : filter.entrySet()) {
+                params.put(entry.getKey().name().toLowerCase(), entry.getValue());
             }
         }
-    }
+        params.put("page", String.valueOf(page));
+        params.put("limit", String.valueOf(limit));
 
-    /**
-     * Gets the authorization.
-     *
-     * @return the authorization
-     */
-    private String getAuthorization() {
-        return accessToken.getTokenType() + " " + accessToken.getToken();
-    }
+        try {
+            String response = HttpUtils.get(context.getApiPath(Constants.PATH_PAYMENT_REQUEST), getHeaders(), params);
 
-    /**
-     * Gets the api path.
-     *
-     * @param path the path
-     * @return the api path
-     */
-    private String getApiPath(String path) {
-        String apiPath = this.apiEndpoint + path;
+            Type type = new TypeToken<ApiListResponse<PaymentRequest>>() {
+            }.getType();
+            return gson.fromJson(response, type);
 
-        if (!apiPath.endsWith("/")) {
-            apiPath += Character.toString('/');
+        } catch (IOException | URISyntaxException e) {
+            throw new ConnectionException(e.getMessage(), e);
         }
-        return apiPath;
     }
 
+    @Override
+    public PaymentRequest getPaymentRequest(String id) throws ConnectionException, HTTPException {
+        try {
+            String response = HttpUtils.get(context.getApiPath(Constants.PATH_PAYMENT_REQUEST + id + "/"),
+                    getHeaders());
+            return gson.fromJson(response, PaymentRequest.class);
+
+        } catch (IOException | URISyntaxException e) {
+            throw new ConnectionException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public Boolean enablePaymentRequest(String id) throws ConnectionException, HTTPException {
+        try {
+            String response = HttpUtils.post(context.getApiPath(Constants.PATH_PAYMENT_REQUEST + id + "/enable/"),
+                    getHeaders());
+            ApiResponse rapResponse = gson.fromJson(response, ApiResponse.class);
+            return rapResponse.getSuccess();
+
+        } catch (IOException e) {
+            throw new ConnectionException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public Boolean disablePaymentRequest(String id) throws ConnectionException, HTTPException {
+        try {
+            String response = HttpUtils.post(context.getApiPath(Constants.PATH_PAYMENT_REQUEST + id + "/disable/"),
+                    getHeaders());
+            ApiResponse rapResponse = gson.fromJson(response, ApiResponse.class);
+            return rapResponse.getSuccess();
+
+        } catch (IOException e) {
+            throw new ConnectionException(e.getMessage(), e);
+        }
+    }
+
+    private Map<String, String> getHeaders() throws ConnectionException, HTTPException {
+        Map<String, String> headers = new HashMap<>();
+        headers.put(Constants.HEADER_AUTHORIZATION, context.getAuthorization());
+        return headers;
+    }
 }

@@ -1,179 +1,190 @@
 package com.instamojo.wrapper.api;
 
 import com.instamojo.wrapper.builder.PaymentOrderBuilder;
-import com.instamojo.wrapper.builder.RefundBuilder;
-import com.instamojo.wrapper.exception.InvalidPaymentOrderException;
-import com.instamojo.wrapper.exception.InvalidRefundException;
-import com.instamojo.wrapper.model.PaymentOrder;
-import com.instamojo.wrapper.model.PaymentOrderFilter;
-import com.instamojo.wrapper.model.Refund;
-import com.instamojo.wrapper.response.CreatePaymentOrderResponse;
-import com.instamojo.wrapper.response.CreateRefundResponse;
-import com.instamojo.wrapper.response.PaymentOrderDetailsResponse;
-import com.instamojo.wrapper.response.PaymentOrderListResponse;
+import com.instamojo.wrapper.exception.HTTPException;
+import com.instamojo.wrapper.filter.PaymentRequestFilter;
+import com.instamojo.wrapper.model.*;
+import com.instamojo.wrapper.response.ApiListResponse;
 import com.instamojo.wrapper.util.TestConstants;
 import org.junit.Before;
-import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static com.instamojo.wrapper.api.ApiContext.Mode;
+import static org.junit.Assert.*;
 
 public class InstamojoIntegrationTest {
 
     private Instamojo api;
 
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
+
     @Before
-    public void setUp() throws Exception {
-        InstamojoImpl.ClearInstance();
-        api = InstamojoImpl.getApi(TestConstants.TEST_CLIENT_ID, TestConstants.TEST_CLIENT_SECRET, TestConstants.INSTAMOJO_TEST_API_ENDPOINT, TestConstants.INSTAMOJO_TEST_AUTH_ENDPOINT);
-//        api = InstamojoImpl.getApi(TestConstants.TEST_CLIENT_ID, TestConstants.TEST_CLIENT_SECRET);
+    public void setUp() {
+        ApiContext.ClearInstance();
+        ApiContext context = ApiContext.create(TestConstants.TEST_CLIENT_ID, TestConstants.TEST_CLIENT_SECRET, Mode.TEST);
+        api = new InstamojoImpl(context);
     }
 
     @Test
-    public void createPaymentOrder_ValidateInternationalPhone() {
-        PaymentOrder order = new PaymentOrderBuilder().withPhone("+14155552671").build();
-        assertThat(order.validate()).isTrue();
-        assertThat(order.isPhoneInvalid()).isFalse();
-    }
-
-    @Test
-    public void createPaymentOrder_whenNewPaymentOrderIsMade_shouldCreateNewPaymentOrder() throws Exception {
+    public void createValidPaymentOrder() throws Exception {
         PaymentOrder order = new PaymentOrderBuilder().build();
+        PaymentOrderResponse paymentOrderResponse = api.createPaymentOrder(order);
 
-        CreatePaymentOrderResponse createPaymentOrderResponse = api.createNewPaymentOrder(order);
-
-        assertThat(createPaymentOrderResponse).isNotNull();
-        assertThat(createPaymentOrderResponse.getPaymentOrder().getId()).isNotEmpty();
-        assertThat(createPaymentOrderResponse.getPaymentOrder().getTransactionId()).isEqualTo(order.getTransactionId());
+        assertNotNull(paymentOrderResponse);
+        assertNotNull(paymentOrderResponse.getPaymentOrder().getId());
+        assertEquals(paymentOrderResponse.getPaymentOrder().getTransactionId(), order.getTransactionId());
     }
 
-    @Test(expected = InvalidPaymentOrderException.class)
-    public void createOrder_whenWebhookIsInvalid_shouldThrowException() throws Exception{
-        PaymentOrder order = new PaymentOrderBuilder()
+    @Test
+    public void createPaymentOrder_InvalidWebhookUrl() throws Exception {
+        expectedException.expect(HTTPException.class);
+        expectedException.expectMessage("Bad Request");
+
+        PaymentOrder paymentOrder = new PaymentOrderBuilder()
                 .withWebhookUrl("invalid_url")
                 .build();
-        api.createNewPaymentOrder(order);
+        api.createPaymentOrder(paymentOrder);
     }
 
     @Test
-    public void createOrder_whenWebhookIsNull_shouldCreateNewOrder() throws Exception {
+    public void createPaymentOrder_NullWebhookUrl() throws Exception {
         PaymentOrder order = new PaymentOrderBuilder()
                 .withWebhookUrl(null)
                 .build();
 
-        api.createNewPaymentOrder(order);
-        assertThat(order.getWebhookUrl()).isNull();
-    }
-
-    @Test(expected = InvalidPaymentOrderException.class)
-    public void createPaymentOrder_whenInvalidPaymentOrderIsMade_shouldThrowException() throws Exception {
-        PaymentOrder order = new PaymentOrderBuilder()
-                .withEmail(null)
-                .withAmount(7D)
-                .build();
-
-        api.createNewPaymentOrder(order);
-    }
-
-    @Test(expected = InvalidPaymentOrderException.class)
-    public void createPaymentOrder_whenSameTransactionIdIsGiven_shouldThrowException() throws Exception {
-        PaymentOrder order = new PaymentOrderBuilder().build();
-
-        api.createNewPaymentOrder(order);
-        CreatePaymentOrderResponse duplicateOrder = api.createNewPaymentOrder(order);
-
-        assertThat(duplicateOrder).isNotNull();
-        assertThat(duplicateOrder.getPaymentOrder()).isNull();
-    }
-
-    @Test(expected = InvalidPaymentOrderException.class)
-    public void createPaymentOrder_whenUnsupportedCurrencyIsGiven_shouldThrowException() throws Exception {
-        PaymentOrder order = new PaymentOrderBuilder()
-                .withCurrency("unsupported currency")
-                .build();
-
-        CreatePaymentOrderResponse createPaymentOrderResponse = api.createNewPaymentOrder(order);
-
-        assertThat(createPaymentOrderResponse).isNotNull();
-        assertThat(createPaymentOrderResponse.getPaymentOrder()).isNull();
+        api.createPaymentOrder(order);
+        assertNull(order.getWebhookUrl());
     }
 
     @Test
-    public void getPaymentOrderDetails_whenPaymentOrderIdIsGiven_shouldReturnDetailsOfPaymentOrder() throws Exception {
+    public void createPaymentOrder_ExistingTransactionId() throws Exception {
         PaymentOrder order = new PaymentOrderBuilder().build();
+        api.createPaymentOrder(order);
 
-        CreatePaymentOrderResponse createPaymentOrderResponse = api.createNewPaymentOrder(order);
-        String paymentOrderId = createPaymentOrderResponse.getPaymentOrder().getId();
-
-        PaymentOrderDetailsResponse paymentOrderDetailsResponse = api.getPaymentOrderDetails(paymentOrderId);
-
-        assertThat(paymentOrderDetailsResponse).isNotNull();
-        assertThat(paymentOrderDetailsResponse.getId()).isEqualTo(paymentOrderId);
-        assertThat(paymentOrderDetailsResponse.getTransactionId()).isEqualTo(order.getTransactionId());
+        expectedException.expect(HTTPException.class);
+        expectedException.expectMessage("Bad Request");
+        api.createPaymentOrder(order);
     }
 
     @Test
-    public void getPaymentOrderDetails_whenTransactionIdIsGiven_shouldReturnDetailsOfPaymentOrder() throws Exception {
+    public void getPaymentOrderById() throws Exception {
+        PaymentOrder newPaymentOrder = new PaymentOrderBuilder().build();
+        PaymentOrderResponse paymentOrderResponse = api.createPaymentOrder(newPaymentOrder);
+        String paymentOrderId = paymentOrderResponse.getPaymentOrder().getId();
+
+        PaymentOrder paymentOrder = api.getPaymentOrder(paymentOrderId);
+        assertNotNull(paymentOrder);
+        assertEquals(paymentOrder.getId(), paymentOrderId);
+        assertEquals(paymentOrder.getTransactionId(), newPaymentOrder.getTransactionId());
+    }
+
+    @Test
+    public void getPaymentOrderByTransactionId() throws Exception {
         String transactionId = UUID.randomUUID().toString();
-        PaymentOrder order = new PaymentOrderBuilder().withTransactionId(transactionId).build();
+        PaymentOrder newPaymentOrder = new PaymentOrderBuilder().withTransactionId(transactionId).build();
+        PaymentOrderResponse paymentOrderResponse = api.createPaymentOrder(newPaymentOrder);
 
-        CreatePaymentOrderResponse createPaymentOrderResponse = api.createNewPaymentOrder(order);
-        PaymentOrderDetailsResponse paymentOrderDetailsResponse = api.getPaymentOrderDetailsByTransactionId(transactionId);
-
-        assertThat(paymentOrderDetailsResponse).isNotNull();
-        assertThat(paymentOrderDetailsResponse.getTransactionId()).isEqualTo(transactionId);
-        assertThat(paymentOrderDetailsResponse.getId()).isEqualTo(createPaymentOrderResponse.getPaymentOrder().getId());
+        PaymentOrder paymentOrder = api.getPaymentOrderByTransactionId(transactionId);
+        assertNotNull(paymentOrder);
+        assertEquals(paymentOrder.getTransactionId(), transactionId);
+        assertEquals(paymentOrder.getId(), paymentOrderResponse.getPaymentOrder().getId());
     }
 
     @Test
-    public void getPaymentOrderList_shouldReturnListOfAllPaymentOrders() throws Exception {
-        PaymentOrderFilter paymentOrderFilter = new PaymentOrderFilter();
-        paymentOrderFilter.setLimit(2);
-
-        PaymentOrderListResponse paymentOrderListResponse = api.getPaymentOrderList(paymentOrderFilter);
-
-        assertThat(paymentOrderListResponse).isNotNull();
+    public void getPaymentOrdersByFilter() throws Exception {
+        PaymentOrder order = new PaymentOrderBuilder().build();
+        PaymentOrderResponse paymentOrderResponse = api.createPaymentOrder(order);
+        ApiListResponse<PaymentOrder> paymentOrders = api.getPaymentOrders(1, 1);
+        assertEquals(1, paymentOrders.getResults().size());
     }
 
-    /**
-     * In order to run this test, you need to replace this payment id with the new payment id,
-     * as the request using same payment id fails
-     */
     @Test
-    @Ignore
-    public void createRefund_whenNewRefundIsMade_shouldCreateNewRefund() throws Exception {
-        String paymentId = "MOJO6701005J41260320";
-
-        Refund refund = new RefundBuilder().withPaymentId(paymentId).build();
-        CreateRefundResponse createRefundResponse = api.createNewRefund(refund);
-
-        assertThat(createRefundResponse).isNotNull();
-        assertThat(createRefundResponse.getRefund()).isNotNull();
-        assertThat(createRefundResponse.getRefund().getPaymentId()).isNotEmpty();
+    public void createWebhookSignature() {
+        Map<String, String> map = new HashMap<>();
+        map.put("foo", "1");
+        map.put("bar", "2");
+        map.put("baz", "3");
+        String signature = api.generateWebhookSignature(map, TestConstants.TEST_CLIENT_SALT);
+        assertEquals(signature, "a0d60f15eb94cd332bc93edc379bb248b298182a");
     }
 
-    @Test(expected = InvalidRefundException.class)
-    public void createRefund_whenInvalidRefundIsMade_shouldThrowException() throws Exception {
-        Refund refund = new RefundBuilder()
-                .withRefundAmount(7D)
-                .withBody(null)
-                .build();
+    @Test
+    public void getPayoutById_InvalidId() throws Exception {
+        expectedException.expect(HTTPException.class);
+        expectedException.expectMessage("Not Found");
 
-        api.createNewRefund(refund);
+        api.getPayout("invalid_id");
     }
 
-    @Test(expected = InvalidRefundException.class)
-    public void createRefund_whenUnsupportedTypeIsGiven_shouldThrowException() throws Exception {
-        Refund refund = new RefundBuilder()
-                .withType("Unsupported Type")
-                .build();
+    @Test
+    public void createValidPaymentRequest() throws Exception {
+        PaymentRequest rap = new PaymentRequest();
+        rap.setAmount(10.0);
+        rap.setEmail("vijith@instamojo.com");
+        rap.setPurpose("testing rap");
 
-        CreateRefundResponse createRefundResponse = api.createNewRefund(refund);
-
-        assertThat(createRefundResponse).isNotNull();
-        assertThat(createRefundResponse.getRefund()).isNull();
+        PaymentRequest createdRap = api.createPaymentRequest(rap);
+        assertNotNull(createdRap);
     }
 
+    @Test
+    public void getPaymentRequestsByFilter() throws Exception {
+        PaymentRequest rap = new PaymentRequest();
+        rap.setAmount(10.0);
+        rap.setEmail("vijith@instamojo.com");
+        rap.setPurpose("testing rap");
+        rap.setPhone("+919999999999");
+        api.createPaymentRequest(rap);
+        Map<PaymentRequestFilter, String> filter = new HashMap<>();
+        filter.put(PaymentRequestFilter.PHONE, "+919999999999");
+        ApiListResponse<PaymentRequest> raps = api.getPaymentRequests(filter, 1, 1);
+        assertEquals(1, raps.getResults().size());
+        assertEquals(rap.getPhone(), raps.getResults().get(0).getPhone());
+    }
+
+    @Test
+    public void getPaymentRequestById() throws Exception {
+        PaymentRequest rap = new PaymentRequest();
+        rap.setAmount(10.0);
+        rap.setEmail("vijith@instamojo.com");
+        rap.setPurpose("testing rap");
+
+        PaymentRequest createdRap = api.createPaymentRequest(rap);
+
+        PaymentRequest retrievedRap = api.getPaymentRequest(createdRap.getId());
+        assertNotNull(retrievedRap);
+    }
+
+    @Test
+    public void enablePaymentRequest() throws Exception {
+        PaymentRequest rap = new PaymentRequest();
+        rap.setAmount(10.0);
+        rap.setEmail("vijith@instamojo.com");
+        rap.setPurpose("testing rap");
+
+        PaymentRequest createdRap = api.createPaymentRequest(rap);
+
+        Boolean success = api.enablePaymentRequest(createdRap.getId());
+        assertTrue(success);
+    }
+
+    @Test
+    public void disablePaymentRequest() throws Exception {
+        PaymentRequest rap = new PaymentRequest();
+        rap.setAmount(10.0);
+        rap.setEmail("vijith@instamojo.com");
+        rap.setPurpose("testing rap");
+
+        PaymentRequest createdRap = api.createPaymentRequest(rap);
+
+        Boolean success = api.disablePaymentRequest(createdRap.getId());
+        assertTrue(success);
+    }
 }
