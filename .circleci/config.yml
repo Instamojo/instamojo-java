@@ -45,14 +45,14 @@ jobs:
      steps:
      - checkout
      - restore_cache:
-         key: jars-{{ checksum "build.gradle" }}-{{ checksum  "android-sdk/build.gradle" }}
+         key: jars-{{ checksum "build.gradle" }}-{{ checksum  "instamojo-java/build.gradle" }}
      - run:
          name: Download Dependencies
-         command: ./gradlew androidDependencies
+         command: ./gradlew build
      - save_cache:
          paths:
          - ~/.gradle
-         key: jars-{{ checksum "build.gradle" }}-{{ checksum  "android-sdk/build.gradle" }}
+         key: jars-{{ checksum "build.gradle" }}-{{ checksum  "instamojo-java/build.gradle" }}
      - run:
          name: Publish to Bintray
          command: ./gradlew bintrayUpload
