@@ -40,22 +40,22 @@ jobs:
      - store_test_results:
          path: ~/test-results
 
-   release:
-     <<: *defaults
-     steps:
-     - checkout
-     - restore_cache:
-         key: jars-{{ checksum "build.gradle" }}-{{ checksum  "instamojo-java/build.gradle" }}
-     - run:
-         name: Download Dependencies
-         command: ./gradlew build
-     - save_cache:
-         paths:
-         - ~/.gradle
-         key: jars-{{ checksum "build.gradle" }}-{{ checksum  "instamojo-java/build.gradle" }}
-     - run:
-         name: Publish to Bintray
-         command: ./gradlew bintrayUpload
+ release:
+   <<: *defaults
+   steps:
+    - checkout
+    - restore_cache:
+       key: jars-{{ checksum "build.gradle" }}-{{ checksum  "instamojo-java/build.gradle" }}
+    - run:
+       name: Download Dependencies
+       command: gradle dependencies
+    - save_cache:
+       paths:
+       - ~/.gradle
+       key: jars-{{ checksum "build.gradle" }}-{{ checksum  "instamojo-java/build.gradle" }}
+    - run:
+       name: Publish to Bintray
+       command: gradle bintrayUpload
 
 workflows:
   version: 2
@@ -68,7 +68,7 @@ workflows:
             only: /.*/
     - release:
         requires:
-        - build
+          - build
         filters:
           tags:
             only: /^v.*/
