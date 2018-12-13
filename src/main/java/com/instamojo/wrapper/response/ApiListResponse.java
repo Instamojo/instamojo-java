@@ -11,17 +11,19 @@ public class ApiListResponse<T> {
     @SerializedName(value = "invoices", alternate = {"orders", "payouts", "payment_requests"})
     private List<T> results;
 
+    @SerializedName("success")
     private Boolean success;
 
+    @SerializedName("message")
     private String message;
 
-    /** The count. */
+    @SerializedName("count")
     private Integer count;
 
-    /** The next. */
+    @SerializedName("next")
     private String next;
 
-    /** The previous. */
+    @SerializedName("previous")
     private String previous;
 
     public List<T> getResults() {
@@ -78,7 +80,7 @@ public class ApiListResponse<T> {
                 "count=" + count +
                 ", next='" + next + '\'' +
                 ", previous='" + previous + '\'' +
-                ", results='" + results + '\''+
+                ", results='" + results + '\'' +
                 '}';
     }
 }

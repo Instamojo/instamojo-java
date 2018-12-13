@@ -1,5 +1,5 @@
 group 'com.instamojo'
-version '2.0.1'
+version '2.0.2'
 
 apply plugin: 'java'
 
@@ -10,7 +10,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.4'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
     }
 }
@@ -34,7 +34,7 @@ ext {
     siteUrl = 'https://github.com/Instamojo/instamojo-java'
     gitUrl = 'https://github.com/Instamojo/instamojo-java.git'
 
-    libraryVersion = '2.0.1'
+    libraryVersion = '2.0.2'
     developerId = 'vijith'
     developerName = 'Vijith Kumar'
     developerEmail = 'support@instamojo.com'
