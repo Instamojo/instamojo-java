@@ -6,11 +6,7 @@ Table of Contents
 * [Requirements](#requirements)
 * [Installation](#installation)
     * [Gradle](#gradle)
-    * [JAR](#jar)
 * [Authentication Keys](#authentication-keys)
-* [End Points](#end-points)
-    * [Test URLs](#test-urls)
-    * [Production URLs](#production-urls)
 * [Payment Order API](#payment-order-api)
     * [Create new Payment Order](#create-new-payment-order)
       * [Payment Order Creation Parameters](#payment-order-creation-parameters)
@@ -35,18 +31,9 @@ Java Version : 1.7+
    
 ## Installation [ ![Download](https://api.bintray.com/packages/dev-accounts/maven/wrappers/images/download.svg) ](https://bintray.com/dev-accounts/maven/wrappers/_latestVersion) [![Build Status](https://travis-ci.org/Instamojo/instamojo-java.svg?branch=master)](https://travis-ci.org/Instamojo/instamojo-java)
 ### Gradle
-All the dependencies will be downloaded automatically.
+Add following dependency to the `build.gradle`
 
-`compile group: 'com.instamojo', name: 'instamojo-java', version: '2.0.0'`
-
-### JAR
-Download `instamojo-java-<version>.jar` from the latest release and the following dependencies to the classpath of the Application. 
-
-1. [Apache HttpClient v4.5.2](http://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient/4.5.2)
-2. [Apache HttpCore v4.4.4](http://mvnrepository.com/artifact/org.apache.httpcomponents/httpcore/4.4.4)
-3. [Apache Commons Codec v1.11](http://mvnrepository.com/artifact/commons-codec/commons-codec/1.11)
-4. [Apache Commons Logging v1.2](http://mvnrepository.com/artifact/commons-logging/commons-logging/1.2)
-5. [Gson v2.6.2](http://mvnrepository.com/artifact/com.google.code.gson/gson/2.6.2)
+`compile group: 'com.instamojo', name: 'instamojo-java', version: '2.0.2'`
 
 ## Authentication Keys
 Generate CLIENT_ID and CLIENT_SECRET for specific environments from the following links.
@@ -54,17 +41,6 @@ Generate CLIENT_ID and CLIENT_SECRET for specific environments from the followin
  - [Production Environment](https://www.instamojo.com/integrations)
 
 Related support article: [How Do I Get My Client ID And Client Secret?](https://support.instamojo.com/hc/en-us/articles/212214265-How-do-I-get-my-Client-ID-and-Client-Secret-)
-
-## End Points
-### Test URLs
-auth_endpoint : https://test.instamojo.com/oauth2/token/
-
-endpoint: https://test.instamojo.com/v2/
-
-### Production URLs
-auth endpoint : https://www.instamojo.com/oauth2/token/
-
-endpoint: https://api.instamojo.com/v2/
 
 ## Payment Order API
 ### Create new Payment Order
