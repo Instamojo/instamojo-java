@@ -141,7 +141,7 @@ public class ApiContext {
             params.put(Constants.PARAM_PASSWORD, password);
 
         } else {
-            params.put(Constants.PARAM_GRANT_TYPE, Constants.GRAND_TYPE_CLIENT_CREDENTIALS);
+            params.put(Constants.PARAM_GRANT_TYPE, Constants.GRANT_TYPE_CLIENT_CREDENTIALS);
         }
 
         loadAccessToken(params);
@@ -161,12 +161,12 @@ public class ApiContext {
 
         if (isUserAuthFlow() && accessToken.getRefreshToken() != null) {
             // For user based authentication, refresh the token
-            params.put(Constants.PARAM_GRANT_TYPE, Constants.GRAND_TYPE_REFRESH_TOKEN);
+            params.put(Constants.PARAM_GRANT_TYPE, Constants.GRANT_TYPE_REFRESH_TOKEN);
             params.put(Constants.PARAM_REFRESH_TOKEN, accessToken.getRefreshToken());
 
         } else {
             // For app based authentication, reload the token
-            params.put(Constants.PARAM_GRANT_TYPE, Constants.GRAND_TYPE_CLIENT_CREDENTIALS);
+            params.put(Constants.PARAM_GRANT_TYPE, Constants.GRANT_TYPE_CLIENT_CREDENTIALS);
         }
 
         loadAccessToken(params);

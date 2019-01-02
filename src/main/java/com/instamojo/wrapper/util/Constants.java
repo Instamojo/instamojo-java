@@ -54,14 +54,19 @@ public class Constants {
     public static final String PARAM_PASSWORD = "password";
 
     /**
-     * The constant GRAND_TYPE_CLIENT_CREDENTIALS.
+     * The constant GRANT_TYPE_CLIENT_CREDENTIALS.
      */
-    public static final String GRAND_TYPE_CLIENT_CREDENTIALS = "client_credentials";
+    public static final String GRANT_TYPE_CLIENT_CREDENTIALS = "client_credentials";
 
     /**
-     * The constant PARAM_REFRESH_TOKEN.
+     * The constant GRANT_TYPE_PASSWORD.
      */
-    public static final String GRAND_TYPE_REFRESH_TOKEN = "refresh_token";
+    public static final String GRANT_TYPE_PASSWORD = "password";
+
+    /**
+     * The constant GRANT_TYPE_REFRESH_TOKEN.
+     */
+    public static final String GRANT_TYPE_REFRESH_TOKEN = "refresh_token";
 
     /**
      * The constant HEADER_AUTHORIZATION.
