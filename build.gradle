@@ -2,6 +2,7 @@ group 'com.instamojo'
 version '2.0.2'
 
 apply plugin: 'java'
+apply plugin: 'jacoco'
 
 sourceCompatibility = 1.8
 
@@ -55,6 +56,13 @@ dependencies {
     compile group: 'commons-codec', name: 'commons-codec', version: '1.11'
     compile group: 'commons-logging', name: 'commons-logging', version: '1.2'
     compile group: 'com.google.code.gson', name: 'gson', version: '2.6.2'
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled false
+    }
 }
 
 apply from: './install.gradle'
