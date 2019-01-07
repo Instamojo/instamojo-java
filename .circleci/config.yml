@@ -28,7 +28,7 @@ jobs:
 
      - run:
         name: Running tests
-        command: gradle test
+        command: gradle test jacocoTestReport
 
      - run:
         name: Saving test results
@@ -39,6 +39,12 @@ jobs:
 
      - store_test_results:
          path: ~/test-results
+
+     - run:
+         name: Publishing coverage report(codecov.io)
+         when: always
+         command: |
+           bash <(curl -s https://codecov.io/bash)
 
  release:
    <<: *defaults
