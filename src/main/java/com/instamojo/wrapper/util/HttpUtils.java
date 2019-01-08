@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -122,6 +123,10 @@ public class HttpUtils {
     public static String post(String url, Map<String, String> customHeaders, String jsonPayload) throws IOException, HTTPException {
         LOGGER.log(Level.INFO, "Sending POST request to the url {0}", url);
         HttpPost httpPost = new HttpPost(url);
+
+        if (customHeaders == null) {
+            customHeaders = new HashMap<>();
+        }
 
         customHeaders.put(Constants.HEADER_ACCEPT, "application/json");
         customHeaders.put(Constants.HEADER_CONTENT_TYPE, "application/json");

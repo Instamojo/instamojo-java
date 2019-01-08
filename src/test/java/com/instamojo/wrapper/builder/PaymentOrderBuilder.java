@@ -9,14 +9,14 @@ import java.util.UUID;
  */
 public class PaymentOrderBuilder {
 
-    private static final String PAYMENT_ORDER_NAME = "John Smith";
-    private static final String PAYMENT_ORDER_EMAIL = "john.smith@gmail.com";
-    private static final String PAYMENT_ORDER_PHONE = "1234567890";
-    private static final String PAYMENT_ORDER_CURRENCY = "INR";
-    private static final Double PAYMENT_ORDER_AMOUNT = 9D;
-    private static final String PAYMENT_ORDER_DESCRIPTION = "This is a test payment order.";
-    private static final String PAYMENT_ORDER_REDIRECT_URL = "http://www.someexample.com";
-    private static final String PAYMENT_ORDER_WEBHOOK_URL = "http://www.somewebhookurl.com/";
+    public static final String PAYMENT_ORDER_NAME = "John Smith";
+    public static final String PAYMENT_ORDER_EMAIL = "john.smith@gmail.com";
+    public static final String PAYMENT_ORDER_PHONE = "9898989898";
+    public static final String PAYMENT_ORDER_CURRENCY = "INR";
+    public static final Double PAYMENT_ORDER_AMOUNT = 9D;
+    public static final String PAYMENT_ORDER_DESCRIPTION = "This is a test payment order.";
+    public static final String PAYMENT_ORDER_REDIRECT_URL = "http://www.someexample.com";
+    public static final String PAYMENT_ORDER_WEBHOOK_URL = "http://www.somewebhookurl.com/";
 
     private PaymentOrder paymentOrder;
 

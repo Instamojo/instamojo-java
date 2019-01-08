@@ -28,7 +28,7 @@ public class InstamojoIntegrationTest {
     @Before
     public void setUp() {
         ApiContext.ClearInstance();
-        ApiContext context = ApiContext.create(TestConstants.TEST_CLIENT_ID, TestConstants.TEST_CLIENT_SECRET, Mode.TEST);
+        ApiContext context = ApiContext.create(TestConstants.CLIENT_ID, TestConstants.CLIENT_SECRET, Mode.TEST);
         api = new InstamojoImpl(context);
     }
 
@@ -111,8 +111,8 @@ public class InstamojoIntegrationTest {
         map.put("foo", "1");
         map.put("bar", "2");
         map.put("baz", "3");
-        String signature = api.generateWebhookSignature(map, TestConstants.TEST_CLIENT_SALT);
-        assertEquals(signature, "a0d60f15eb94cd332bc93edc379bb248b298182a");
+        String signature = api.generateWebhookSignature(map, TestConstants.CLIENT_SALT);
+        assertEquals(signature, "32b1d38a4a70bdce36a52dad3f3ac6eb3662096b");
     }
 
     @Test
