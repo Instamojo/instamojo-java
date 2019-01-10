@@ -11,7 +11,7 @@ import com.instamojo.wrapper.response.ApiListResponse;
 
 public class InstamojoExample {
 
-    public static void main(String args[]) {
+    public static void main(String[] args) {
 
         /*
          * Get a reference to the instamojo api

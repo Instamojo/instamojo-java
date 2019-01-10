@@ -1,8 +1,7 @@
 package com.instamojo.wrapper.model;
 
 import com.google.gson.annotations.SerializedName;
-
-import java.util.Date;
+import org.joda.time.DateTime;
 
 /**
  * The Class Refund.
@@ -31,7 +30,7 @@ public class Refund {
     private Double totalAmount;
 
     @SerializedName("created_at")
-    private Date createdAt;
+    private DateTime createdAt;
 
     public String getId() {
         return id;
@@ -89,11 +88,11 @@ public class Refund {
         this.totalAmount = totalAmount;
     }
 
-    public Date getCreatedAt() {
+    public DateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(DateTime createdAt) {
         this.createdAt = createdAt;
     }
 

@@ -1,6 +1,7 @@
 package com.instamojo.wrapper.model;
 
 import com.google.gson.annotations.SerializedName;
+import org.joda.time.DateTime;
 
 import java.util.List;
 
@@ -68,7 +69,7 @@ public class PaymentOrder {
      * The created at.
      */
     @SerializedName("created_at")
-    private String createdAt;
+    private DateTime createdAt;
 
     /**
      * The resource uri.
@@ -288,7 +289,7 @@ public class PaymentOrder {
      *
      * @return the created at
      */
-    public String getCreatedAt() {
+    public DateTime getCreatedAt() {
         return createdAt;
     }
 
@@ -297,7 +298,7 @@ public class PaymentOrder {
      *
      * @param createdAt the new created at
      */
-    public void setCreatedAt(String createdAt) {
+    public void setCreatedAt(DateTime createdAt) {
         this.createdAt = createdAt;
     }
 

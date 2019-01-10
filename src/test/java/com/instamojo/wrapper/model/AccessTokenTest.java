@@ -3,10 +3,12 @@ package com.instamojo.wrapper.model;
 import com.google.gson.Gson;
 import com.instamojo.wrapper.exception.HTTPException;
 import com.instamojo.wrapper.util.Constants;
+import com.instamojo.wrapper.util.GsonWrapper;
 import com.instamojo.wrapper.util.HttpUtils;
 import com.instamojo.wrapper.util.TestConstants;
 import org.junit.Before;
 import org.junit.Test;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +20,7 @@ public class AccessTokenTest {
 
     private String AUTH_ENDPOINT = Constants.INSTAMOJO_TEST_AUTH_ENDPOINT;
     private Map<String, String> apiParams = new HashMap<>();
+    private static Gson gson = GsonWrapper.getGson();
 
     @Before
     public void setUp() {
@@ -34,7 +37,7 @@ public class AccessTokenTest {
         apiParams.put(Constants.PARAM_GRANT_TYPE, Constants.GRANT_TYPE_CLIENT_CREDENTIALS);
 
         String response = HttpUtils.post(AUTH_ENDPOINT, null, apiParams);
-        AccessToken accessToken = new Gson().fromJson(response, AccessToken.class);
+        AccessToken accessToken = gson.fromJson(response, AccessToken.class);
 
         assertEquals(accessToken.getTokenType(), "Bearer");
         assertEquals((long) accessToken.getExpiresIn(), (long) 36000);
@@ -51,7 +54,7 @@ public class AccessTokenTest {
         apiParams.put(Constants.PARAM_PASSWORD, TestConstants.PASSWORD);
 
         String response = HttpUtils.post(AUTH_ENDPOINT, null, apiParams);
-        AccessToken accessToken = new Gson().fromJson(response, AccessToken.class);
+        AccessToken accessToken = gson.fromJson(response, AccessToken.class);
 
         assertEquals(accessToken.getTokenType(), "Bearer");
         assertEquals((long) accessToken.getExpiresIn(), (long) 36000);
@@ -72,7 +75,7 @@ public class AccessTokenTest {
         apiParams.put(Constants.PARAM_PASSWORD, TestConstants.PASSWORD);
 
         String response = HttpUtils.post(AUTH_ENDPOINT, null, apiParams);
-        AccessToken accessToken = new Gson().fromJson(response, AccessToken.class);
+        AccessToken accessToken = gson.fromJson(response, AccessToken.class);
 
         String refreshToken = accessToken.getRefreshToken();
 
@@ -86,7 +89,7 @@ public class AccessTokenTest {
         apiParams.put(Constants.PARAM_REFRESH_TOKEN, refreshToken);
 
         response = HttpUtils.post(AUTH_ENDPOINT, null, apiParams);
-        accessToken = new Gson().fromJson(response, AccessToken.class);
+        accessToken = gson.fromJson(response, AccessToken.class);
 
         assertEquals(accessToken.getTokenType(), "Bearer");
         assertEquals((long) accessToken.getExpiresIn(), (long) 36000);
