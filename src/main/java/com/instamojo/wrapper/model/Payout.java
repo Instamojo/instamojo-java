@@ -10,7 +10,7 @@ public class Payout {
 
     private String recipient;
 
-    private String status;
+    private Boolean status;
 
     @SerializedName("paid_out_at")
     private Date paidOutAt;
@@ -63,11 +63,11 @@ public class Payout {
         this.recipient = recipient;
     }
 
-    public String getStatus() {
+    public Boolean getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Boolean status) {
         this.status = status;
     }
 
