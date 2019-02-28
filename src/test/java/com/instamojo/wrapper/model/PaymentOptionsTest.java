@@ -6,15 +6,15 @@ import com.instamojo.wrapper.builder.PaymentOrderBuilder;
 import com.instamojo.wrapper.exception.ConnectionException;
 import com.instamojo.wrapper.exception.HTTPException;
 import com.instamojo.wrapper.util.Constants;
+import com.instamojo.wrapper.util.GsonWrapper;
 import com.instamojo.wrapper.util.HttpUtils;
 import com.instamojo.wrapper.util.TestConstants;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
-
-import java.util.HashMap;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -24,7 +24,7 @@ public class PaymentOptionsTest {
 
     private String PAYMENT_ORDER_ENDPOINT;
     private Map<String, String> headers = new HashMap<>();
-    private Gson gson = new Gson();
+    private Gson gson = GsonWrapper.getGson();
     private ApiContext context;
 
     private PaymentOrderResponse orderResponse = new PaymentOrderResponse();

@@ -1,8 +1,8 @@
 package com.instamojo.wrapper.model;
 
 import com.google.gson.annotations.SerializedName;
+import org.joda.time.DateTime;
 
-import java.util.Date;
 import java.util.List;
 
 public class PaymentRequest {
@@ -50,10 +50,10 @@ public class PaymentRequest {
     private String webhookUrl;
 
     @SerializedName("scheduled_at")
-    private Date scheduledAt;
+    private DateTime scheduledAt;
 
     @SerializedName("expires_at")
-    private Date expiresAt;
+    private DateTime expiresAt;
 
     @SerializedName("allow_repeated_payments")
     private Boolean allowRepeatedPayments;
@@ -71,10 +71,10 @@ public class PaymentRequest {
     private Boolean markFulfilled;
 
     @SerializedName("created_at")
-    private Date createdAt;
+    private DateTime createdAt;
 
     @SerializedName("modified_at")
-    private Date modifiedAt;
+    private DateTime modifiedAt;
 
     @SerializedName("resource_uri")
     private String resourceUri;
@@ -207,19 +207,19 @@ public class PaymentRequest {
         this.webhookUrl = webhookUrl;
     }
 
-    public Date getScheduledAt() {
+    public DateTime getScheduledAt() {
         return scheduledAt;
     }
 
-    public void setScheduledAt(Date scheduledAt) {
+    public void setScheduledAt(DateTime scheduledAt) {
         this.scheduledAt = scheduledAt;
     }
 
-    public Date getExpiresAt() {
+    public DateTime getExpiresAt() {
         return expiresAt;
     }
 
-    public void setExpiresAt(Date expiresAt) {
+    public void setExpiresAt(DateTime expiresAt) {
         this.expiresAt = expiresAt;
     }
 
@@ -263,19 +263,19 @@ public class PaymentRequest {
         this.markFulfilled = markFulfilled;
     }
 
-    public Date getCreatedAt() {
+    public DateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(DateTime createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Date getModifiedAt() {
+    public DateTime getModifiedAt() {
         return modifiedAt;
     }
 
-    public void setModifiedAt(Date modifiedAt) {
+    public void setModifiedAt(DateTime modifiedAt) {
         this.modifiedAt = modifiedAt;
     }
 

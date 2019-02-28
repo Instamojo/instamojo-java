@@ -1,8 +1,7 @@
 package com.instamojo.wrapper.model;
 
 import com.google.gson.annotations.SerializedName;
-
-import java.util.Date;
+import org.joda.time.DateTime;
 
 public class Payout {
 
@@ -13,7 +12,7 @@ public class Payout {
     private Boolean status;
 
     @SerializedName("paid_out_at")
-    private Date paidOutAt;
+    private DateTime paidOutAt;
 
     private String currency;
 
@@ -71,11 +70,11 @@ public class Payout {
         this.status = status;
     }
 
-    public Date getPaidOutAt() {
+    public DateTime getPaidOutAt() {
         return paidOutAt;
     }
 
-    public void setPaidOutAt(Date paidOutAt) {
+    public void setPaidOutAt(DateTime paidOutAt) {
         this.paidOutAt = paidOutAt;
     }
 

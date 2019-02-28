@@ -1,8 +1,7 @@
 package com.instamojo.wrapper.model;
 
 import com.google.gson.annotations.SerializedName;
-
-import java.util.Date;
+import org.joda.time.DateTime;
 
 public class Invoice {
 
@@ -12,16 +11,16 @@ public class Invoice {
     private String userUri;
 
     @SerializedName("created_at")
-    private Date createdAt;
+    private DateTime createdAt;
 
     @SerializedName("issue_date")
-    private Date issueDate;
+    private DateTime issueDate;
 
     @SerializedName("file")
     private String fileUrl;
 
     @SerializedName("last_modified")
-    private Date modifiedAt;
+    private DateTime modifiedAt;
 
     public String getId() {
         return id;
@@ -39,19 +38,19 @@ public class Invoice {
         this.userUri = userUri;
     }
 
-    public Date getCreatedAt() {
+    public DateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(DateTime createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Date getIssueDate() {
+    public DateTime getIssueDate() {
         return issueDate;
     }
 
-    public void setIssueDate(Date issueDate) {
+    public void setIssueDate(DateTime issueDate) {
         this.issueDate = issueDate;
     }
 
@@ -63,11 +62,11 @@ public class Invoice {
         this.fileUrl = fileUrl;
     }
 
-    public Date getModifiedAt() {
+    public DateTime getModifiedAt() {
         return modifiedAt;
     }
 
-    public void setModifiedAt(Date modifiedAt) {
+    public void setModifiedAt(DateTime modifiedAt) {
         this.modifiedAt = modifiedAt;
     }
 

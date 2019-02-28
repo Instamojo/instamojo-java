@@ -10,6 +10,7 @@ import com.instamojo.wrapper.model.*;
 import com.instamojo.wrapper.response.ApiListResponse;
 import com.instamojo.wrapper.response.ApiResponse;
 import com.instamojo.wrapper.util.Constants;
+import com.instamojo.wrapper.util.GsonWrapper;
 import com.instamojo.wrapper.util.HttpUtils;
 import org.apache.commons.codec.digest.HmacAlgorithms;
 import org.apache.commons.codec.digest.HmacUtils;
@@ -18,7 +19,10 @@ import org.apache.http.util.Asserts;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class InstamojoImpl implements Instamojo {
 
@@ -28,7 +32,7 @@ public class InstamojoImpl implements Instamojo {
 
     public InstamojoImpl(ApiContext context) {
         this.context = context;
-        this.gson = new Gson();
+        this.gson = GsonWrapper.getGson();
     }
 
     @Override
