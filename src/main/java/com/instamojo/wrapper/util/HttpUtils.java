@@ -159,7 +159,11 @@ public class HttpUtils {
 
     private static void populateHeaders(HttpRequestBase httpRequestBase, Map<String, String> customHeaders) {
         // Adding default headers
-        httpRequestBase.addHeader("User-Agent", "instamojo-java");
+
+        String osInfo = System.getProperty("os.name") + "/" + System.getProperty("os.version");
+        String langInfo = "java/" + System.getProperty("java.version");
+
+        httpRequestBase.addHeader("User-Agent", "instamojo-java/2.0.2" + "/n" + osInfo + "/n" + langInfo);
 
         if (customHeaders != null && customHeaders.size() > 0) {
             for (Map.Entry<String, String> header : customHeaders.entrySet()) {
