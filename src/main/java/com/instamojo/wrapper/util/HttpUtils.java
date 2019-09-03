@@ -34,7 +34,7 @@ public class HttpUtils {
         String osInfo = System.getProperty("os.name") + "/" + System.getProperty("os.version");
         String langInfo = "java/" + System.getProperty("java.version");
 
-        String libraryVersion = "lib version not found";
+        String libraryVersion = "lib-ver-not-found";
 
         try (InputStream input = new FileInputStream("gradle.properties")) {
 
