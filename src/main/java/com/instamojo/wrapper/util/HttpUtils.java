@@ -180,11 +180,7 @@ public class HttpUtils {
     }
 
     private static boolean isErrorStatus(int statusCode) {
-        if (statusCode >= 400 && statusCode < 600) {
-            return true;
-        }
-
-        return false;
+        return statusCode >= 400 && statusCode < 600;
     }
 
     private static void populateHeaders(HttpRequestBase httpRequestBase, Map<String, String> customHeaders) {
