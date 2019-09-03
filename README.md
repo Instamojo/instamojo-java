@@ -97,6 +97,12 @@ try {
 1.  Description:  Short description of the order (max 255 characters). If provided, this information is sent to backend gateways, wherever possible.
 2.  Webhook URL: Full URL to which webhook call to be made post transaction.
 
+`PaymentOrderResponse` object contains the details of the payment request that was just created, has a `paymentUrl` in `PaymentOptions` which you can use to as `instamojo-payment-url` in JS based checkout library.
+
+### Recommended seamless checkout Option
+ You can render your Instamojo checkout form and collect payments on your webpage with just the instamojo-payment-url obtained in `createPaymentRequest()` using JS based seamless checkout library. To know more how its work [Click here](https://docs.instamojo.com/page/seamless-checkout).
+
+
 ### Get details of a Payment order by order id
 ```Java
 /*
