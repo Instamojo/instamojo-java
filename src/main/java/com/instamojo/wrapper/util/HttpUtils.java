@@ -163,7 +163,7 @@ public class HttpUtils {
         String osInfo = System.getProperty("os.name") + "/" + System.getProperty("os.version");
         String langInfo = "java/" + System.getProperty("java.version");
 
-        httpRequestBase.addHeader("User-Agent", "instamojo-java/2.0.2" + "/n" + osInfo + "/n" + langInfo);
+        httpRequestBase.addHeader("User-Agent", "instamojo-java/2.0.2/" + osInfo + "/" + langInfo);
 
         if (customHeaders != null && customHeaders.size() > 0) {
             for (Map.Entry<String, String> header : customHeaders.entrySet()) {
