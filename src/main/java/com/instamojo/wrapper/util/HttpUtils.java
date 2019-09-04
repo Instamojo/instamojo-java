@@ -112,10 +112,6 @@ public class HttpUtils {
     public static String post(String url, Map<String, String> customHeaders, Map<String, String> params) throws IOException, HTTPException {
         LOGGER.log(Level.INFO, "Sending POST request to the url {0}", url);
 
-        System.setProperty("org.apache.commons.logging.Log","org.apache.commons.logging.impl.SimpleLog");
-        System.setProperty("org.apache.commons.logging.simplelog.showdatetime", "true");
-        System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.http.wire", "DEBUG");
-
         HttpPost httpPost = new HttpPost(url);
 
         populateHeaders(httpPost, customHeaders);
@@ -147,10 +143,6 @@ public class HttpUtils {
 
     public static String post(String url, Map<String, String> customHeaders, String jsonPayload) throws IOException, HTTPException {
         LOGGER.log(Level.INFO, "Sending POST request to the url {0}", url);
-
-        System.setProperty("org.apache.commons.logging.Log","org.apache.commons.logging.impl.SimpleLog");
-        System.setProperty("org.apache.commons.logging.simplelog.showdatetime", "true");
-        System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.http.wire", "DEBUG");
 
         HttpPost httpPost = new HttpPost(url);
 
