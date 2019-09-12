@@ -1,82 +1,116 @@
 defaults: &defaults
   working_directory: ~/imojo
   docker:
-  - image: circleci/openjdk:8-jdk
+    - image: circleci/openjdk:8-jdk
   environment:
     JVM_OPTS: -Xmx3200m
     TERM: dumb
 
 version: 2
 jobs:
- build:
-   <<: *defaults
-   steps:
-     - checkout
+  build:
+    <<: *defaults
+    steps:
+      - checkout
 
-     - restore_cache:
-         keys:
-         - dependency-cache-{{ checksum "build.gradle" }}
+      - restore_cache:
+          keys:
+            - dependency-cache-{{ checksum "build.gradle" }}
 
-     - run:
-        name: Downloading dependencies
-        command: gradle dependencies
+      - run:
+          name: Downloading dependencies
+          command: gradle dependencies
 
-     - save_cache:
-         paths:
-           - ~/.gradle
-         key: dependency-cache-{{ checksum "build.gradle" }}
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: dependency-cache-{{ checksum "build.gradle" }}
 
-     - run:
-        name: Running tests
-        command: gradle test jacocoTestReport
+      - run:
+          name: Running tests
+          command: gradle test jacocoTestReport
 
-     - run:
-        name: Saving test results
-        command: |
-          mkdir -p ~/test-results/
-          find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/test-results/ \;
-        when: always
+      - run:
+          name: Saving test results
+          command: |
+            mkdir -p ~/test-results/
+            find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/test-results/ \;
+          when: always
 
-     - store_test_results:
-         path: ~/test-results
+      - store_test_results:
+          path: ~/test-results
 
-     - run:
-         name: Publishing coverage report(codecov.io)
-         when: always
-         command: |
-           bash <(curl -s https://codecov.io/bash)
+      - run:
+          name: Publishing coverage report(codecov.io)
+          when: always
+          command: |
+            bash <(curl -s https://codecov.io/bash)
 
- release:
-   <<: *defaults
-   steps:
-    - checkout
-    - restore_cache:
-       key: jars-{{ checksum "build.gradle" }}-{{ checksum  "instamojo-java/build.gradle" }}
-    - run:
-       name: Download Dependencies
-       command: gradle dependencies
-    - save_cache:
-       paths:
-       - ~/.gradle
-       key: jars-{{ checksum "build.gradle" }}-{{ checksum  "instamojo-java/build.gradle" }}
-    - run:
-       name: Publish to Bintray
-       command: gradle bintrayUpload
+      - run:
+          name: Assemble JAR
+          command: |
+            gradle assemble
+
+      - store_artifacts:
+          path: build/libs
+
+      - run:
+          name: Copy artifacts to persisted workspace
+          command: |
+            mkdir -p output
+            cp -r build/libs/* output
+
+      - persist_to_workspace:
+          root: output
+          paths:
+            - .
+
+  release:
+    <<: *defaults
+    steps:
+      - checkout
+      - restore_cache:
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "instamojo-java/build.gradle" }}
+      - run:
+          name: Download Dependencies
+          command: gradle dependencies
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "instamojo-java/build.gradle" }}
+      - run:
+          name: Publish to Bintray
+          command: gradle bintrayUpload
+
+  publish-github-release:
+    docker:
+      - image: cibuilds/github:0.10
+    steps:
+      - attach_workspace:
+          at: ~/imojo/output
+      - run:
+          name: "Publish Release on GitHub"
+          command: |
+            PROJECT_VERSION="v1.0.1"
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${PROJECT_VERSION} ~/imojo/output
 
 workflows:
   version: 2
   build-and-release:
     jobs:
-    - build:
-        filters:
-          # By default a build is only triggered on commits. Lets build for any tag too.
-          tags:
-            only: /.*/
-    - release:
-        requires:
-          - build
-        filters:
-          tags:
-            only: /^v.*/
-          branches:
-            ignore: /.*/
+      - build:
+          filters:
+            # By default a build is only triggered on commits. Lets build for any tag too.
+            tags:
+              only: /.*/
+      - release:
+          requires:
+            - build
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
+      - publish-github-release:
+          requires:
+            - build
