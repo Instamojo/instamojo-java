@@ -91,8 +91,36 @@ jobs:
       - run:
           name: "Publish Release on GitHub"
           command: |
-            PROJECT_VERSION="v1.0.1"
-            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${PROJECT_VERSION} ~/imojo/output
+            cd ~/imojo/output
+            mkdir -p temp
+            input="CHANGELOG.md"
+            consumeData=0
+            while IFS= read -r line
+            do
+             if [ "${line:0:2}" == "##" ]; then
+               ((consumeData+=1))
+             fi
+
+             if [ "$consumeData" == 1 ]; then
+               if [ "${line:0:2}" == "##" ]; then
+                 VERSION=${line:3:${#line}}
+                 echo "version: $VERSION"
+               else
+                 echo "$line" >> temp/notes.txt
+                 echo "$line"
+               fi
+             fi
+            done < "$input"
+
+            rm CHANGELOG.md
+
+            ghr -t ${GITHUB_TOKEN} \
+              -u ${CIRCLE_PROJECT_USERNAME} \
+              -r ${CIRCLE_PROJECT_REPONAME} \
+              -c ${CIRCLE_SHA1} \
+              -b "$(cat ./temp/notes.txt)" \
+              -delete ${VERSION} \
+              ~/imojo/output
 
 workflows:
   version: 2
