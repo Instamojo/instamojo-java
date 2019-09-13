@@ -14,13 +14,10 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,10 +28,34 @@ public class HttpUtils {
 
     private static final Logger LOGGER = Logger.getLogger(HttpUtils.class.getName());
 
+    private static String userAgent = "";
+
+    static {
+        String osInfo = System.getProperty("os.name") + "/" + System.getProperty("os.version");
+        String langInfo = "java/" + System.getProperty("java.version");
+
+        String libraryVersion = "lib-ver-not-found";
+
+        try (InputStream input = new FileInputStream("gradle.properties")) {
+
+            Properties prop = new Properties();
+
+            prop.load(input);
+
+            libraryVersion = prop.getProperty("LIBRARY_VERSION").replace("\"", "");
+
+        } catch (IOException io) {
+            io.printStackTrace();
+        }
+
+        userAgent = "instamojo-java/"+ libraryVersion + "/" + osInfo + "/" + langInfo;
+    }
+
     /**
      * Instantiates a new Http utils.
      */
     private HttpUtils() {
+
     }
 
     public static String get(String url, Map<String, String> customHeaders) throws URISyntaxException, IOException, HTTPException {
@@ -122,6 +143,7 @@ public class HttpUtils {
 
     public static String post(String url, Map<String, String> customHeaders, String jsonPayload) throws IOException, HTTPException {
         LOGGER.log(Level.INFO, "Sending POST request to the url {0}", url);
+
         HttpPost httpPost = new HttpPost(url);
 
         if (customHeaders == null) {
@@ -150,16 +172,12 @@ public class HttpUtils {
     }
 
     private static boolean isErrorStatus(int statusCode) {
-        if (statusCode >= 400 && statusCode < 600) {
-            return true;
-        }
-
-        return false;
+        return statusCode >= 400 && statusCode < 600;
     }
 
     private static void populateHeaders(HttpRequestBase httpRequestBase, Map<String, String> customHeaders) {
         // Adding default headers
-        httpRequestBase.addHeader("User-Agent", "instamojo-java");
+        httpRequestBase.addHeader("User-Agent", userAgent);
 
         if (customHeaders != null && customHeaders.size() > 0) {
             for (Map.Entry<String, String> header : customHeaders.entrySet()) {

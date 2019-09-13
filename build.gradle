@@ -1,5 +1,5 @@
 group 'com.instamojo'
-version '2.0.2'
+version LIBRARY_VERSION
 
 apply plugin: 'java'
 apply plugin: 'jacoco'
@@ -35,7 +35,7 @@ ext {
     siteUrl = 'https://github.com/Instamojo/instamojo-java'
     gitUrl = 'https://github.com/Instamojo/instamojo-java.git'
 
-    libraryVersion = '2.0.2'
+    libraryVersion = LIBRARY_VERSION
     developerId = 'vijith'
     developerName = 'Vijith Kumar'
     developerEmail = 'support@instamojo.com'
