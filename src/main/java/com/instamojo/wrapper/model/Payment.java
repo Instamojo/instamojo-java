@@ -6,6 +6,7 @@ public class Payment {
      * The id.
      */
     private String id;
+private String name;
 
     /**
      * The status.
